@@ -52,7 +52,7 @@ function DataPage({ onDataSuccess }) {
         },
       });
 
-      setMessage(data?.message || 'Your details were saved and are waiting for review.');
+      setMessage(data?.message || 'Your details were saved and are waiting for verification.');
       setForm(initialForm);
       onDataSuccess?.(data);
     } catch (err) {
@@ -78,7 +78,7 @@ function DataPage({ onDataSuccess }) {
             <div className="login-page__highlights" aria-label="Highlights">
               <article>
                 <strong>Check</strong>
-                <span>Details review step</span>
+                <span>Details verification step</span>
               </article>
               <article>
                 <strong>Quick</strong>

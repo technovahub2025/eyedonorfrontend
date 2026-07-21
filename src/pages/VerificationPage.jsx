@@ -7,7 +7,7 @@ import './VerificationPage.css';
 const steps = [
   { label: 'Basics' },
   { label: 'Consent' },
-  { label: 'Review' },
+  { label: 'Verify' },
 ];
 
 const profile = [
@@ -91,7 +91,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
           <section className="verification-card" aria-labelledby="verification-title">
             <div className="verification-card__top">
               <div>
-                <h1 id="verification-title">Review Your Details</h1>
+                <h1 id="verification-title">Verify Your Details</h1>
                 <p>Please confirm your registration information before you finish.</p>
                 <p className="verification-card__status-line">{rootStatus}</p>
               </div>
@@ -100,7 +100,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                 <span className="material-symbols-outlined" aria-hidden="true">
                   info
                 </span>
-                <span>Status: Ready for Review</span>
+                <span>Status: Ready for Verification</span>
               </div>
             </div>
 
@@ -121,7 +121,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                 {loadingProfile
                   ? 'Loading your details...'
                   : userProfile
-                  ? 'Your details are ready.'
+                  ? 'Your details are ready to verify.'
                   : 'No details loaded yet. Sign in through the user login screen first.'}
               </p>
             </div>

@@ -3,7 +3,7 @@ import './AppNavigator.css';
 const navItems = [
   { key: 'login-data', label: 'Your Details' },
   { key: 'terms', label: 'Terms' },
-  { key: 'verification', label: 'Review' },
+  { key: 'verification', label: 'Verify' },
   { key: 'thank-you', label: 'Done' },
   { key: 'admin-login', label: 'admin Sign In' },
   { key: 'registry', label: 'user List' },

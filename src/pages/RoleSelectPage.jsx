@@ -32,7 +32,7 @@ function RoleSelectPage({ onRoleSelect }) {
               badge
             </span>
             <strong>user</strong>
-            <span>Share details, review, and finish</span>
+            <span>Share details, verify, and finish</span>
           </button>
         </section>
 
