@@ -14,14 +14,20 @@ function ThankYouPage({ onRestart }) {
 
           <h1>Thank you</h1>
           <p>
-            Your registration has been submitted and reviewed through the verification flow.
-            We appreciate the time you took to complete the process.
+            Your registration has been submitted. Thank you for taking the time to complete the
+            process.
           </p>
 
           <button className="thank-you-page__button" type="button" onClick={() => onRestart?.()}>
-            Return to Role Selection
+            Return to Start
           </button>
         </section>
+
+        <footer className="thank-you-page__footer">
+          <a className="thank-you-page__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
+        </footer>
       </main>
     </div>
   );

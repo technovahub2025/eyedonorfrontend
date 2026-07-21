@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProgressStepper from '../components/ProgressStepper';
-import { API_BASE_URL, apiRequest } from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -11,29 +11,29 @@ const steps = [
 
 const terms = [
   {
-    title: 'Authorization and Consent',
-    body: 'I hereby authorize VisionGift to recover my ocular tissues for transplantation, research, or education upon my legal passing. I understand that this gift is voluntary and altruistic in nature, intended to restore vision to those in clinical need or to advance the field of ophthalmology.',
+    title: 'Your gift',
+    body: 'I agree that my eye donation may be used to help restore sight, support learning, or improve care for others after my lifetime.',
   },
   {
-    title: 'Medical Suitability',
-    body: 'I understand that final suitability for donation is determined by professional clinical screening at the time of recovery. This includes a review of medical records and potential blood testing to ensure the safety of the recipient and the integrity of the medical gift.',
+    title: 'Medical review',
+    body: 'I understand that the team will review the details at the time of donation to make sure the gift is suitable and safe.',
   },
   {
-    title: 'Use of Ocular Tissue',
-    body: 'Recovered tissues may be used for sight-restoring corneal transplants, glaucoma research, medical education for ophthalmologists-in-training, or development of new surgical techniques. All uses strictly adhere to national medical ethics and professional standards.',
+    title: 'How it may be used',
+    body: 'My gift may support sight-restoring treatment, learning, or improvements in care and recovery methods.',
   },
   {
-    title: 'No Cost to Family',
-    body: 'VisionGift confirms that there are no costs to the donor’s family or estate associated with the eye donation process. The recovery process is performed with the utmost respect and does not interfere with traditional funeral arrangements or open-casket viewings.',
+    title: 'No cost to family',
+    body: 'I understand that my family will not be charged, and the process will be handled with care and respect.',
   },
   {
-    title: 'Privacy and Records',
-    body: 'Personal information is handled with absolute confidentiality under HIPAA standards. Data is used solely for the coordination of donation services and clinical verification.',
+    title: 'Privacy',
+    body: 'My personal details will be kept private and used only to support the donation process.',
   },
 ];
 
 function TermsPage({ onAccept, onDecline }) {
-  const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
@@ -43,10 +43,10 @@ function TermsPage({ onAccept, onDecline }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'API root reachable');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
       } catch (err) {
         if (!active) return;
-        setRootStatus(`API check failed: ${err.message}`);
+        setRootStatus(`Connection check failed: ${err.message}`);
       }
     }
 
@@ -77,13 +77,9 @@ function TermsPage({ onAccept, onDecline }) {
           <section className="terms-card" aria-labelledby="terms-title">
             <h1 id="terms-title">Consent for Eye Donation</h1>
             <p className="terms-card__intro">
-              Please review the medical excellence standards and altruistic commitments below to
-              proceed with your gift of sight.
+              Please review the simple terms below before you continue with your gift of sight.
             </p>
             <p className="terms-card__status">{rootStatus}</p>
-            <p className="terms-card__status">
-              API base: <code>{API_BASE_URL}</code>
-            </p>
 
             <div className="terms-card__scroll custom-scrollbar">
               {terms.map((item, index) => (
@@ -97,11 +93,12 @@ function TermsPage({ onAccept, onDecline }) {
             </div>
 
             <label className="terms-card__agree">
-              <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
-              <span>
-                I agree to the terms and conditions described above and reaffirm my commitment to
-                the gift of sight.
-              </span>
+              <input
+                type="checkbox"
+                checked={accepted}
+                onChange={(event) => setAccepted(event.target.checked)}
+              />
+              <span>I agree to these terms and want to continue.</span>
             </label>
 
             <div className="terms-card__actions">
@@ -133,10 +130,7 @@ function TermsPage({ onAccept, onDecline }) {
             <span className="material-symbols-outlined" aria-hidden="true">
               info
             </span>
-            <p>
-              You can withdraw your consent at any time through our Support portal or by contacting
-              our 24/7 donation coordination center.
-            </p>
+            <p>You can change your mind later by contacting our support team.</p>
           </section>
         </section>
       </main>
@@ -156,8 +150,11 @@ function TermsPage({ onAccept, onDecline }) {
             <a href="#accessibility">Accessibility</a>
             <a href="#contact">Contact Us</a>
           </div>
+          <a className="terms-page__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
 
-          <p>© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+          <p>Copyright 2026 VisionGift. All rights reserved.</p>
         </div>
       </footer>
     </div>

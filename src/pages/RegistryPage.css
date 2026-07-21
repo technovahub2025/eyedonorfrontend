@@ -505,6 +505,16 @@
   transform: translateY(-1px);
 }
 
+.registry-page__powered-by {
+  color: #7af7e9;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.registry-page__powered-by:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 1100px) {
   .registry-page__nav-links {
     display: none;

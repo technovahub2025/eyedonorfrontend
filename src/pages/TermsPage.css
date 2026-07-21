@@ -224,6 +224,16 @@
   text-decoration: underline;
 }
 
+.terms-page__powered-by {
+  color: #003c90;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.terms-page__powered-by:hover {
+  text-decoration: underline;
+}
+
 .terms-page__footer p {
   margin: 0;
   color: #43474b;

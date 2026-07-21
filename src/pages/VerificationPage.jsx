@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import ReviewRow from '../components/ReviewRow';
 import ProgressStepper from '../components/ProgressStepper';
-import {
-  API_BASE_URL,
-  apiRequest,
-} from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './VerificationPage.css';
 
 const steps = [
   { label: 'Basics' },
   { label: 'Consent' },
-  { label: 'Verify' },
+  { label: 'Review' },
 ];
 
 const profile = [
@@ -35,7 +32,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
   const [token, setToken] = useState(userToken || '');
   const [userProfile, setUserProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
-  const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [rootStatus, setRootStatus] = useState('Checking your connection...');
 
   useEffect(() => {
     let active = true;
@@ -44,10 +41,10 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'API root reachable');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
       } catch (err) {
         if (!active) return;
-        setRootStatus(`API check failed: ${err.message}`);
+        setRootStatus(`Connection check failed: ${err.message}`);
       }
     }
 
@@ -112,20 +109,15 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
             <div className="verification-card__top">
               <div>
                 <h1 id="verification-title">Review Your Details</h1>
-                <p>
-                  Please confirm your registration information before final submission.
-                </p>
+                <p>Please confirm your registration information before you finish.</p>
                 <p className="verification-card__status-line">{rootStatus}</p>
-                <p className="verification-card__status-line">
-                  API base: <code>{API_BASE_URL}</code>
-                </p>
               </div>
 
               <div className="verification-card__status">
                 <span className="material-symbols-outlined" aria-hidden="true">
                   info
                 </span>
-                <span>Status: Pending Verification</span>
+                <span>Status: Ready for Review</span>
               </div>
             </div>
 
@@ -141,13 +133,13 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
             </div>
 
             <div className="verification-card__user-profile">
-              <span className="verification-card__profile-label">Live User Profile</span>
+              <span className="verification-card__profile-label">Saved details</span>
               <p>
                 {loadingProfile
-                  ? 'Loading user profile...'
+                  ? 'Loading your details...'
                   : userProfile
-                  ? JSON.stringify(userProfile)
-                  : 'No user profile loaded yet. Sign in through the user login screen first.'}
+                  ? 'Your details are ready.'
+                  : 'No details loaded yet. Sign in through the user login screen first.'}
               </p>
             </div>
 
@@ -157,8 +149,8 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                   verified_user
                 </span>
                 <p>
-                  By clicking 'Submit Registration', I confirm that the data provided is
-                  accurate and I understand my donation can restore sight to those in need.
+                  By clicking Submit Registration, I confirm that the details I shared are
+                  correct and I understand my donation can help restore sight.
                 </p>
               </div>
 
@@ -189,13 +181,13 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
               <span className="material-symbols-outlined" aria-hidden="true">
                 encrypted
               </span>
-              <span>HIPAA Compliant Data Handling</span>
+              <span>Private handling</span>
             </div>
             <div>
               <span className="material-symbols-outlined" aria-hidden="true">
                 verified
               </span>
-              <span>Verified Donor Database</span>
+              <span>Trusted donor list</span>
             </div>
           </section>
         </section>
@@ -210,7 +202,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
             <span>VisionGift</span>
           </div>
 
-          <p>© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+          <p>Copyright 2026 VisionGift. All rights reserved.</p>
 
           <div className="verification-page__footer-links">
             <a href="#privacy">Privacy Policy</a>
@@ -218,6 +210,9 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
             <a href="#accessibility">Accessibility</a>
             <a href="#contact">Contact Us</a>
           </div>
+          <a className="verification-page__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
         </div>
       </footer>
     </div>

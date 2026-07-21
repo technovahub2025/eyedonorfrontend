@@ -317,6 +317,16 @@
   gap: 18px;
 }
 
+.login-page__powered-by {
+  color: #003c90;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.login-page__powered-by:hover {
+  text-decoration: underline;
+}
+
 .login-page__footer p {
   margin: 0;
   font-size: 0.92rem;

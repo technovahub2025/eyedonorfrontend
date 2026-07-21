@@ -16,7 +16,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [actionLoading, setActionLoading] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [search, setSearch] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 10;
@@ -25,7 +25,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     async (authToken = token) => {
       if (!authToken) {
         setLoading(false);
-        setError('Admin login required to view the registry.');
+        setError('Staff sign in is needed to view the list.');
         return;
       }
 
@@ -55,10 +55,10 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'API root reachable');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
       } catch (err) {
         if (!active) return;
-        setRootStatus(`API check failed: ${err.message}`);
+        setRootStatus(`Connection check failed: ${err.message}`);
       }
     }
 
@@ -123,7 +123,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
 
   function exportCsv() {
     if (!filteredRows.length) {
-      setMessage('No donor data available to export.');
+      setMessage('No records are ready to export.');
       setError('');
       return;
     }
@@ -166,13 +166,13 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    setMessage(`Exported ${filteredRows.length} donor record${filteredRows.length === 1 ? '' : 's'} to CSV.`);
+    setMessage(`Exported ${filteredRows.length} record${filteredRows.length === 1 ? '' : 's'}.`);
     setError('');
   }
 
   async function deleteDonor(id) {
     if (!id) return;
-    if (!window.confirm('Delete this donor record?')) return;
+    if (!window.confirm('Delete this record?')) return;
 
     setActionLoading(id);
     setMessage('');
@@ -183,7 +183,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         method: 'DELETE',
         token,
       });
-      setMessage(`Deleted donor ${id}.`);
+      setMessage(`Deleted record ${id}.`);
       await loadRegistry(token);
     } catch (err) {
       setError(err.message);
@@ -198,7 +198,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     onAdminLogout?.();
     setRows([]);
     setTotalCount(0);
-    setMessage('Admin token cleared.');
+    setMessage('Signed out.');
   }
 
   return (
@@ -220,7 +220,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
 
           <div className="registry-page__nav-actions">
             <button className="registry-page__register" type="button" onClick={handleLogout}>
-              Logout
+              Sign Out
             </button>
           </div>
         </nav>
@@ -229,19 +229,19 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       <main className="registry-page__main">
         <section className="registry-page__hero">
           <div className="registry-page__breadcrumb">
-            <span>Admin</span>
+            <span>Staff</span>
             <span className="material-symbols-outlined" aria-hidden="true">
               chevron_right
             </span>
-            <span className="registry-page__breadcrumb-current">Donor Management</span>
+            <span className="registry-page__breadcrumb-current">Donor List</span>
           </div>
 
           <div className="registry-page__hero-row">
             <div>
-              <h1>Donor Registry</h1>
+              <h1>Donor List</h1>
               <p>
-                Manage and review all registered eye donors. New user submissions arrive here as
-                records you can export, search, and delete.
+                Manage and review all registered donors. New submissions arrive here, and you can
+                export, search, or remove them as needed.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
             </div>
@@ -280,18 +280,18 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             onChange={(event) => setSearch({ ...search, status: event.target.value })}
           >
             <option value="all">All</option>
-            <option value="pending">Pending Verification</option>
+            <option value="pending">Waiting</option>
             <option value="accepted">Accepted</option>
             <option value="declined">Declined</option>
-            <option value="active">Active Donor</option>
-            <option value="inactive">Inactive Donor</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
           </select>
 
           <button type="button" className="registry-page__action registry-page__action--ghost">
             <span className="material-symbols-outlined" aria-hidden="true">
               tune
             </span>
-            Advanced Filters
+            More filters
           </button>
         </section>
 
@@ -314,7 +314,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                 {loading ? (
                   <tr>
                     <td className="registry-page__empty" colSpan={5}>
-                      Loading donors...
+                      Loading records...
                     </td>
                   </tr>
                 ) : paginatedRows.length ? (
@@ -345,7 +345,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                 ) : (
                   <tr>
                     <td className="registry-page__empty" colSpan={5}>
-                      No donors found. Sign in as admin or create a donor to begin.
+                      No donors found. Sign in to add the first one.
                     </td>
                   </tr>
                 )}
@@ -355,9 +355,8 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
 
           <div className="registry-page__pagination">
             <span>
-              Showing{' '}
-              {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
-              {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length} filtered donors
+              Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
+              {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length} filtered records
             </span>
             <div className="registry-page__pages">
               <button
@@ -406,7 +405,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
             </div>
             <div>
-              <p>Total Registrations</p>
+              <p>Total Records</p>
               <strong>{totalCount || rows.length}</strong>
             </div>
           </article>
@@ -422,7 +421,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
               <span>VisionGift</span>
             </div>
-            <p>Â© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+            <p>Copyright 2026 VisionGift. All rights reserved.</p>
           </div>
 
           <div className="registry-page__footer-links">
@@ -431,6 +430,9 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             <a href="#accessibility">Accessibility</a>
             <a href="#contact">Contact Us</a>
           </div>
+          <a className="registry-page__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
 
           <div className="registry-page__footer-social">
             <a href="#share" aria-label="Share">

@@ -312,6 +312,21 @@
   word-break: break-word;
 }
 
+.admin-login-card__footer-link {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.admin-login-card__powered-by {
+  color: #003c90;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-login-card__powered-by:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 960px) {
   .admin-login-page {
     grid-template-columns: 1fr;

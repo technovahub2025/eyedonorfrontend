@@ -297,6 +297,16 @@
   text-decoration: underline;
 }
 
+.verification-page__powered-by {
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.verification-page__powered-by:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 860px) {
   .verification-page__nav {
     display: none;

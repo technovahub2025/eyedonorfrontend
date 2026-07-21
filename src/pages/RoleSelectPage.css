@@ -118,6 +118,21 @@
     #ffffff;
 }
 
+.role-select-page__footer {
+  padding: 8px 22px 22px;
+  text-align: center;
+}
+
+.role-select-page__powered-by {
+  color: #003c90;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.role-select-page__powered-by:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 900px) {
   .role-select-page__shell {
     grid-template-columns: 1fr;

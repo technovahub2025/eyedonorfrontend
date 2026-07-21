@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import FormField from '../components/FormField';
-import {
-  API_BASE_URL,
-  apiRequest,
-} from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './AdminLoginPage.css';
 
 const initialForm = {
@@ -21,7 +18,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
   const [profileLoading, setProfileLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [rootStatus, setRootStatus] = useState('Checking your connection...');
 
   async function loadProfile(authToken = token) {
     if (!authToken) {
@@ -49,10 +46,10 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'API root reachable');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
       } catch (err) {
         if (!active) return;
-        setRootStatus(`API check failed: ${err.message}`);
+        setRootStatus(`Connection check failed: ${err.message}`);
       }
     }
 
@@ -91,7 +88,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
       setToken(nextToken);
       onAdminTokenChange?.(nextToken);
-      setMessage(data?.message || 'Admin login successful.');
+      setMessage(data?.message || 'Staff sign in successful.');
       onAdminLoginSuccess?.(nextToken, data);
       await loadProfile(nextToken);
     } catch (err) {
@@ -123,25 +120,25 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
         <div className="admin-login-page__panel-copy">
           <p className="admin-login-page__eyebrow">Protected access</p>
-          <h1>Admin Portal Sign In</h1>
+          <h1>Staff Sign In</h1>
           <p>
-            Use your administrator credentials to manage donor records, review
-            verification queues, and access compliance tools.
+            Use your staff details to manage donor lists, check requests, and handle important
+            tasks.
           </p>
         </div>
 
         <div className="admin-login-page__trust-grid">
           <article>
-            <strong>2FA</strong>
-            <span>Optional multi-factor verification</span>
+            <strong>Extra check</strong>
+            <span>Optional added verification</span>
           </article>
           <article>
-            <strong>HIPAA</strong>
-            <span>Compliance-first access controls</span>
+            <strong>Private access</strong>
+            <span>Careful entry controls</span>
           </article>
           <article>
-            <strong>Audit</strong>
-            <span>Signed activity trail for admin actions</span>
+            <strong>Activity log</strong>
+            <span>Record of staff actions</span>
           </article>
         </div>
 
@@ -149,9 +146,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           <span className="material-symbols-outlined" aria-hidden="true">
             shield
           </span>
-          <p>
-            Administrator access is monitored and restricted to approved staff only.
-          </p>
+          <p>Staff access is watched and limited to approved team members.</p>
         </div>
       </aside>
 
@@ -159,12 +154,9 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
         <section className="admin-login-card" aria-labelledby="admin-login-title">
           <header className="admin-login-card__header">
             <p className="admin-login-card__kicker">VisionGift Secure Portal</p>
-            <h2 id="admin-login-title">Admin Login</h2>
-            <p>Enter your credentials to open the dashboard and donor management tools.</p>
+            <h2 id="admin-login-title">Staff Login</h2>
+            <p>Enter your details to open the dashboard and donor tools.</p>
             <p className="admin-login-card__status">{rootStatus}</p>
-            <p className="admin-login-card__status">
-              API base: <code>{API_BASE_URL}</code>
-            </p>
           </header>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
@@ -200,8 +192,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
               </button>
             </div>
 
-          
-
             <button className="admin-login-form__submit" type="submit" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In to Dashboard'}
               <span className="material-symbols-outlined" aria-hidden="true">
@@ -215,7 +205,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
           <div className="admin-login-card__actions">
             <button type="button" className="admin-login-card__secondary" onClick={() => loadProfile()}>
-              {profileLoading ? 'Refreshing...' : 'Refresh Profile'}
+              {profileLoading ? 'Refreshing...' : 'Refresh Details'}
             </button>
             <button type="button" className="admin-login-card__ghost" onClick={handleLogout} disabled={!token}>
               Logout
@@ -226,15 +216,25 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <span className="material-symbols-outlined" aria-hidden="true">
               verified_user
             </span>
-            <p>
-              All admin access is logged and protected by secure session controls.
-            </p>
+            <p>All staff access is logged and protected with secure sign-in handling.</p>
           </div>
 
           <div className="admin-login-card__profile">
-            <span className="admin-login-card__profile-label">Admin Profile</span>
-            <p>{profileLoading ? 'Loading profile...' : profile ? JSON.stringify(profile) : 'No profile loaded yet.'}</p>
+            <span className="admin-login-card__profile-label">Staff details</span>
+            <p>
+              {profileLoading
+                ? 'Loading your details...'
+                : profile
+                ? 'Your details are ready.'
+                : 'No details loaded yet.'}
+            </p>
           </div>
+
+          <footer className="admin-login-card__footer-link">
+            <a className="admin-login-card__powered-by" href="https://www.technovahub.in">
+              Powered by TechnovaHub
+            </a>
+          </footer>
         </section>
       </main>
     </div>

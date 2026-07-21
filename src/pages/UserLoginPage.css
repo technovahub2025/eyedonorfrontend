@@ -208,6 +208,21 @@
   word-break: break-word;
 }
 
+.user-login-card__footer {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.user-login-card__powered-by {
+  color: #003c90;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.user-login-card__powered-by:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 960px) {
   .user-login-page {
     grid-template-columns: 1fr;

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { API_BASE_URL, apiRequest } from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './data.css';
 
 const initialForm = {
@@ -12,7 +12,7 @@ const initialForm = {
 function DataPage({ onDataSuccess }) {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
-  const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -23,10 +23,10 @@ function DataPage({ onDataSuccess }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'API root reachable');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
       } catch (err) {
         if (!active) return;
-        setRootStatus(`API check failed: ${err.message}`);
+        setRootStatus(`Connection check failed: ${err.message}`);
       }
     }
 
@@ -52,7 +52,7 @@ function DataPage({ onDataSuccess }) {
         },
       });
 
-      setMessage(data?.message || 'Data saved successfully. It is now pending admin review.');
+      setMessage(data?.message || 'Your details were saved and are waiting for review.');
       setForm(initialForm);
       onDataSuccess?.(data);
     } catch (err) {
@@ -83,22 +83,20 @@ function DataPage({ onDataSuccess }) {
       <main className="login-page__main">
         <section className="login-page__layout">
           <div className="login-page__intro">
-            <p className="login-page__eyebrow">Login data</p>
-            <h1>Enter your registration details</h1>
+            <p className="login-page__eyebrow">Your details</p>
+            <h1>Enter the details for your registration</h1>
             <p className="login-page__copy">
-              Share the registration details that will be checked before verification.
-              This screen sends data directly to the backend at {API_BASE_URL}.
+              Share the details that will be checked before the next step.
             </p>
 
             <div className="login-page__highlights" aria-label="Highlights">
-             
               <article>
-                <strong>Review</strong>
-                <span>Data verification step</span>
+                <strong>Check</strong>
+                <span>Details review step</span>
               </article>
               <article>
-                <strong>Fast</strong>
-                <span>Moves to verification</span>
+                <strong>Quick</strong>
+                <span>Moves to the next step</span>
               </article>
             </div>
           </div>
@@ -106,10 +104,8 @@ function DataPage({ onDataSuccess }) {
           <section className="login-card" aria-labelledby="login-title">
             <header className="login-card__header">
               <p className="login-card__kicker">VisionGift Data Form</p>
-              <h2 id="login-title">Submit your data</h2>
-              <p>
-                Please provide the registration information required for verification.
-              </p>
+              <h2 id="login-title">Submit your details</h2>
+              <p>Please provide the registration information needed to continue.</p>
             </header>
 
             <form className="login-form" onSubmit={handleSubmit}>
@@ -185,7 +181,10 @@ function DataPage({ onDataSuccess }) {
             <a href="#accessibility">Accessibility</a>
             <a href="#contact">Contact Us</a>
           </div>
-          <p>© 2026 VisionGift. All rights reserved.</p>
+          <a className="login-page__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
+          <p>Copyright 2026 VisionGift. All rights reserved.</p>
         </section>
       </main>
     </div>

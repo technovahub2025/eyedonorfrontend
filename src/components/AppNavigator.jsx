@@ -1,12 +1,12 @@
 import './AppNavigator.css';
 
 const navItems = [
-  { key: 'login-data', label: 'Login Data' },
+  { key: 'login-data', label: 'Your Details' },
   { key: 'terms', label: 'Terms' },
-  { key: 'verification', label: 'Verification' },
-  { key: 'thank-you', label: 'Thank You' },
-  { key: 'admin-login', label: 'Admin Login' },
-  { key: 'registry', label: 'Registry' },
+  { key: 'verification', label: 'Review' },
+  { key: 'thank-you', label: 'Done' },
+  { key: 'admin-login', label: 'Staff Sign In' },
+  { key: 'registry', label: 'Donor List' },
 ];
 
 const roleNavMap = {
@@ -28,7 +28,7 @@ function AppNavigator({ activePage, activeRole, onNavigate }) {
           </span>
           <div>
             <strong>VisionGift</strong>
-            <span>Screen navigation</span>
+            <span>Where you are</span>
           </div>
         </div>
 

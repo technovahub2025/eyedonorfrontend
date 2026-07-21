@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import FormField from '../components/FormField';
-import {
-  API_BASE_URL,
-  apiRequest,
-} from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './UserLoginPage.css';
 
 const initialForm = {
@@ -101,24 +98,21 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
         <div className="user-login-page__hero-copy">
           <p className="user-login-page__eyebrow">User access</p>
           <h1>Sign in with your email and phone</h1>
-          <p>
-            This screen talks to <code>{API_BASE_URL}/api/user/login</code> and
-            then fetches <code>/api/user/me</code> with the returned token.
-          </p>
+          <p>Use your details to sign in and continue with your registration.</p>
         </div>
 
         <div className="user-login-page__facts">
           <article>
-            <strong>Login</strong>
-            <span>email + phone</span>
+            <strong>Sign in</strong>
+            <span>Email and phone</span>
           </article>
           <article>
-            <strong>Profile</strong>
-            <span>/api/user/me</span>
+            <strong>Your details</strong>
+            <span>Saved information</span>
           </article>
           <article>
-            <strong>Session</strong>
-            <span>Stored locally</span>
+            <strong>Saved here</strong>
+            <span>On this device</span>
           </article>
         </div>
       </section>
@@ -127,7 +121,7 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
         <header className="user-login-card__header">
           <p className="user-login-card__kicker">VisionGift User Portal</p>
           <h2 id="user-login-title">User Login</h2>
-          <p>Use your registered details to get a user token and load your profile.</p>
+          <p>Use your registered details to sign in and see your information.</p>
         </header>
 
         <form className="user-login-form" onSubmit={handleSubmit}>
@@ -176,9 +170,15 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
         </div>
 
         <div className="user-login-card__profile">
-          <span className="user-login-card__profile-label">Profile</span>
-          <p>{profileLoading ? 'Loading profile...' : profile ? JSON.stringify(profile) : 'No profile loaded yet.'}</p>
+          <span className="user-login-card__profile-label">Your details</span>
+          <p>{profileLoading ? 'Loading your details...' : profile ? 'Your details are ready.' : 'No details loaded yet.'}</p>
         </div>
+
+        <footer className="user-login-card__footer">
+          <a className="user-login-card__powered-by" href="https://www.technovahub.in">
+            Powered by TechnovaHub
+          </a>
+        </footer>
       </section>
     </div>
   );
