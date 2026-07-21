@@ -52,7 +52,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
       if (!token) return;
       setLoadingProfile(true);
       try {
-        const data = await apiRequest('/api/user/me', { token });
+        const data = await apiRequest('/api/donors/me', { token });
         if (active) {
           setUserProfile(data);
         }
