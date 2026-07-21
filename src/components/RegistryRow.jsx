@@ -6,8 +6,6 @@ function RegistryRow({
   email,
   phone,
   date,
-  onAccept,
-  onDecline,
   onDelete,
   actionLoading = false,
 }) {
@@ -26,22 +24,6 @@ function RegistryRow({
       <td className="registry-row__cell">{date}</td>
       <td className="registry-row__cell registry-row__cell--actions">
         <div className="registry-row__actions">
-          <button
-            className="registry-row__action"
-            type="button"
-            onClick={onAccept}
-            disabled={actionLoading}
-          >
-            Accept
-          </button>
-          <button
-            className="registry-row__action"
-            type="button"
-            onClick={onDecline}
-            disabled={actionLoading}
-          >
-            Decline
-          </button>
           <button
             className="registry-row__menu material-symbols-outlined"
             type="button"

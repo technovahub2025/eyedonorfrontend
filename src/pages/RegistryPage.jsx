@@ -112,43 +112,62 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     return filteredRows.slice(startIndex, startIndex + pageSize);
   }, [currentPage, filteredRows]);
 
-  const statusCounts = useMemo(() => {
-    const normalizeStatus = (value) => (value || '').toLowerCase();
-    const pendingRows = rows.filter((row) => normalizeStatus(row.status) === 'pending');
-    const acceptedRows = rows.filter((row) => normalizeStatus(row.status) === 'accepted');
-    const declinedRows = rows.filter((row) => normalizeStatus(row.status) === 'declined');
-    const activeRows = rows.filter((row) => row.isActive !== false);
-    const inactiveRows = rows.filter((row) => row.isActive === false);
-
-    return {
-      total: totalCount || rows.length,
-      pending: pendingRows.length,
-      accepted: acceptedRows.length,
-      declined: declinedRows.length,
-      active: activeRows.length,
-      inactive: inactiveRows.length,
-    };
-  }, [rows, totalCount]);
-
-  async function updateStatus(id, status) {
-    if (!id) return;
-    setActionLoading(id);
-    setMessage('');
-    setError('');
-
-    try {
-      await apiRequest(`/api/donors/${id}`, {
-        method: 'PUT',
-        token,
-        body: { status },
-      });
-      setMessage(`Updated donor ${id} to ${status}.`);
-      await loadRegistry(token);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setActionLoading('');
+  function escapeCsvValue(value) {
+    const text = String(value ?? '');
+    if (/[",\n]/.test(text)) {
+      return `"${text.replaceAll('"', '""')}"`;
     }
+
+    return text;
+  }
+
+  function exportCsv() {
+    if (!filteredRows.length) {
+      setMessage('No donor data available to export.');
+      setError('');
+      return;
+    }
+
+    const headers = [
+      'Full Name',
+      'Email Address',
+      'Phone Number',
+      'Notes',
+      'Status',
+      'Active',
+      'Created At',
+      'Updated At',
+    ];
+
+    const csvRows = [
+      headers.join(','),
+      ...filteredRows.map((row) =>
+        [
+          row.fullName || row.name || '',
+          row.email || '',
+          row.phone || '',
+          row.notes || '',
+          row.status || '',
+          row.isActive === false ? 'No' : 'Yes',
+          row.createdAt || '',
+          row.updatedAt || '',
+        ]
+          .map(escapeCsvValue)
+          .join(',')
+      ),
+    ];
+
+    const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `donor-registry-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setMessage(`Exported ${filteredRows.length} donor record${filteredRows.length === 1 ? '' : 's'} to CSV.`);
+    setError('');
   }
 
   async function deleteDonor(id) {
@@ -173,17 +192,37 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     }
   }
 
-  
+  function handleLogout() {
+    setToken('');
+    onAdminTokenChange?.('');
+    onAdminLogout?.();
+    setRows([]);
+    setTotalCount(0);
+    setMessage('Admin token cleared.');
+  }
 
   return (
     <div className="registry-page">
       <header className="registry-page__header">
         <nav className="registry-page__nav">
-          
+          <div className="registry-page__brand">
+            <span className="material-symbols-outlined" aria-hidden="true">
+              visibility
+            </span>
+            <span>VisionGift</span>
+          </div>
 
-        
+          <div className="registry-page__nav-links">
+            <a href="#how-it-works">How it Works</a>
+            <a href="#impact">Impact</a>
+            <a href="#support">Support</a>
+          </div>
 
-        
+          <div className="registry-page__nav-actions">
+            <button className="registry-page__register" type="button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -201,22 +240,23 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             <div>
               <h1>Donor Registry</h1>
               <p>
-                Manage and review all registered eye donors. Ensure compliance and verification
-                across the national database. New user submissions arrive here as pending records
-                and can be marked accepted or declined.
+                Manage and review all registered eye donors. New user submissions arrive here as
+                records you can export, search, and delete.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
-             
             </div>
 
             <div className="registry-page__hero-actions">
-              <button type="button" className="registry-page__action registry-page__action--secondary">
+              <button
+                type="button"
+                className="registry-page__action registry-page__action--secondary"
+                onClick={exportCsv}
+              >
                 <span className="material-symbols-outlined" aria-hidden="true">
                   file_download
                 </span>
                 Export CSV
               </button>
-              
             </div>
           </div>
         </section>
@@ -234,7 +274,18 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             />
           </div>
 
-         
+          <select
+            className="registry-page__select"
+            value={search.status}
+            onChange={(event) => setSearch({ ...search, status: event.target.value })}
+          >
+            <option value="all">All</option>
+            <option value="pending">Pending Verification</option>
+            <option value="accepted">Accepted</option>
+            <option value="declined">Declined</option>
+            <option value="active">Active Donor</option>
+            <option value="inactive">Inactive Donor</option>
+          </select>
 
           <button type="button" className="registry-page__action registry-page__action--ghost">
             <span className="material-symbols-outlined" aria-hidden="true">
@@ -286,8 +337,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                         email={row.email || 'No email'}
                         phone={row.phone || 'No phone'}
                         date={row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date || 'Unknown'}
-                        onAccept={() => updateStatus(id, 'Accepted')}
-                        onDecline={() => updateStatus(id, 'Declined')}
                         onDelete={() => deleteDonor(id)}
                         actionLoading={actionLoading === id}
                       />
@@ -358,59 +407,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             </div>
             <div>
               <p>Total Registrations</p>
-              <strong>{statusCounts.total}</strong>
-            </div>
-          </article>
-          <article className="insight-card">
-            <div className="insight-card__top">
-              <span className="insight-card__icon insight-card__icon--secondary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  verified_user
-                </span>
-              </span>
-            </div>
-            <div>
-              <p>Accepted</p>
-              <strong>{statusCounts.accepted}</strong>
-            </div>
-          </article>
-          <article className="insight-card">
-            <div className="insight-card__top">
-              <span className="insight-card__icon insight-card__icon--error">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  pending_actions
-                </span>
-              </span>
-            </div>
-            <div>
-              <p>Pending Review</p>
-              <strong>{statusCounts.pending}</strong>
-            </div>
-          </article>
-          <article className="insight-card">
-            <div className="insight-card__top">
-              <span className="insight-card__icon insight-card__icon--primary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  do_not_disturb
-                </span>
-              </span>
-            </div>
-            <div>
-              <p>Declined</p>
-              <strong>{statusCounts.declined}</strong>
-            </div>
-          </article>
-          <article className="insight-card">
-            <div className="insight-card__top">
-              <span className="insight-card__icon insight-card__icon--secondary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  toggle_on
-                </span>
-              </span>
-            </div>
-            <div>
-              <p>Active</p>
-              <strong>{statusCounts.active}</strong>
+              <strong>{totalCount || rows.length}</strong>
             </div>
           </article>
         </section>
@@ -425,7 +422,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
               <span>VisionGift</span>
             </div>
-            <p>© 2024 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+            <p>Â© 2024 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
           </div>
 
           <div className="registry-page__footer-links">
