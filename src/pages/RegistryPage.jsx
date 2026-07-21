@@ -14,7 +14,7 @@ const initialSearch = {
 function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [token, setToken] = useState(adminToken || '');
   const [rows, setRows] = useState([]);
-  const [dashboard, setDashboard] = useState(null);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState('');
   const [message, setMessage] = useState('');
@@ -34,16 +34,13 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       setError('');
 
       try {
-        const [donors, dashboardData] = await Promise.all([
-          apiRequest('/api/donors', { token: authToken }),
-          apiRequest('/api/donors/dashboard', { token: authToken }),
-        ]);
-
-        setRows(Array.isArray(donors) ? donors : donors?.donors || []);
-        setDashboard(dashboardData || null);
+        const donors = await apiRequest('/api/donors', { token: authToken });
+        const nextRows = Array.isArray(donors) ? donors : donors?.data || donors?.donors || [];
+        setRows(nextRows);
+        setTotalCount(donors?.count ?? nextRows.length);
       } catch (err) {
         setRows([]);
-        setDashboard(null);
+        setTotalCount(0);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -101,13 +98,22 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   }, [rows, search]);
 
   const statusCounts = useMemo(() => {
-    const source = dashboard || {};
+    const normalizeStatus = (value) => (value || '').toLowerCase();
+    const pendingRows = rows.filter((row) => normalizeStatus(row.status) === 'pending');
+    const acceptedRows = rows.filter((row) => normalizeStatus(row.status) === 'accepted');
+    const declinedRows = rows.filter((row) => normalizeStatus(row.status) === 'declined');
+    const activeRows = rows.filter((row) => row.isActive !== false);
+    const inactiveRows = rows.filter((row) => row.isActive === false);
+
     return {
-      total: source.totalDonors ?? rows.length,
-      pending: source.pendingCount ?? rows.filter((row) => (row.status || '').toLowerCase() === 'pending').length,
-      verified: rows.filter((row) => (row.status || '').toLowerCase() === 'verified' || (row.status || '').toLowerCase() === 'accepted').length,
+      total: totalCount || rows.length,
+      pending: pendingRows.length,
+      accepted: acceptedRows.length,
+      declined: declinedRows.length,
+      active: activeRows.length,
+      inactive: inactiveRows.length,
     };
-  }, [dashboard, rows]);
+  }, [rows, totalCount]);
 
   async function updateStatus(id, status) {
     if (!id) return;
@@ -157,7 +163,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     onAdminTokenChange?.('');
     onAdminLogout?.();
     setRows([]);
-    setDashboard(null);
     setMessage('Admin token cleared.');
   }
 
@@ -392,8 +397,8 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
             </div>
             <div>
-              <p>Verified Matches</p>
-              <strong>{statusCounts.verified}</strong>
+              <p>Accepted</p>
+              <strong>{statusCounts.accepted}</strong>
             </div>
           </article>
           <article className="insight-card">
@@ -405,8 +410,34 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
             </div>
             <div>
-              <p>Verification Queue</p>
+              <p>Pending Review</p>
               <strong>{statusCounts.pending}</strong>
+            </div>
+          </article>
+          <article className="insight-card">
+            <div className="insight-card__top">
+              <span className="insight-card__icon insight-card__icon--primary">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  do_not_disturb
+                </span>
+              </span>
+            </div>
+            <div>
+              <p>Declined</p>
+              <strong>{statusCounts.declined}</strong>
+            </div>
+          </article>
+          <article className="insight-card">
+            <div className="insight-card__top">
+              <span className="insight-card__icon insight-card__icon--secondary">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  toggle_on
+                </span>
+              </span>
+            </div>
+            <div>
+              <p>Active</p>
+              <strong>{statusCounts.active}</strong>
             </div>
           </article>
         </section>
