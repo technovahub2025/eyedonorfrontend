@@ -11,7 +11,7 @@ const initialSearch = {
   status: '',
 };
 
-function RegistryPage({ adminToken, onAdminTokenChange }) {
+function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [token, setToken] = useState(adminToken || '');
   const [rows, setRows] = useState([]);
   const [dashboard, setDashboard] = useState(null);
@@ -155,6 +155,7 @@ function RegistryPage({ adminToken, onAdminTokenChange }) {
   function handleLogout() {
     setToken('');
     onAdminTokenChange?.('');
+    onAdminLogout?.();
     setRows([]);
     setDashboard(null);
     setMessage('Admin token cleared.');

@@ -9,7 +9,7 @@ const initialForm = {
   notes: '',
 };
 
-function LoginPage() {
+function LoginPage({ onLoginSuccess }) {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
   const [rootStatus, setRootStatus] = useState('Checking API connection...');
@@ -51,6 +51,7 @@ function LoginPage() {
 
       setMessage(data?.message || 'Donor submitted successfully.');
       setForm(initialForm);
+      onLoginSuccess?.(data);
     } catch (err) {
       setError(err.message);
     } finally {

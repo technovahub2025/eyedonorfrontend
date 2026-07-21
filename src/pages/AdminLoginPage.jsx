@@ -12,7 +12,7 @@ const initialForm = {
   otp: '',
 };
 
-function AdminLoginPage({ adminToken, onAdminTokenChange }) {
+function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, onAdminLogout }) {
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
   const [token, setToken] = useState(adminToken || '');
@@ -92,6 +92,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange }) {
       setToken(nextToken);
       onAdminTokenChange?.(nextToken);
       setMessage(data?.message || 'Admin login successful.');
+      onAdminLoginSuccess?.(nextToken, data);
       await loadProfile(nextToken);
     } catch (err) {
       setProfile(null);
@@ -107,6 +108,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange }) {
     setMessage('');
     setError('');
     onAdminTokenChange?.('');
+    onAdminLogout?.();
   }
 
   return (

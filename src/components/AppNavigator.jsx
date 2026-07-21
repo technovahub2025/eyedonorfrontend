@@ -9,7 +9,14 @@ const navItems = [
   { key: 'registry', label: 'Registry' },
 ];
 
-function AppNavigator({ activePage, onNavigate }) {
+const roleNavMap = {
+  user: ['login', 'user-login', 'terms', 'verification'],
+  admin: ['admin-login', 'registry'],
+};
+
+function AppNavigator({ activePage, activeRole, onNavigate }) {
+  const visibleItems = activeRole ? navItems.filter((item) => roleNavMap[activeRole].includes(item.key)) : navItems;
+
   return (
     <header className="app-navigator">
       <div className="app-navigator__inner">
@@ -24,7 +31,7 @@ function AppNavigator({ activePage, onNavigate }) {
         </div>
 
         <nav className="app-navigator__tabs" aria-label="Page navigation">
-          {navItems.map((item) => (
+          {visibleItems.map((item) => (
             <button
               key={item.key}
               type="button"

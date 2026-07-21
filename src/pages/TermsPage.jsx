@@ -32,8 +32,9 @@ const terms = [
   },
 ];
 
-function TermsPage() {
+function TermsPage({ onAccept, onDecline }) {
   const [rootStatus, setRootStatus] = useState('Checking API connection...');
+  const [accepted, setAccepted] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -96,7 +97,7 @@ function TermsPage() {
             </div>
 
             <label className="terms-card__agree">
-              <input type="checkbox" />
+              <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
               <span>
                 I agree to the terms and conditions described above and reaffirm my commitment to
                 the gift of sight.
@@ -104,13 +105,22 @@ function TermsPage() {
             </label>
 
             <div className="terms-card__actions">
-              <button className="terms-card__button terms-card__button--primary" type="button">
+              <button
+                className="terms-card__button terms-card__button--primary"
+                type="button"
+                onClick={() => onAccept?.()}
+                disabled={!accepted}
+              >
                 <span>Accept</span>
                 <span className="material-symbols-outlined" aria-hidden="true">
                   arrow_forward
                 </span>
               </button>
-              <button className="terms-card__button terms-card__button--secondary" type="button">
+              <button
+                className="terms-card__button terms-card__button--secondary"
+                type="button"
+                onClick={() => onDecline?.()}
+              >
                 <span>Decline</span>
                 <span className="material-symbols-outlined" aria-hidden="true">
                   close

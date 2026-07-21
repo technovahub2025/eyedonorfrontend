@@ -11,7 +11,7 @@ const initialForm = {
   phone: '',
 };
 
-function UserLoginPage({ userToken, onUserTokenChange }) {
+function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLogout }) {
   const [form, setForm] = useState(initialForm);
   const [token, setToken] = useState(userToken || '');
   const [loading, setLoading] = useState(false);
@@ -69,6 +69,7 @@ function UserLoginPage({ userToken, onUserTokenChange }) {
       setToken(nextToken);
       onUserTokenChange?.(nextToken);
       setMessage(data?.message || 'User login successful.');
+      onLoginSuccess?.(data, nextToken);
       await loadProfile(nextToken);
     } catch (err) {
       setError(err.message);
@@ -84,6 +85,7 @@ function UserLoginPage({ userToken, onUserTokenChange }) {
     setMessage('');
     setError('');
     onUserTokenChange?.('');
+    onUserLogout?.();
   }
 
   return (
