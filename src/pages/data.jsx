@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { API_BASE_URL, apiRequest } from '../lib/apiClient';
-import './LoginPage.css';
+import './data.css';
 
 const initialForm = {
   fullName: '',
@@ -9,7 +9,7 @@ const initialForm = {
   notes: '',
 };
 
-function LoginPage({ onLoginSuccess }) {
+function DataPage({ onDataSuccess }) {
   const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
   const [rootStatus, setRootStatus] = useState('Checking API connection...');
@@ -49,9 +49,9 @@ function LoginPage({ onLoginSuccess }) {
         body: form,
       });
 
-      setMessage(data?.message || 'Donor submitted successfully.');
+      setMessage(data?.message || 'Data saved successfully.');
       setForm(initialForm);
-      onLoginSuccess?.(data);
+      onDataSuccess?.(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -80,11 +80,11 @@ function LoginPage({ onLoginSuccess }) {
       <main className="login-page__main">
         <section className="login-page__layout">
           <div className="login-page__intro">
-            <p className="login-page__eyebrow">Public submission</p>
-            <h1>Begin your donor registration</h1>
+            <p className="login-page__eyebrow">Login data</p>
+            <h1>Enter your registration details</h1>
             <p className="login-page__copy">
-              Share your contact details and intent to donate. This form sends data
-              directly to the backend at {API_BASE_URL}.
+              Share the registration details that will be checked before verification.
+              This screen sends data directly to the backend at {API_BASE_URL}.
             </p>
 
             <div className="login-page__highlights" aria-label="Highlights">
@@ -93,22 +93,22 @@ function LoginPage({ onLoginSuccess }) {
                 <span>POST /api/donors</span>
               </article>
               <article>
-                <strong>Private</strong>
-                <span>Root check enabled</span>
+                <strong>Review</strong>
+                <span>Data verification step</span>
               </article>
               <article>
                 <strong>Fast</strong>
-                <span>Instant submission flow</span>
+                <span>Moves to verification</span>
               </article>
             </div>
           </div>
 
           <section className="login-card" aria-labelledby="login-title">
             <header className="login-card__header">
-              <p className="login-card__kicker">VisionGift Donor Form</p>
-              <h2 id="login-title">Submit your details</h2>
+              <p className="login-card__kicker">VisionGift Data Form</p>
+              <h2 id="login-title">Submit your data</h2>
               <p>
-                Please provide the donor information required by the public API.
+                Please provide the registration information required for verification.
               </p>
             </header>
 
@@ -158,7 +158,7 @@ function LoginPage({ onLoginSuccess }) {
               </label>
 
               <button className="login-form__submit" type="submit" disabled={loading}>
-                {loading ? 'Submitting...' : 'Submit Donor Form'}
+                {loading ? 'Saving...' : 'Save and Continue'}
                 <span className="material-symbols-outlined" aria-hidden="true">
                   arrow_forward
                 </span>
@@ -192,4 +192,4 @@ function LoginPage({ onLoginSuccess }) {
   );
 }
 
-export default LoginPage;
+export default DataPage;

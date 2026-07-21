@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Atkinson+Hyperlegible+Next:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+.thank-you-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at top, rgba(0, 60, 144, 0.12), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(122, 247, 233, 0.2), transparent 25%),
+    linear-gradient(180deg, #f7fbff 0%, #edf3fb 100%);
+  color: #1a1c1e;
+  font-family: 'Inter', sans-serif;
+}
+
+.thank-you-page__shell {
+  width: min(860px, 100%);
+}
+
+.thank-you-page__card {
+  border: 1px solid #d6deea;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 48px rgba(15, 82, 186, 0.08);
+  padding: 42px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.thank-you-page__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(122, 247, 233, 0.16);
+  color: #006a63;
+  font-weight: 700;
+}
+
+.thank-you-page__badge .material-symbols-outlined {
+  color: #006a63;
+}
+
+.thank-you-page__card h1 {
+  margin: 0;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: -0.04em;
+}
+
+.thank-you-page__card p {
+  margin: 16px auto 0;
+  max-width: 58ch;
+  color: #4e5666;
+  line-height: 1.7;
+}
+
+.thank-you-page__button {
+  margin-top: 26px;
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #003c90 0%, #0f52ba 100%);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .thank-you-page {
+    padding: 16px;
+  }
+
+  .thank-you-page__card {
+    padding: 26px;
+    border-radius: 24px;
+  }
+}

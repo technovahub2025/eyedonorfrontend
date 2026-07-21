@@ -31,7 +31,7 @@ const profile = [
   },
 ];
 
-function VerificationPage({ userToken }) {
+function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
   const [token, setToken] = useState(userToken || '');
   const [userProfile, setUserProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
@@ -163,13 +163,21 @@ function VerificationPage({ userToken }) {
               </div>
 
               <div className="verification-card__buttons">
-                <button className="verification-card__button verification-card__button--primary" type="button">
+                <button
+                  className="verification-card__button verification-card__button--primary"
+                  type="button"
+                  onClick={() => onSubmitSuccess?.()}
+                >
                   Submit Registration
                   <span className="material-symbols-outlined" aria-hidden="true">
                     arrow_forward
                   </span>
                 </button>
-                <button className="verification-card__button verification-card__button--secondary" type="button">
+                <button
+                  className="verification-card__button verification-card__button--secondary"
+                  type="button"
+                  onClick={() => onCancel?.()}
+                >
                   Cancel
                 </button>
               </div>

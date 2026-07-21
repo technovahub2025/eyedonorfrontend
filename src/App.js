@@ -1,59 +1,52 @@
 import { useState } from 'react';
 import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
-import LoginPage from './pages/LoginPage';
+import DataPage from './pages/data';
+import RoleSelectPage from './pages/RoleSelectPage';
 import RegistryPage from './pages/RegistryPage';
-import TermsPage from './pages/TermsPage';
 import UserLoginPage from './pages/UserLoginPage';
 import VerificationPage from './pages/VerificationPage';
+import ThankYouPage from './pages/ThankYouPage';
 
 const pages = {
-  login: LoginPage,
+  'role-select': RoleSelectPage,
   'user-login': UserLoginPage,
-  terms: TermsPage,
+  'login-data': DataPage,
   verification: VerificationPage,
+  'thank-you': ThankYouPage,
   'admin-login': AdminLoginPage,
   registry: RegistryPage,
 };
 
-const rolePages = {
-  user: ['login', 'user-login', 'terms', 'verification'],
-  admin: ['admin-login', 'registry'],
-};
-
 function App() {
-  const [activePage, setActivePage] = useState('login');
+  const [activePage, setActivePage] = useState('role-select');
   const [activeRole, setActiveRole] = useState(null);
   const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
-  const PageComponent = pages[activePage] || UserLoginPage;
+  const PageComponent = pages[activePage] || RoleSelectPage;
 
   function navigate(nextPage) {
     setActivePage(nextPage);
-
-    if (rolePages.admin.includes(nextPage)) {
-      setActiveRole('admin');
-      return;
-    }
-
-    if (rolePages.user.includes(nextPage)) {
-      setActiveRole('user');
-    }
   }
 
-  function handleLoginSuccess() {
+  function handleRoleSelect(role) {
+    setActiveRole(role);
+    setActivePage(role === 'admin' ? 'admin-login' : 'user-login');
+  }
+
+  function handleUserLoginSuccess() {
     setActiveRole('user');
-    setActivePage('terms');
+    setActivePage('login-data');
   }
 
-  function handleTermsAccept() {
+  function handleDataSuccess() {
     setActiveRole('user');
     setActivePage('verification');
   }
 
-  function handleTermsDecline() {
-    setActiveRole(null);
-    setActivePage('login');
+  function handleVerificationSubmit() {
+    setActiveRole('user');
+    setActivePage('thank-you');
   }
 
   function handleAdminLoginSuccess() {
@@ -63,23 +56,28 @@ function App() {
 
   function handleAdminLogout() {
     setActiveRole(null);
-    setActivePage('admin-login');
+    setActivePage('role-select');
   }
 
   function handleUserLogout() {
     setActiveRole(null);
-    setActivePage('login');
+    setActivePage('role-select');
   }
 
   return (
     <>
-      <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
+      {activePage !== 'role-select' ? (
+        <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
+      ) : null}
       <PageComponent
         adminToken={adminToken}
         userToken={userToken}
-        onLoginSuccess={handleLoginSuccess}
-        onAccept={handleTermsAccept}
-        onDecline={handleTermsDecline}
+        onRoleSelect={handleRoleSelect}
+        onLoginSuccess={handleUserLoginSuccess}
+        onDataSuccess={handleDataSuccess}
+        onSubmitSuccess={handleVerificationSubmit}
+        onCancel={handleUserLogout}
+        onRestart={handleUserLogout}
         onAdminLoginSuccess={handleAdminLoginSuccess}
         onAdminLogout={handleAdminLogout}
         onUserLogout={handleUserLogout}

@@ -1,21 +1,23 @@
 import './AppNavigator.css';
 
 const navItems = [
-  { key: 'login', label: 'Donor Submit' },
   { key: 'user-login', label: 'User Login' },
-  { key: 'terms', label: 'Terms' },
+  { key: 'login-data', label: 'Login Data' },
   { key: 'verification', label: 'Verification' },
+  { key: 'thank-you', label: 'Thank You' },
   { key: 'admin-login', label: 'Admin Login' },
   { key: 'registry', label: 'Registry' },
 ];
 
 const roleNavMap = {
-  user: ['login', 'user-login', 'terms', 'verification'],
+  user: ['user-login', 'login-data', 'verification', 'thank-you'],
   admin: ['admin-login', 'registry'],
 };
 
 function AppNavigator({ activePage, activeRole, onNavigate }) {
-  const visibleItems = activeRole ? navItems.filter((item) => roleNavMap[activeRole].includes(item.key)) : navItems;
+  const visibleItems = activeRole
+    ? navItems.filter((item) => roleNavMap[activeRole].includes(item.key))
+    : [];
 
   return (
     <header className="app-navigator">
