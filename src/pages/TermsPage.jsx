@@ -59,14 +59,7 @@ function TermsPage({ onAccept, onDecline }) {
 
   return (
     <div className="terms-page">
-      <header className="terms-page__header">
-        <div className="terms-page__brand">
-          <span className="material-symbols-outlined" aria-hidden="true">
-            visibility
-          </span>
-          <span>VisionGift</span>
-        </div>
-      </header>
+     
 
       <main className="terms-page__main">
         <section className="terms-page__content">

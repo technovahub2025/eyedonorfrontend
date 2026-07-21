@@ -81,24 +81,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
 
   return (
     <div className="verification-page">
-      <header className="verification-page__header">
-        <div className="verification-page__header-inner">
-          <div className="verification-page__brand">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              visibility
-            </span>
-            <span>VisionGift</span>
-          </div>
-
-          <nav className="verification-page__nav" aria-label="Primary">
-            <a href="#how-it-works">How it Works</a>
-            <a href="#impact">Impact</a>
-            <a href="#support">Support</a>
-            <button type="button">Register Now</button>
-          </nav>
-        </div>
-      </header>
-
+      
       <main className="verification-page__main">
         <section className="verification-page__content">
           <div className="verification-page__stepper-wrap">
