@@ -312,27 +312,6 @@
   word-break: break-word;
 }
 
-.admin-login-page__footer {
-  grid-column: 1 / -1;
-  padding: 10px 24px 24px;
-  text-align: center;
-}
-
-.admin-login-page__powered-by {
-  display: inline-block;
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  color: #003c90;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(15, 82, 186, 0.12);
-}
-
-.admin-login-page__powered-by:hover {
-  text-decoration: underline;
-}
-
 @media (max-width: 960px) {
   .admin-login-page {
     grid-template-columns: 1fr;

@@ -174,11 +174,6 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
           <p>{profileLoading ? 'Loading your details...' : profile ? 'Your details are ready.' : 'No details loaded yet.'}</p>
         </div>
 
-        <footer className="user-login-card__footer">
-          <a className="user-login-card__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-        </footer>
       </section>
     </div>
   );

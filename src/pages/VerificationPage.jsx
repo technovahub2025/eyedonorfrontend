@@ -176,21 +176,6 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
         </section>
       </main>
 
-      <footer className="verification-page__footer">
-        <div className="verification-page__footer-inner">
-          <div className="verification-page__footer-brand">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              visibility
-            </span>
-            <span>VisionGift</span>
-          </div>
-
-          <p>Copyright 2026 VisionGift. All rights reserved.</p>
-          <a className="verification-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-        </div>
-      </footer>
     </div>
   );
 }

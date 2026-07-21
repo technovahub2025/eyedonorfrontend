@@ -36,11 +36,6 @@ function RoleSelectPage({ onRoleSelect }) {
           </button>
         </section>
 
-        <footer className="role-select-page__footer">
-          <a className="role-select-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-        </footer>
       </main>
     </div>
   );

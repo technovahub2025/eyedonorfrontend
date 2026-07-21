@@ -159,13 +159,6 @@ function DataPage({ onDataSuccess }) {
           </section>
         </section>
 
-        <section className="login-page__footer" id="support">
-          <div className="login-page__footer-brand">VisionGift</div>
-          <a className="login-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-          <p>Copyright 2026 VisionGift. All rights reserved.</p>
-        </section>
       </main>
     </div>
   );

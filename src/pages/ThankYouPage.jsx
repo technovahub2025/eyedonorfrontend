@@ -23,11 +23,6 @@ function ThankYouPage({ onRestart }) {
           </button>
         </section>
 
-        <footer className="thank-you-page__footer">
-          <a className="thank-you-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-        </footer>
       </main>
     </div>
   );

@@ -90,11 +90,6 @@ function App() {
         onAdminTokenChange={setAdminToken}
         onUserTokenChange={setUserToken}
       />
-      <footer className="app-footer">
-        <a className="app-footer__link" href="https://www.technovahub.in">
-          Powered by TechnovaHub
-        </a>
-      </footer>
     </div>
   );
 }

@@ -232,11 +232,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
         </section>
       </main>
 
-      <footer className="admin-login-page__footer">
-        <a className="admin-login-page__powered-by" href="https://www.technovahub.in">
-          Powered by TechnovaHub
-        </a>
-      </footer>
     </div>
   );
 }

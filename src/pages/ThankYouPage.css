@@ -69,21 +69,6 @@
   cursor: pointer;
 }
 
-.thank-you-page__footer {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.thank-you-page__powered-by {
-  color: #003c90;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.thank-you-page__powered-by:hover {
-  text-decoration: underline;
-}
-
 @media (max-width: 640px) {
   .thank-you-page {
     padding: 16px;

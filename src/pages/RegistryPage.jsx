@@ -392,36 +392,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         </section>
       </main>
 
-      <footer className="registry-page__footer">
-        <div className="registry-page__footer-inner">
-          <div className="registry-page__footer-brand-wrap">
-            <div className="registry-page__footer-brand">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                visibility
-              </span>
-              <span>VisionGift</span>
-            </div>
-            <p>Copyright 2026 VisionGift. All rights reserved.</p>
-          </div>
-
-          <a className="registry-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-
-          <div className="registry-page__footer-social">
-            <a href="#share" aria-label="Share">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                share
-              </span>
-            </a>
-            <a href="#mail" aria-label="Email">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                mail
-              </span>
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

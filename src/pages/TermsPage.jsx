@@ -128,21 +128,6 @@ function TermsPage({ onAccept, onDecline }) {
         </section>
       </main>
 
-      <footer className="terms-page__footer">
-        <div className="terms-page__footer-inner">
-          <div className="terms-page__footer-brand">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              visibility
-            </span>
-            <span>VisionGift</span>
-          </div>
-          <a className="terms-page__powered-by" href="https://www.technovahub.in">
-            Powered by TechnovaHub
-          </a>
-
-          <p>Copyright 2026 VisionGift. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }
