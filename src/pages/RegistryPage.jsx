@@ -202,15 +202,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     }
   }
 
-  function handleLogout() {
-    setToken('');
-    onAdminTokenChange?.('');
-    onAdminLogout?.();
-    setRows([]);
-    setTotalCount(0);
-    setMessage('Signed out.');
-  }
-
   return (
     <div className="registry-page">
       
