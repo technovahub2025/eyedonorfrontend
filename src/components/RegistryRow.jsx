@@ -6,8 +6,6 @@ function RegistryRow({
   email,
   phone,
   date,
-  status,
-  statusTone,
   onAccept,
   onDecline,
   onDelete,
@@ -17,7 +15,7 @@ function RegistryRow({
     <tr className="registry-row">
       <td className="registry-row__cell registry-row__cell--name">
         <div className="registry-row__identity">
-          <div className={`registry-row__avatar registry-row__avatar--${statusTone}`}>
+          <div className="registry-row__avatar registry-row__avatar--active">
             {initials}
           </div>
           <span className="registry-row__name">{name}</span>
@@ -26,12 +24,6 @@ function RegistryRow({
       <td className="registry-row__cell">{email}</td>
       <td className="registry-row__cell">{phone}</td>
       <td className="registry-row__cell">{date}</td>
-      <td className="registry-row__cell">
-        <span className={`registry-row__status registry-row__status--${statusTone}`}>
-          <span className={`registry-row__dot registry-row__dot--${statusTone}`} aria-hidden="true" />
-          {status}
-        </span>
-      </td>
       <td className="registry-row__cell registry-row__cell--actions">
         <div className="registry-row__actions">
           <button

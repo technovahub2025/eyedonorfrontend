@@ -216,12 +216,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                 </span>
                 Export CSV
               </button>
-              <button type="button" className="registry-page__action registry-page__action--primary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  add
-                </span>
-                New Entry
-              </button>
+              
             </div>
           </div>
         </section>
@@ -239,18 +234,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             />
           </div>
 
-          <select
-            className="registry-page__select"
-            value={search.status}
-            onChange={(event) => setSearch({ ...search, status: event.target.value })}
-          >
-            <option value="all">All</option>
-            <option value="pending">Pending Verification</option>
-            <option value="accepted">Accepted</option>
-            <option value="declined">Declined</option>
-            <option value="active">Active Donor</option>
-            <option value="inactive">Inactive Donor</option>
-          </select>
+         
 
           <button type="button" className="registry-page__action registry-page__action--ghost">
             <span className="material-symbols-outlined" aria-hidden="true">
@@ -272,22 +256,19 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                   <th>Email Address</th>
                   <th>Phone Number</th>
                   <th>Registration Date</th>
-                  <th>Status</th>
                   <th className="registry-table__actions">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td className="registry-page__empty" colSpan={6}>
+                    <td className="registry-page__empty" colSpan={5}>
                       Loading donors...
                     </td>
                   </tr>
                 ) : paginatedRows.length ? (
                   paginatedRows.map((row) => {
                     const id = row._id || row.id;
-                    const status = row.status || 'Pending';
-                    const normalizedStatus = status.toLowerCase();
                     const initials =
                       (row.fullName || row.name || 'Donor')
                         .split(' ')
@@ -305,16 +286,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                         email={row.email || 'No email'}
                         phone={row.phone || 'No phone'}
                         date={row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date || 'Unknown'}
-                        status={status}
-                        statusTone={
-                          normalizedStatus.includes('verified')
-                            ? 'verified'
-                            : normalizedStatus.includes('pending')
-                              ? 'pending'
-                              : normalizedStatus.includes('declined')
-                                ? 'neutral'
-                                : 'active'
-                        }
                         onAccept={() => updateStatus(id, 'Accepted')}
                         onDecline={() => updateStatus(id, 'Declined')}
                         onDelete={() => deleteDonor(id)}
@@ -324,7 +295,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                   })
                 ) : (
                   <tr>
-                    <td className="registry-page__empty" colSpan={6}>
+                    <td className="registry-page__empty" colSpan={5}>
                       No donors found. Sign in as admin or create a donor to begin.
                     </td>
                   </tr>
