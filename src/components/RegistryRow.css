@@ -1,0 +1,160 @@
+.registry-row:hover {
+  background: #eeeef0;
+}
+
+.registry-row__cell {
+  padding: 16px 24px;
+  color: #434653;
+  border-bottom: 1px solid #c3c6d5;
+}
+
+.registry-row__cell--name {
+  color: #1a1c1e;
+}
+
+.registry-row__identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.registry-row__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #001945;
+  flex: none;
+}
+
+.registry-row__avatar--verified {
+  background: #7af7e9;
+}
+
+.registry-row__avatar--pending {
+  background: #ffdad6;
+}
+
+.registry-row__avatar--active {
+  background: #d9e2ff;
+}
+
+.registry-row__avatar--neutral {
+  background: #e2e2e5;
+  color: #434653;
+}
+
+.registry-row__name {
+  font-weight: 600;
+  color: #1a1c1e;
+}
+
+.registry-row__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.registry-row__status--verified {
+  background: #7af7e9;
+  color: #00504a;
+}
+
+.registry-row__status--pending {
+  background: #ffdad6;
+  color: #93000a;
+}
+
+.registry-row__status--active {
+  background: #d9e2ff;
+  color: #00419c;
+}
+
+.registry-row__status--neutral {
+  background: #e2e2e5;
+  color: #434653;
+}
+
+.registry-row__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  flex: none;
+}
+
+.registry-row__dot--verified {
+  background: #006a63;
+}
+
+.registry-row__dot--pending {
+  background: #ba1a1a;
+}
+
+.registry-row__dot--active {
+  background: #003c90;
+}
+
+.registry-row__dot--neutral {
+  background: #737784;
+}
+
+.registry-row__menu {
+  border: 0;
+  background: transparent;
+  color: #737784;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.registry-row__menu:hover {
+  color: #003c90;
+}
+
+.registry-row__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.registry-row__action {
+  border: 1px solid #c3c6d5;
+  background: #ffffff;
+  color: #4e5666;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.registry-row__action:hover {
+  border-color: #003c90;
+  color: #003c90;
+}
+
+.registry-row__action:disabled,
+.registry-row__menu:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.registry-row__cell--actions {
+  text-align: right;
+}
+
+@media (max-width: 960px) {
+  .registry-row__cell {
+    padding: 14px 16px;
+  }
+}

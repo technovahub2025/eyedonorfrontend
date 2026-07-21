@@ -1,0 +1,45 @@
+import './AppNavigator.css';
+
+const navItems = [
+  { key: 'login', label: 'Donor Submit' },
+  { key: 'user-login', label: 'User Login' },
+  { key: 'terms', label: 'Terms' },
+  { key: 'verification', label: 'Verification' },
+  { key: 'admin-login', label: 'Admin Login' },
+  { key: 'registry', label: 'Registry' },
+];
+
+function AppNavigator({ activePage, onNavigate }) {
+  return (
+    <header className="app-navigator">
+      <div className="app-navigator__inner">
+        <div className="app-navigator__brand">
+          <span className="material-symbols-outlined" aria-hidden="true">
+            visibility
+          </span>
+          <div>
+            <strong>VisionGift</strong>
+            <span>Screen navigation</span>
+          </div>
+        </div>
+
+        <nav className="app-navigator__tabs" aria-label="Page navigation">
+          {navItems.map((item) => (
+            <button
+              key={item.key}
+              type="button"
+              className={`app-navigator__tab ${
+                activePage === item.key ? 'app-navigator__tab--active' : ''
+              }`}
+              onClick={() => onNavigate(item.key)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+export default AppNavigator;

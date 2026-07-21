@@ -1,0 +1,95 @@
+.progress-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-stepper__item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress-stepper__circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  background: #ffffff;
+  z-index: 1;
+  box-shadow: 0 8px 20px rgba(15, 82, 186, 0.06);
+}
+
+.progress-stepper__circle--complete {
+  background: #7af7e9;
+  color: #00201d;
+  border-color: #7af7e9;
+}
+
+.progress-stepper__circle--active {
+  background: #ffffff;
+  color: #003c90;
+  border-color: #0f52ba;
+}
+
+.progress-stepper__circle--pending {
+  background: #f3f3f6;
+  color: #737784;
+  border-color: #c3c6d5;
+}
+
+.progress-stepper__number {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.progress-stepper__label {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.progress-stepper__label--complete {
+  color: #006a63;
+}
+
+.progress-stepper__label--active {
+  color: #003c90;
+}
+
+.progress-stepper__label--pending {
+  color: #737784;
+}
+
+.progress-stepper__line {
+  position: absolute;
+  top: 20px;
+  left: calc(50% + 28px);
+  right: calc(-50% + 28px);
+  height: 2px;
+  background: #c3c6d5;
+  z-index: 0;
+}
+
+.progress-stepper__line--complete {
+  background: #7af7e9;
+}
+
+@media (max-width: 640px) {
+  .progress-stepper {
+    gap: 8px;
+  }
+
+  .progress-stepper__label {
+    letter-spacing: 0.08em;
+    font-size: 0.7rem;
+  }
+}
