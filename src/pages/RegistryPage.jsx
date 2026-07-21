@@ -1,14 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import RegistryRow from '../components/RegistryRow';
-import {
-  API_BASE_URL,
-  apiRequest,
-} from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './RegistryPage.css';
 
 const initialSearch = {
   query: '',
-  status: '',
+  status: 'all',
 };
 
 function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
@@ -21,6 +18,8 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [error, setError] = useState('');
   const [rootStatus, setRootStatus] = useState('Checking API connection...');
   const [search, setSearch] = useState(initialSearch);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   const loadRegistry = useCallback(
     async (authToken = token) => {
@@ -91,11 +90,27 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         : true;
 
       const rowStatus = (row.status || '').toLowerCase();
-      const matchesStatus = search.status ? rowStatus.includes(search.status) : true;
+      const matchesStatus =
+        !search.status || search.status === 'all' ? true : rowStatus.includes(search.status);
 
       return matchesQuery && matchesStatus;
     });
   }, [rows, search]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search.query, search.status]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+
+  useEffect(() => {
+    setCurrentPage((page) => Math.min(page, totalPages));
+  }, [totalPages]);
+
+  const paginatedRows = useMemo(() => {
+    const startIndex = (currentPage - 1) * pageSize;
+    return filteredRows.slice(startIndex, startIndex + pageSize);
+  }, [currentPage, filteredRows]);
 
   const statusCounts = useMemo(() => {
     const normalizeStatus = (value) => (value || '').toLowerCase();
@@ -229,12 +244,12 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
             value={search.status}
             onChange={(event) => setSearch({ ...search, status: event.target.value })}
           >
-            <option value="">All Statuses</option>
+            <option value="all">All</option>
             <option value="pending">Pending Verification</option>
-            <option value="verified">Verified</option>
-            <option value="active">Active Donor</option>
             <option value="accepted">Accepted</option>
             <option value="declined">Declined</option>
+            <option value="active">Active Donor</option>
+            <option value="inactive">Inactive Donor</option>
           </select>
 
           <button type="button" className="registry-page__action registry-page__action--ghost">
@@ -268,8 +283,8 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                       Loading donors...
                     </td>
                   </tr>
-                ) : filteredRows.length ? (
-                  filteredRows.map((row) => {
+                ) : paginatedRows.length ? (
+                  paginatedRows.map((row) => {
                     const id = row._id || row.id;
                     const status = row.status || 'Pending';
                     const normalizedStatus = status.toLowerCase();
@@ -320,22 +335,39 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
 
           <div className="registry-page__pagination">
             <span>
-              Showing {filteredRows.length ? 1 : 0} to {filteredRows.length} of {statusCounts.total} donors
+              Showing{' '}
+              {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
+              {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length} filtered donors
             </span>
             <div className="registry-page__pages">
-              <button type="button" className="registry-page__page-button registry-page__page-button--icon">
+              <button
+                type="button"
+                className="registry-page__page-button registry-page__page-button--icon"
+                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                disabled={currentPage === 1}
+              >
                 <span className="material-symbols-outlined" aria-hidden="true">
                   chevron_left
                 </span>
               </button>
-              <button type="button" className="registry-page__page-button registry-page__page-button--active">
-                1
-              </button>
-              <button type="button" className="registry-page__page-button">2</button>
-              <button type="button" className="registry-page__page-button">3</button>
-              <span className="registry-page__ellipsis">...</span>
-              <button type="button" className="registry-page__page-button">50</button>
-              <button type="button" className="registry-page__page-button registry-page__page-button--icon">
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button
+                  key={page}
+                  type="button"
+                  className={`registry-page__page-button ${
+                    page === currentPage ? 'registry-page__page-button--active' : ''
+                  }`}
+                  onClick={() => setCurrentPage(page)}
+                >
+                  {page}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="registry-page__page-button registry-page__page-button--icon"
+                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                disabled={currentPage === totalPages}
+              >
                 <span className="material-symbols-outlined" aria-hidden="true">
                   chevron_right
                 </span>

@@ -200,20 +200,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
               </button>
             </div>
 
-            <FormField
-              id="admin-otp"
-              label="Authenticator Code"
-              placeholder="6-digit code"
-              icon="pin"
-              value={form.otp}
-              onChange={(event) => setForm({ ...form, otp: event.target.value })}
-              inputMode="numeric"
-              autoComplete="one-time-code"
-            />
-
-            <div className="admin-login-form__options">
-              <a href="#forgot-password">Forgot password?</a>
-            </div>
+          
 
             <button className="admin-login-form__submit" type="submit" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign In to Dashboard'}
