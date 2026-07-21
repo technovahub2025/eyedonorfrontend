@@ -2,6 +2,7 @@ import './AppNavigator.css';
 
 const navItems = [
   { key: 'login-data', label: 'Login Data' },
+  { key: 'terms', label: 'Terms' },
   { key: 'verification', label: 'Verification' },
   { key: 'thank-you', label: 'Thank You' },
   { key: 'admin-login', label: 'Admin Login' },
@@ -9,7 +10,7 @@ const navItems = [
 ];
 
 const roleNavMap = {
-  user: ['login-data', 'verification', 'thank-you'],
+  user: ['login-data', 'terms', 'verification', 'thank-you'],
   admin: ['admin-login', 'registry'],
 };
 

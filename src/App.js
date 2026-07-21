@@ -4,12 +4,14 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import DataPage from './pages/data';
 import RoleSelectPage from './pages/RoleSelectPage';
 import RegistryPage from './pages/RegistryPage';
+import TermsPage from './pages/TermsPage';
 import VerificationPage from './pages/VerificationPage';
 import ThankYouPage from './pages/ThankYouPage';
 
 const pages = {
   'role-select': RoleSelectPage,
   'login-data': DataPage,
+  terms: TermsPage,
   verification: VerificationPage,
   'thank-you': ThankYouPage,
   'admin-login': AdminLoginPage,
@@ -34,7 +36,17 @@ function App() {
 
   function handleDataSuccess() {
     setActiveRole('user');
+    setActivePage('terms');
+  }
+
+  function handleTermsAccept() {
+    setActiveRole('user');
     setActivePage('verification');
+  }
+
+  function handleTermsDecline() {
+    setActiveRole(null);
+    setActivePage('role-select');
   }
 
   function handleVerificationSubmit() {
@@ -67,6 +79,8 @@ function App() {
         userToken={userToken}
         onRoleSelect={handleRoleSelect}
         onDataSuccess={handleDataSuccess}
+        onAccept={handleTermsAccept}
+        onDecline={handleTermsDecline}
         onSubmitSuccess={handleVerificationSubmit}
         onCancel={handleUserLogout}
         onRestart={handleUserLogout}
