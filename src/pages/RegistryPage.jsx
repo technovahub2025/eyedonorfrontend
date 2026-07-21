@@ -158,45 +158,17 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     }
   }
 
-  function handleLogout() {
-    setToken('');
-    onAdminTokenChange?.('');
-    onAdminLogout?.();
-    setRows([]);
-    setMessage('Admin token cleared.');
-  }
+  
 
   return (
     <div className="registry-page">
       <header className="registry-page__header">
         <nav className="registry-page__nav">
-          <div className="registry-page__brand">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              visibility
-            </span>
-            <span>VisionGift</span>
-          </div>
+          
 
-          <div className="registry-page__nav-links">
-            <a href="#how-it-works">How it Works</a>
-            <a href="#impact">Impact</a>
-            <a href="#support">Support</a>
-          </div>
+        
 
-          <div className="registry-page__nav-actions">
-            <button className="registry-page__register" type="button" onClick={handleLogout}>
-              Logout
-            </button>
-            <div className="registry-page__avatar">
-              <img
-                alt="Healthcare administrator"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuJjT3z6vdh0wgveuO6ll0A9hi6hqkKeRe8XXi1fKysi-TLOiJS9SZ9ODwjTYZvgkk2MpJeoIG7eWrblJpkGHYwViHO46DXd1sxYEPmXYlAeCrLKdkswvoBPtNfuOpeW_OXaP6AHa_Tql5cKh43m9TiieZvLyLjADDWBbpdxTJtDDR6dxqlmdpdz6HQS3yfeW2kTnLYMUQTeORInSXbukZK2KHM3qWEM7CaQs_FUWuE6MQaCqhjaY"
-              />
-            </div>
-            <button className="registry-page__menu material-symbols-outlined" type="button">
-              menu
-            </button>
-          </div>
+        
         </nav>
       </header>
 
@@ -219,9 +191,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                 and can be marked accepted or declined.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
-              <p className="registry-page__status">
-                API base: <code>{API_BASE_URL}</code>
-              </p>
+             
             </div>
 
             <div className="registry-page__hero-actions">
