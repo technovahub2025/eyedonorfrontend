@@ -64,21 +64,7 @@ function DataPage({ onDataSuccess }) {
 
   return (
     <div className="login-page">
-      <nav className="login-page__nav">
-        <div className="login-page__nav-inner">
-          <div className="login-page__brand">VisionGift</div>
-
-          <div className="login-page__links" aria-label="Primary">
-            <a href="#how-it-works">How it Works</a>
-            <a href="#impact">Impact</a>
-            <a href="#support">Support</a>
-          </div>
-
-          <button className="login-page__nav-button" type="button">
-            Public Submit
-          </button>
-        </div>
-      </nav>
+      
 
       <main className="login-page__main">
         <section className="login-page__layout">
