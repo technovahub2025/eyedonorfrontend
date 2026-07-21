@@ -203,28 +203,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
 
   return (
     <div className="registry-page">
-      <header className="registry-page__header">
-        <nav className="registry-page__nav">
-          <div className="registry-page__brand">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              visibility
-            </span>
-            <span>VisionGift</span>
-          </div>
-
-          <div className="registry-page__nav-links">
-            <a href="#how-it-works">How it Works</a>
-            <a href="#impact">Impact</a>
-            <a href="#support">Support</a>
-          </div>
-
-          <div className="registry-page__nav-actions">
-            <button className="registry-page__register" type="button" onClick={handleLogout}>
-              Sign Out
-            </button>
-          </div>
-        </nav>
-      </header>
+      
 
       <main className="registry-page__main">
         <section className="registry-page__hero">
