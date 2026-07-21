@@ -91,10 +91,7 @@ function DataPage({ onDataSuccess }) {
             </p>
 
             <div className="login-page__highlights" aria-label="Highlights">
-              <article>
-                <strong>Secure</strong>
-                <span>POST /api/donors</span>
-              </article>
+             
               <article>
                 <strong>Review</strong>
                 <span>Data verification step</span>
