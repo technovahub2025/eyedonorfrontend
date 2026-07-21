@@ -229,14 +229,14 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
                 : 'No details loaded yet.'}
             </p>
           </div>
-
-          <footer className="admin-login-card__footer-link">
-            <a className="admin-login-card__powered-by" href="https://www.technovahub.in">
-              Powered by TechnovaHub
-            </a>
-          </footer>
         </section>
       </main>
+
+      <footer className="admin-login-page__footer">
+        <a className="admin-login-page__powered-by" href="https://www.technovahub.in">
+          Powered by TechnovaHub
+        </a>
+      </footer>
     </div>
   );
 }
