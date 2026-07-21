@@ -205,25 +205,6 @@
   padding: 22px 0 26px;
 }
 
-.terms-page__footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 18px;
-}
-
-.terms-page__footer-links a {
-  color: #43474b;
-  text-decoration: none;
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.terms-page__footer-links a:hover {
-  color: #003c90;
-  text-decoration: underline;
-}
-
 .terms-page__powered-by {
   color: #003c90;
   font-weight: 700;

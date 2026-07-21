@@ -136,13 +136,6 @@ function TermsPage({ onAccept, onDecline }) {
             </span>
             <span>VisionGift</span>
           </div>
-
-          <div className="terms-page__footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#accessibility">Accessibility</a>
-            <a href="#contact">Contact Us</a>
-          </div>
           <a className="terms-page__powered-by" href="https://www.technovahub.in">
             Powered by TechnovaHub
           </a>

@@ -57,16 +57,14 @@
   gap: 24px;
 }
 
-.registry-page__nav-links a,
-.registry-page__footer-links a {
+.registry-page__nav-links a {
   color: #4e5666;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.18s ease;
 }
 
-.registry-page__nav-links a:hover,
-.registry-page__footer-links a:hover {
+.registry-page__nav-links a:hover {
   color: #003c90;
 }
 
@@ -473,13 +471,6 @@
   margin: 0;
   color: #c3c7cb;
   font-size: 0.8rem;
-}
-
-.registry-page__footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
 }
 
 .registry-page__footer-social {

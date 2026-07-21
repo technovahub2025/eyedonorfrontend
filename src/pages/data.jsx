@@ -161,12 +161,6 @@ function DataPage({ onDataSuccess }) {
 
         <section className="login-page__footer" id="support">
           <div className="login-page__footer-brand">VisionGift</div>
-          <div className="login-page__footer-links">
-            <a href="#privacy">Privacy Policy</a>
-            <a href="#terms">Terms of Service</a>
-            <a href="#accessibility">Accessibility</a>
-            <a href="#contact">Contact Us</a>
-          </div>
           <a className="login-page__powered-by" href="https://www.technovahub.in">
             Powered by TechnovaHub
           </a>
