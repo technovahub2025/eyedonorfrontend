@@ -19,8 +19,8 @@ function RoleSelectPage({ onRoleSelect }) {
             <span className="material-symbols-outlined" aria-hidden="true">
               admin_panel_settings
             </span>
-            <strong>Staff</strong>
-            <span>Staff sign in and donor list</span>
+            <strong>admin</strong>
+            <span>admin sign in and user list</span>
           </button>
 
           <button
@@ -31,7 +31,7 @@ function RoleSelectPage({ onRoleSelect }) {
             <span className="material-symbols-outlined" aria-hidden="true">
               badge
             </span>
-            <strong>Donor</strong>
+            <strong>user</strong>
             <span>Share details, review, and finish</span>
           </button>
         </section>

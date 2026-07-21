@@ -70,7 +70,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="app-shell">
       {activePage !== 'role-select' ? (
         <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
       ) : null}
@@ -90,7 +90,12 @@ function App() {
         onAdminTokenChange={setAdminToken}
         onUserTokenChange={setUserToken}
       />
-    </>
+      <footer className="app-footer">
+        <a className="app-footer__link" href="https://www.technovahub.in">
+          Powered by TechnovaHub
+        </a>
+      </footer>
+    </div>
   );
 }
 

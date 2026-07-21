@@ -25,7 +25,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     async (authToken = token) => {
       if (!authToken) {
         setLoading(false);
-        setError('Staff sign in is needed to view the list.');
+        setError('admin sign in is needed to view the list.');
         return;
       }
 
@@ -33,10 +33,10 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       setError('');
 
       try {
-        const donors = await apiRequest('/api/donors', { token: authToken });
-        const nextRows = Array.isArray(donors) ? donors : donors?.data || donors?.donors || [];
+        const users = await apiRequest('/api/users', { token: authToken });
+        const nextRows = Array.isArray(users) ? users : users?.data || users?.users || [];
         setRows(nextRows);
-        setTotalCount(donors?.count ?? nextRows.length);
+        setTotalCount(users?.count ?? nextRows.length);
       } catch (err) {
         setRows([]);
         setTotalCount(0);
@@ -161,7 +161,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `donor-registry-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `user-registry-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -170,7 +170,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     setError('');
   }
 
-  async function deleteDonor(id) {
+  async function deleteuser(id) {
     if (!id) return;
     if (!window.confirm('Delete this record?')) return;
 
@@ -179,7 +179,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     setError('');
 
     try {
-      await apiRequest(`/api/donors/${id}`, {
+      await apiRequest(`/api/users/${id}`, {
         method: 'DELETE',
         token,
       });
@@ -229,18 +229,18 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       <main className="registry-page__main">
         <section className="registry-page__hero">
           <div className="registry-page__breadcrumb">
-            <span>Staff</span>
+            <span>admin</span>
             <span className="material-symbols-outlined" aria-hidden="true">
               chevron_right
             </span>
-            <span className="registry-page__breadcrumb-current">Donor List</span>
+            <span className="registry-page__breadcrumb-current">user List</span>
           </div>
 
           <div className="registry-page__hero-row">
             <div>
-              <h1>Donor List</h1>
+              <h1>user List</h1>
               <p>
-                Manage and review all registered donors. New submissions arrive here, and you can
+                Manage and review all registered users. New submissions arrive here, and you can
                 export, search, or remove them as needed.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
@@ -321,7 +321,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                   paginatedRows.map((row) => {
                     const id = row._id || row.id;
                     const initials =
-                      (row.fullName || row.name || 'Donor')
+                      (row.fullName || row.name || 'user')
                         .split(' ')
                         .filter(Boolean)
                         .slice(0, 2)
@@ -333,11 +333,11 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                       <RegistryRow
                         key={id || row.email}
                         initials={initials}
-                        name={row.fullName || row.name || 'Unnamed donor'}
+                        name={row.fullName || row.name || 'Unnamed user'}
                         email={row.email || 'No email'}
                         phone={row.phone || 'No phone'}
                         date={row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date || 'Unknown'}
-                        onDelete={() => deleteDonor(id)}
+                        onDelete={() => deleteuser(id)}
                         actionLoading={actionLoading === id}
                       />
                     );
@@ -345,7 +345,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
                 ) : (
                   <tr>
                     <td className="registry-page__empty" colSpan={5}>
-                      No donors found. Sign in to add the first one.
+                      No users found. Sign in to add the first one.
                     </td>
                   </tr>
                 )}

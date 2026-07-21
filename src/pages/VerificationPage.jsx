@@ -187,7 +187,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
               <span className="material-symbols-outlined" aria-hidden="true">
                 verified
               </span>
-              <span>Trusted donor list</span>
+              <span>Trusted user list</span>
             </div>
           </section>
         </section>

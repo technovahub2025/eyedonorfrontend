@@ -44,7 +44,7 @@ function DataPage({ onDataSuccess }) {
     setMessage('');
 
     try {
-      const data = await apiRequest('/api/donors', {
+      const data = await apiRequest('/api/users', {
         method: 'POST',
         body: {
           ...form,

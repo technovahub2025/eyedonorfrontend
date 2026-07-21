@@ -88,7 +88,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
       setToken(nextToken);
       onAdminTokenChange?.(nextToken);
-      setMessage(data?.message || 'Staff sign in successful.');
+      setMessage(data?.message || 'admin sign in successful.');
       onAdminLoginSuccess?.(nextToken, data);
       await loadProfile(nextToken);
     } catch (err) {
@@ -120,9 +120,9 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
         <div className="admin-login-page__panel-copy">
           <p className="admin-login-page__eyebrow">Protected access</p>
-          <h1>Staff Sign In</h1>
+          <h1>admin Sign In</h1>
           <p>
-            Use your staff details to manage donor lists, check requests, and handle important
+            Use your admin details to manage user lists, check requests, and handle important
             tasks.
           </p>
         </div>
@@ -138,7 +138,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           </article>
           <article>
             <strong>Activity log</strong>
-            <span>Record of staff actions</span>
+            <span>Record of admin actions</span>
           </article>
         </div>
 
@@ -146,7 +146,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           <span className="material-symbols-outlined" aria-hidden="true">
             shield
           </span>
-          <p>Staff access is watched and limited to approved team members.</p>
+          <p>admin access is watched and limited to approved team members.</p>
         </div>
       </aside>
 
@@ -154,8 +154,8 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
         <section className="admin-login-card" aria-labelledby="admin-login-title">
           <header className="admin-login-card__header">
             <p className="admin-login-card__kicker">VisionGift Secure Portal</p>
-            <h2 id="admin-login-title">Staff Login</h2>
-            <p>Enter your details to open the dashboard and donor tools.</p>
+            <h2 id="admin-login-title">admin Login</h2>
+            <p>Enter your details to open the dashboard and user tools.</p>
             <p className="admin-login-card__status">{rootStatus}</p>
           </header>
 
@@ -216,11 +216,11 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <span className="material-symbols-outlined" aria-hidden="true">
               verified_user
             </span>
-            <p>All staff access is logged and protected with secure sign-in handling.</p>
+            <p>All admin access is logged and protected with secure sign-in handling.</p>
           </div>
 
           <div className="admin-login-card__profile">
-            <span className="admin-login-card__profile-label">Staff details</span>
+            <span className="admin-login-card__profile-label">admin details</span>
             <p>
               {profileLoading
                 ? 'Loading your details...'
