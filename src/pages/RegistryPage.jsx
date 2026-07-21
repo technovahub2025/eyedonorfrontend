@@ -8,6 +8,16 @@ const initialSearch = {
   status: 'all',
 };
 
+const registryEndpoint = '/api/donors';
+
+function extractRegistryRows(payload) {
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+
+  return payload?.data || payload?.users || payload?.donors || payload?.records || payload?.items || payload?.result || [];
+}
+
 function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [token, setToken] = useState(adminToken || '');
   const [rows, setRows] = useState([]);
@@ -33,10 +43,10 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       setError('');
 
       try {
-        const users = await apiRequest('/api/users', { token: authToken });
-        const nextRows = Array.isArray(users) ? users : users?.data || users?.users || [];
+        const response = await apiRequest(registryEndpoint, { token: authToken });
+        const nextRows = extractRegistryRows(response);
         setRows(nextRows);
-        setTotalCount(users?.count ?? nextRows.length);
+        setTotalCount(response?.count ?? response?.total ?? response?.totalCount ?? nextRows.length);
       } catch (err) {
         setRows([]);
         setTotalCount(0);
@@ -179,7 +189,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     setError('');
 
     try {
-      await apiRequest(`/api/users/${id}`, {
+      await apiRequest(`${registryEndpoint}/${id}`, {
         method: 'DELETE',
         token,
       });
