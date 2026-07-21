@@ -210,7 +210,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
             <span>VisionGift</span>
           </div>
 
-          <p>© 2024 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+          <p>© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
 
           <div className="verification-page__footer-links">
             <a href="#privacy">Privacy Policy</a>

@@ -185,7 +185,7 @@ function DataPage({ onDataSuccess }) {
             <a href="#accessibility">Accessibility</a>
             <a href="#contact">Contact Us</a>
           </div>
-          <p>© 2024 VisionGift. All rights reserved.</p>
+          <p>© 2026 VisionGift. All rights reserved.</p>
         </section>
       </main>
     </div>

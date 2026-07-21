@@ -422,7 +422,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               </span>
               <span>VisionGift</span>
             </div>
-            <p>Â© 2024 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+            <p>Â© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
           </div>
 
           <div className="registry-page__footer-links">

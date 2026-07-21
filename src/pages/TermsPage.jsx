@@ -157,7 +157,7 @@ function TermsPage({ onAccept, onDecline }) {
             <a href="#contact">Contact Us</a>
           </div>
 
-          <p>© 2024 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
+          <p>© 2026 VisionGift. All rights reserved. Medical Excellence in Eye Donation.</p>
         </div>
       </footer>
     </div>
