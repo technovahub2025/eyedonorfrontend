@@ -46,10 +46,13 @@ function DataPage({ onDataSuccess }) {
     try {
       const data = await apiRequest('/api/donors', {
         method: 'POST',
-        body: form,
+        body: {
+          ...form,
+          status: 'Pending',
+        },
       });
 
-      setMessage(data?.message || 'Data saved successfully.');
+      setMessage(data?.message || 'Data saved successfully. It is now pending admin review.');
       setForm(initialForm);
       onDataSuccess?.(data);
     } catch (err) {

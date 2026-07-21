@@ -210,7 +210,8 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
               <h1>Donor Registry</h1>
               <p>
                 Manage and review all registered eye donors. Ensure compliance and verification
-                across the national database.
+                across the national database. New user submissions arrive here as pending records
+                and can be marked accepted or declined.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
               <p className="registry-page__status">
