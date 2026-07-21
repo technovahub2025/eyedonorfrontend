@@ -9,7 +9,7 @@ function RoleSelectPage({ onRoleSelect }) {
           <h1>Select your role</h1>
           <p>
             Choose how you want to continue. Admin users go to the protected dashboard,
-            and donor users follow the registration and verification flow.
+            and user donors go straight into the registration and verification flow.
           </p>
         </section>
 
@@ -27,7 +27,7 @@ function RoleSelectPage({ onRoleSelect }) {
               badge
             </span>
             <strong>User</strong>
-            <span>User Login, Login Data, Verification, Thank You</span>
+            <span>Login Data, Verification, Thank You</span>
           </button>
         </section>
       </main>
