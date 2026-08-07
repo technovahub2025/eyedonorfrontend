@@ -189,7 +189,7 @@ function RegistryPage({ adminToken }) {
       if (!adminToken) {
         setRows([]);
         setTotalCount(0);
-        setError('Please sign in as admin to view user records.');
+        setError('Please sign in to view the list.');
         setLoading(false);
         return;
       }
@@ -205,7 +205,7 @@ function RegistryPage({ adminToken }) {
       } catch (err) {
         setRows([]);
         setTotalCount(0);
-        setError(isAuthError(err.message) ? 'Unable to load user records right now.' : err.message);
+        setError(isAuthError(err.message) ? 'Unable to load the list right now.' : err.message);
       } finally {
         setLoading(false);
       }
@@ -217,7 +217,7 @@ function RegistryPage({ adminToken }) {
     async () => {
       if (!adminToken) {
         setPledgeRows([]);
-        setPledgeError('Please sign in as admin to view pledge data.');
+        setPledgeError('Please sign in to view details.');
         return;
       }
 
@@ -229,7 +229,7 @@ function RegistryPage({ adminToken }) {
         setPledgeRows(nextRows);
       } catch (err) {
         setPledgeRows([]);
-        setPledgeError(isAuthError(err.message) ? 'Unable to load pledge data right now.' : err.message);
+        setPledgeError(isAuthError(err.message) ? 'Unable to load details right now.' : err.message);
       }
     },
     [adminToken]
@@ -242,7 +242,7 @@ function RegistryPage({ adminToken }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
       } catch (err) {
         if (!active) return;
         setRootStatus(`Connection check failed: ${err.message}`);
@@ -320,7 +320,7 @@ function RegistryPage({ adminToken }) {
 
   function exportCsv() {
     if (!filteredRows.length) {
-      setMessage('No records are ready to export.');
+      setMessage('No people are ready to download.');
       setError('');
       return;
     }
@@ -358,7 +358,7 @@ function RegistryPage({ adminToken }) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `user-registry-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `people-list-${new Date().toISOString().slice(0, 10)}.csv`;
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -411,19 +411,19 @@ function RegistryPage({ adminToken }) {
       <main className="registry-page__main">
         <section className="registry-page__hero">
           <div className="registry-page__breadcrumb">
-            <span>admin</span>
+            <span>Team</span>
             <span className="material-symbols-outlined" aria-hidden="true">
               chevron_right
             </span>
-            <span className="registry-page__breadcrumb-current">user List</span>
+            <span className="registry-page__breadcrumb-current">People list</span>
           </div>
 
           <div className="registry-page__hero-row">
             <div>
-              <h1>user List</h1>
+              <h1>People list</h1>
               <p>
-                Manage and review all registered users. New submissions arrive here, and you can
-                export, search, or remove them as needed.
+                Manage and review all registered people. New submissions arrive here, and you can
+                download, search, or remove them as needed.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
             </div>
@@ -437,7 +437,7 @@ function RegistryPage({ adminToken }) {
                 <span className="material-symbols-outlined" aria-hidden="true">
                   file_download
                 </span>
-                Export CSV
+                Download list
               </button>
             </div>
           </div>
@@ -450,7 +450,7 @@ function RegistryPage({ adminToken }) {
             </span>
             <input
               type="text"
-              placeholder="Search by name, email, or ID..."
+              placeholder="Search by name, email, or reference..."
               value={search.query}
               onChange={(event) => setSearch({ ...search, query: event.target.value })}
             />
@@ -469,11 +469,11 @@ function RegistryPage({ adminToken }) {
             <option value="inactive">Inactive</option>
           </select>
 
-          <button type="button" className="registry-page__action registry-page__action--ghost">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              tune
-            </span>
-            More filters
+            <button type="button" className="registry-page__action registry-page__action--ghost">
+              <span className="material-symbols-outlined" aria-hidden="true">
+                tune
+              </span>
+              More filters
           </button>
         </section>
 
@@ -497,7 +497,7 @@ function RegistryPage({ adminToken }) {
                   {loading ? (
                     <tr>
                       <td className="registry-page__empty" colSpan={5}>
-                        Loading records...
+                        Loading people...
                       </td>
                     </tr>
                   ) : paginatedRows.length ? (
@@ -534,7 +534,7 @@ function RegistryPage({ adminToken }) {
                   ) : (
                     <tr>
                       <td className="registry-page__empty" colSpan={5}>
-                        No users found. Sign in to add the first one.
+                        No people found. Sign in to add the first one.
                       </td>
                     </tr>
                   )}
@@ -546,7 +546,7 @@ function RegistryPage({ adminToken }) {
               <span>
                 Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
                 {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length}{' '}
-                filtered records
+                matching people
               </span>
               <div className="registry-page__pages">
                 <button
@@ -588,7 +588,7 @@ function RegistryPage({ adminToken }) {
           <aside className="registry-page__sidebar">
             <div className="registry-page__sidebar-header">
               <div>
-                <p className="registry-page__eyebrow">Admin only</p>
+                <p className="registry-page__eyebrow">Team only</p>
                 <h2>Selected user</h2>
               </div>
               <span className="registry-page__sidebar-badge">
@@ -598,7 +598,7 @@ function RegistryPage({ adminToken }) {
 
             {!selectedRow ? (
               <div className="registry-page__sidebar-empty">
-                Click a user row to load the related pledge data from the API.
+                Click a row to load the related details.
               </div>
             ) : (
               <div className="registry-page__detail-list">
@@ -613,7 +613,7 @@ function RegistryPage({ adminToken }) {
                   <div className="registry-page__sidebar-header">
                     <div>
                       <p className="registry-page__eyebrow">Filtered result</p>
-                      <h2>Pledge data</h2>
+                      <h2>Submission details</h2>
                     </div>
                     <span className="registry-page__sidebar-badge">
                       {pledgeLoading ? 'Loading...' : 'By user'}
@@ -621,7 +621,7 @@ function RegistryPage({ adminToken }) {
                   </div>
 
                   {pledgeLoading ? (
-                    <div className="registry-page__sidebar-empty">Loading pledge data...</div>
+                      <div className="registry-page__sidebar-empty">Loading details...</div>
                   ) : pledgeError ? (
                     <div className="registry-page__toast registry-page__toast--error">{pledgeError}</div>
                   ) : selectedPledgeDetails.length ? (
@@ -635,7 +635,7 @@ function RegistryPage({ adminToken }) {
                     </div>
                   ) : (
                     <div className="registry-page__sidebar-empty">
-                      The API returned no pledge fields for this user.
+                      No extra details were found for this person.
                     </div>
                   )}
                 </article>

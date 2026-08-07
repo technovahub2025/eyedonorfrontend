@@ -14,7 +14,7 @@ function ThankYouPage({ onRestart }) {
 
           <h1>Thank you</h1>
           <p>
-            Your registration has been submitted. Thank you for taking the time to complete the
+            Your details have been submitted. Thank you for taking the time to complete the
             process.
           </p>
 

@@ -41,7 +41,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
       } catch (err) {
         if (!active) return;
         setRootStatus(`Connection check failed: ${err.message}`);
@@ -91,8 +91,8 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
           <section className="verification-card" aria-labelledby="verification-title">
             <div className="verification-card__top">
               <div>
-                <h1 id="verification-title">Verify Your Details</h1>
-                <p>Please confirm your registration information before you finish.</p>
+                <h1 id="verification-title">Check your details</h1>
+                <p>Please confirm your information before you finish.</p>
                 <p className="verification-card__status-line">{rootStatus}</p>
               </div>
 
@@ -100,7 +100,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                 <span className="material-symbols-outlined" aria-hidden="true">
                   info
                 </span>
-                <span>Status: Ready for Verification</span>
+                <span>Status: Ready to continue</span>
               </div>
             </div>
 
@@ -122,7 +122,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                   ? 'Loading your details...'
                   : userProfile
                   ? 'Your details are ready to verify.'
-                  : 'No details loaded yet. Sign in through the user login screen first.'}
+                  : 'No details loaded yet. Sign in through the login screen first.'}
               </p>
             </div>
 
@@ -132,8 +132,8 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                   verified_user
                 </span>
                 <p>
-                  By clicking Submit Registration, I confirm that the details I shared are
-                  correct and I understand my donation can help restore sight.
+                  By clicking Submit, I confirm that the details I shared are correct and I
+                  understand my donation can help restore sight.
                 </p>
               </div>
 
@@ -143,7 +143,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
                   type="button"
                   onClick={() => onSubmitSuccess?.()}
                 >
-                  Submit Registration
+                  Submit
                   <span className="material-symbols-outlined" aria-hidden="true">
                     arrow_forward
                   </span>
@@ -170,7 +170,7 @@ function VerificationPage({ userToken, onSubmitSuccess, onCancel }) {
               <span className="material-symbols-outlined" aria-hidden="true">
                 verified
               </span>
-              <span>Trusted user list</span>
+              <span>Trusted list</span>
             </div>
           </section>
         </section>

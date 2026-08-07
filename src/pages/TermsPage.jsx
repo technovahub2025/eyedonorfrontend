@@ -32,7 +32,7 @@ function TermsPage({ onAccept, onDecline }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
       } catch (err) {
         if (!active) return;
         setRootStatus(`Connection check failed: ${err.message}`);
@@ -65,7 +65,7 @@ function TermsPage({ onAccept, onDecline }) {
         body: payload,
       });
 
-      setTermsMessage('Your details were submitted successfully.');
+      setTermsMessage('Your details were saved successfully.');
       setTermForm(initialTermForm);
     } catch (err) {
       setTermsError(err.message);
@@ -85,9 +85,9 @@ function TermsPage({ onAccept, onDecline }) {
           <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
               <div>
-                <h1 id="terms-title">Consent for Eye Donation</h1>
+                <h1 id="terms-title">Review and continue</h1>
                 <p className="terms-card__intro">
-                  Please review the simple terms below before you continue with your gift of sight.
+                  Please review the simple notes below before you continue.
                 </p>
                 <p className="terms-card__status">{rootStatus}</p>
               </div>
@@ -97,8 +97,8 @@ function TermsPage({ onAccept, onDecline }) {
                   checklist
                 </span>
                 <div>
-                  <strong>Fill out your details</strong>
-                  <p>Your submission is saved to the admin record list.</p>
+                  <strong>Complete the form</strong>
+                  <p>Your submission is saved for the team to review.</p>
                 </div>
               </div>
             </div>
@@ -106,10 +106,10 @@ function TermsPage({ onAccept, onDecline }) {
             <section className="terms-card__admin-panel" aria-labelledby="terms-admin-title">
               <div className="terms-card__admin-header">
                 <div>
-                  <p className="terms-card__eyebrow">User entry</p>
-                  <h2 id="terms-admin-title">Enter your details</h2>
+                  <p className="terms-card__eyebrow">Your entry</p>
+                  <h2 id="terms-admin-title">Add your details</h2>
                 </div>
-                <span className="terms-card__admin-badge">POST /api/terms/createterms</span>
+                <span className="terms-card__admin-badge">Saved automatically</span>
               </div>
 
               <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
