@@ -9,6 +9,7 @@ const initialSearch = {
 };
 
 const registryEndpoint = '/api/donors';
+const pledgeEndpoint = '/api/terms/gettermsbyid';
 
 function extractRegistryRows(payload) {
   if (Array.isArray(payload)) {
@@ -16,6 +17,108 @@ function extractRegistryRows(payload) {
   }
 
   return payload?.data || payload?.users || payload?.donors || payload?.records || payload?.items || payload?.result || [];
+}
+
+function extractDetailRecord(payload) {
+  if (!payload) {
+    return null;
+  }
+
+  if (Array.isArray(payload)) {
+    return payload[0] || null;
+  }
+
+  const candidates = [
+    payload.data,
+    payload.record,
+    payload.item,
+    payload.result,
+    payload.terms,
+    payload.pledge,
+    payload.donor,
+  ];
+
+  for (const candidate of candidates) {
+    if (candidate && typeof candidate === 'object') {
+      return candidate;
+    }
+
+    if (Array.isArray(candidate)) {
+      return candidate[0] || null;
+    }
+  }
+
+  return typeof payload === 'object' ? payload : null;
+}
+
+function formatDetailValue(value) {
+  if (value === null || value === undefined || value === '') {
+    return 'Not provided';
+  }
+
+  if (Array.isArray(value)) {
+    return value.join(', ');
+  }
+
+  if (typeof value === 'object') {
+    return JSON.stringify(value, null, 2);
+  }
+
+  return String(value);
+}
+
+function buildPledgeDetails(payload, fallbackRow) {
+  const record = extractDetailRecord(payload) || {};
+  const merged = { ...fallbackRow, ...record };
+  const details = [];
+  const seen = new Set();
+
+  function add(label, value) {
+    if (value === undefined || value === null || value === '') {
+      return;
+    }
+
+    details.push({ label, value: formatDetailValue(value) });
+    seen.add(label);
+  }
+
+  add('Name', merged.name || merged.fullName);
+  add('Age', merged.age);
+  add('Gender', merged.gender);
+  add('Email', merged.email);
+  add('Phone', merged.phone);
+  add('Status', merged.status);
+  add('Notes', merged.notes || merged.body || merged.description || merged.note);
+  add('Created At', merged.createdAt || merged.created_at);
+  add('Updated At', merged.updatedAt || merged.updated_at);
+  add('Record ID', merged._id || merged.id || merged.termId);
+
+  Object.entries(record).forEach(([key, value]) => {
+    const normalizedKey = key.toLowerCase();
+    const label = key
+      .replace(/[_-]+/g, ' ')
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+
+    if (
+      seen.has(label) ||
+      ['_id', 'id', 'termid', 'createdat', 'updatedat', 'created_at', 'updated_at'].includes(
+        normalizedKey
+      ) ||
+      value === undefined ||
+      value === null ||
+      value === ''
+    ) {
+      return;
+    }
+
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      return;
+    }
+
+    add(label, value);
+  });
+
+  return details;
 }
 
 function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
@@ -29,6 +132,10 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [search, setSearch] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRowId, setSelectedRowId] = useState('');
+  const [selectedPledgeRaw, setSelectedPledgeRaw] = useState(null);
+  const [pledgeLoading, setPledgeLoading] = useState(false);
+  const [pledgeError, setPledgeError] = useState('');
   const pageSize = 10;
 
   const loadRegistry = useCallback(
@@ -106,6 +213,16 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
       return matchesQuery && matchesStatus;
     });
   }, [rows, search]);
+
+  const selectedRow = useMemo(
+    () => rows.find((row) => (row._id || row.id || '') === selectedRowId) || null,
+    [rows, selectedRowId]
+  );
+
+  const selectedPledgeDetails = useMemo(
+    () => buildPledgeDetails(selectedPledgeRaw, selectedRow),
+    [selectedPledgeRaw, selectedRow]
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -194,6 +311,11 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         token,
       });
       setMessage(`Deleted record ${id}.`);
+      if (selectedRowId === id) {
+        setSelectedRowId('');
+        setSelectedPledgeRaw(null);
+        setPledgeError('');
+      }
       await loadRegistry(token);
     } catch (err) {
       setError(err.message);
@@ -202,10 +324,28 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     }
   }
 
+  async function handleSelectRow(row) {
+    const id = row._id || row.id;
+    if (!id) return;
+
+    setSelectedRowId(id);
+    setSelectedPledgeRaw(null);
+    setPledgeError('');
+    setPledgeLoading(true);
+
+    try {
+      const response = await apiRequest(`${pledgeEndpoint}/${id}`, { token });
+      setSelectedPledgeRaw(extractDetailRecord(response) || response);
+    } catch (err) {
+      setPledgeError(err.message);
+      setSelectedPledgeRaw(row);
+    } finally {
+      setPledgeLoading(false);
+    }
+  }
+
   return (
     <div className="registry-page">
-      
-
       <main className="registry-page__main">
         <section className="registry-page__hero">
           <div className="registry-page__breadcrumb">
@@ -278,101 +418,156 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         {message ? <div className="registry-page__toast registry-page__toast--success">{message}</div> : null}
         {error ? <div className="registry-page__toast registry-page__toast--error">{error}</div> : null}
 
-        <section className="registry-page__table-card">
-          <div className="registry-page__table-scroll">
-            <table className="registry-table">
-              <thead>
-                <tr>
-                  <th>Full Name</th>
-                  <th>Email Address</th>
-                  <th>Phone Number</th>
-                  <th>Registration Date</th>
-                  <th className="registry-table__actions">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
+        <section className="registry-page__workspace">
+          <section className="registry-page__table-card">
+            <div className="registry-page__table-scroll">
+              <table className="registry-table">
+                <thead>
                   <tr>
-                    <td className="registry-page__empty" colSpan={5}>
-                      Loading records...
-                    </td>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Phone Number</th>
+                    <th>Registration Date</th>
+                    <th className="registry-table__actions">Actions</th>
                   </tr>
-                ) : paginatedRows.length ? (
-                  paginatedRows.map((row) => {
-                    const id = row._id || row.id;
-                    const initials =
-                      (row.fullName || row.name || 'user')
-                        .split(' ')
-                        .filter(Boolean)
-                        .slice(0, 2)
-                        .map((part) => part[0])
-                        .join('')
-                        .toUpperCase() || 'DN';
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td className="registry-page__empty" colSpan={5}>
+                        Loading records...
+                      </td>
+                    </tr>
+                  ) : paginatedRows.length ? (
+                    paginatedRows.map((row) => {
+                      const id = row._id || row.id;
+                      const initials =
+                        (row.fullName || row.name || 'user')
+                          .split(' ')
+                          .filter(Boolean)
+                          .slice(0, 2)
+                          .map((part) => part[0])
+                          .join('')
+                          .toUpperCase() || 'DN';
 
-                    return (
-                      <RegistryRow
-                        key={id || row.email}
-                        initials={initials}
-                        name={row.fullName || row.name || 'Unnamed user'}
-                        email={row.email || 'No email'}
-                        phone={row.phone || 'No phone'}
-                        date={row.createdAt ? new Date(row.createdAt).toLocaleDateString() : row.date || 'Unknown'}
-                        onDelete={() => deleteuser(id)}
-                        actionLoading={actionLoading === id}
-                      />
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td className="registry-page__empty" colSpan={5}>
-                      No users found. Sign in to add the first one.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="registry-page__pagination">
-            <span>
-              Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
-              {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length} filtered records
-            </span>
-            <div className="registry-page__pages">
-              <button
-                type="button"
-                className="registry-page__page-button registry-page__page-button--icon"
-                onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-                disabled={currentPage === 1}
-              >
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  chevron_left
-                </span>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
-                <button
-                  key={page}
-                  type="button"
-                  className={`registry-page__page-button ${
-                    page === currentPage ? 'registry-page__page-button--active' : ''
-                  }`}
-                  onClick={() => setCurrentPage(page)}
-                >
-                  {page}
-                </button>
-              ))}
-              <button
-                type="button"
-                className="registry-page__page-button registry-page__page-button--icon"
-                onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-                disabled={currentPage === totalPages}
-              >
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  chevron_right
-                </span>
-              </button>
+                      return (
+                        <RegistryRow
+                          key={id || row.email}
+                          initials={initials}
+                          name={row.fullName || row.name || 'Unnamed user'}
+                          email={row.email || 'No email'}
+                          phone={row.phone || 'No phone'}
+                          date={
+                            row.createdAt
+                              ? new Date(row.createdAt).toLocaleDateString()
+                              : row.date || 'Unknown'
+                          }
+                          onSelect={() => handleSelectRow(row)}
+                          onDelete={() => deleteuser(id)}
+                          actionLoading={actionLoading === id}
+                          selected={selectedRowId === id}
+                        />
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td className="registry-page__empty" colSpan={5}>
+                        No users found. Sign in to add the first one.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-          </div>
+
+            <div className="registry-page__pagination">
+              <span>
+                Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
+                {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length}{' '}
+                filtered records
+              </span>
+              <div className="registry-page__pages">
+                <button
+                  type="button"
+                  className="registry-page__page-button registry-page__page-button--icon"
+                  onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+                  disabled={currentPage === 1}
+                >
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    chevron_left
+                  </span>
+                </button>
+                {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    className={`registry-page__page-button ${
+                      page === currentPage ? 'registry-page__page-button--active' : ''
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className="registry-page__page-button registry-page__page-button--icon"
+                  onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    chevron_right
+                  </span>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <aside className="registry-page__sidebar">
+            <div className="registry-page__sidebar-header">
+              <div>
+                <p className="registry-page__eyebrow">Admin only</p>
+                <h2>Pledge data</h2>
+              </div>
+              <span className="registry-page__sidebar-badge">
+                {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
+              </span>
+            </div>
+
+            {!selectedRow ? (
+              <div className="registry-page__sidebar-empty">
+                Click a user row to load the related pledge data from the API.
+              </div>
+            ) : (
+              <>
+                <div className="registry-page__sidebar-card">
+                  <p className="registry-page__sidebar-label">Selected user</p>
+                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed user'}</strong>
+                  <span>{selectedRow.email || 'No email provided'}</span>
+                </div>
+
+                {pledgeLoading ? <div className="registry-page__sidebar-empty">Loading pledge data...</div> : null}
+                {pledgeError ? <div className="registry-page__toast registry-page__toast--error">{pledgeError}</div> : null}
+
+                {selectedPledgeDetails.length ? (
+                  <div className="registry-page__detail-list">
+                    {selectedPledgeDetails.map((detail) => (
+                      <article key={detail.label} className="registry-page__detail-item">
+                        <span>{detail.label}</span>
+                        <strong>{detail.value}</strong>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
+
+                {!pledgeLoading && !selectedPledgeDetails.length ? (
+                  <div className="registry-page__sidebar-empty">
+                    The API returned no pledge fields for this record.
+                  </div>
+                ) : null}
+              </>
+            )}
+          </aside>
         </section>
 
         <section className="registry-page__insights">
@@ -391,7 +586,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
           </article>
         </section>
       </main>
-
     </div>
   );
 }

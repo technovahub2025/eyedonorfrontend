@@ -6,11 +6,24 @@ function RegistryRow({
   email,
   phone,
   date,
+  onSelect,
   onDelete,
   actionLoading = false,
+  selected = false,
 }) {
   return (
-    <tr className="registry-row">
+    <tr
+      className={`registry-row ${selected ? 'registry-row--selected' : ''}`}
+      onClick={() => onSelect?.()}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onSelect?.();
+        }
+      }}
+      tabIndex={0}
+      aria-selected={selected}
+    >
       <td className="registry-row__cell registry-row__cell--name">
         <div className="registry-row__identity">
           <div className="registry-row__avatar registry-row__avatar--active">
@@ -28,7 +41,10 @@ function RegistryRow({
             className="registry-row__menu material-symbols-outlined"
             type="button"
             aria-label={`Delete ${name}`}
-            onClick={onDelete}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDelete?.();
+            }}
             disabled={actionLoading}
           >
             more_vert
