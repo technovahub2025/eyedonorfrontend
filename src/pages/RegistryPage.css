@@ -555,3 +555,134 @@
     padding-right: 14px;
   }
 }
+
+.registry-page__workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.registry-page__table-card {
+  height: 100%;
+}
+
+.registry-page__sidebar {
+  display: grid;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #c3c6d5;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 18px 44px rgba(15, 82, 186, 0.06);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 92px;
+}
+
+.registry-page__sidebar-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.registry-page__eyebrow {
+  margin: 0 0 4px;
+  color: #006a63;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.registry-page__sidebar-header h2 {
+  margin: 0;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+  font-size: 1.35rem;
+}
+
+.registry-page__sidebar-badge {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #d9e2ff;
+  color: #003c90;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.registry-page__sidebar-card {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid #d8dbe6;
+  border-radius: 16px;
+  background: #f9f9fc;
+}
+
+.registry-page__sidebar-label {
+  margin: 0;
+  color: #4e5666;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.registry-page__sidebar-card strong {
+  color: #1a1c1e;
+  font-size: 1.15rem;
+}
+
+.registry-page__sidebar-card span {
+  color: #4e5666;
+}
+
+.registry-page__sidebar-empty {
+  padding: 16px;
+  border: 1px dashed #c3c6d5;
+  border-radius: 16px;
+  background: rgba(249, 249, 252, 0.8);
+  color: #4e5666;
+  line-height: 1.6;
+}
+
+.registry-page__detail-list {
+  display: grid;
+  gap: 12px;
+}
+
+.registry-page__detail-item {
+  padding: 14px;
+  border: 1px solid #d8dbe6;
+  border-radius: 16px;
+  background: #ffffff;
+  display: grid;
+  gap: 6px;
+}
+
+.registry-page__detail-item span {
+  color: #4e5666;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.registry-page__detail-item strong {
+  color: #1a1c1e;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+}
+
+@media (max-width: 960px) {
+  .registry-page__workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .registry-page__sidebar {
+    position: static;
+  }
+}

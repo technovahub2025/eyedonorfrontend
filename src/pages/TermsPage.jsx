@@ -18,6 +18,20 @@ const initialTermForm = {
   gender: '',
 };
 
+function getSalutation(gender) {
+  const value = String(gender || '').trim().toLowerCase();
+
+  if (['male', 'm', 'mr', 'man'].includes(value)) {
+    return 'Mr';
+  }
+
+  if (['female', 'f', 'mrs', 'woman'].includes(value)) {
+    return 'Mrs';
+  }
+
+  return '';
+}
+
 function extractItems(payload) {
   if (Array.isArray(payload)) {
     return payload;
@@ -27,9 +41,12 @@ function extractItems(payload) {
 }
 
 function normalizeTerm(item, index) {
+  const salutation = getSalutation(item?.gender);
+  const baseName = item?.name || item?.title || item?.label || `Term ${index + 1}`;
+
   return {
     id: item?._id || item?.id || item?.termId || `term-${index}`,
-    name: item?.name || item?.title || item?.label || `Term ${index + 1}`,
+    name: salutation ? `${salutation} ${baseName}` : baseName,
     age: item?.age ?? '',
     gender: item?.gender ?? '',
     body: item?.body || item?.description || item?.details || item?.note || '',
@@ -174,7 +191,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
                         <h3>{item.name}</h3>
                         {item.age !== '' || item.gender ? (
                           <span className="terms-card__row-meta">
-                            {[item.age !== '' ? `Age ${item.age}` : null, item.gender || null]
+                            {[item.age !== '' ? `Age ${item.age}` : null, getSalutation(item.gender) || item.gender || null]
                               .filter(Boolean)
                               .join(' · ')}
                           </span>
@@ -225,13 +242,15 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
 
                   <label className="terms-card__field">
                     <span>Gender</span>
-                    <input
-                      type="text"
-                      placeholder="Male"
+                    <select
                       value={termForm.gender}
                       onChange={(event) => setTermForm({ ...termForm, gender: event.target.value })}
                       required
-                    />
+                    >
+                      <option value="">Select gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                    </select>
                   </label>
 
                   <button className="terms-card__submit" type="submit" disabled={savingTerm}>

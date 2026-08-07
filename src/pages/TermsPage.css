@@ -222,7 +222,8 @@
   font-weight: 700;
 }
 
-.terms-card__field input {
+.terms-card__field input,
+.terms-card__field select {
   width: 100%;
   box-sizing: border-box;
   border: 1px solid #c3c6d5;
@@ -234,7 +235,8 @@
   outline: none;
 }
 
-.terms-card__field input:focus {
+.terms-card__field input:focus,
+.terms-card__field select:focus {
   border-color: #003c90;
   box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.1);
 }

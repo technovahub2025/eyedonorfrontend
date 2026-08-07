@@ -2,6 +2,23 @@
   background: #eeeef0;
 }
 
+.registry-row {
+  cursor: pointer;
+}
+
+.registry-row:focus-visible {
+  outline: 2px solid #003c90;
+  outline-offset: -2px;
+}
+
+.registry-row--selected {
+  background: rgba(0, 60, 144, 0.06);
+}
+
+.registry-row--selected .registry-row__cell {
+  border-bottom-color: #9eb6ff;
+}
+
 .registry-row__cell {
   padding: 16px 24px;
   color: #434653;
