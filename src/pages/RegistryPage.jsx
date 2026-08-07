@@ -9,7 +9,7 @@ const initialSearch = {
 };
 
 const registryEndpoint = '/api/donors';
-const pledgeEndpoint = '/api/terms/gettermsbyid';
+const pledgeEndpoint = '/api/terms/getall';
 
 function isAuthError(message = '') {
   const text = String(message).toLowerCase();
@@ -54,6 +54,48 @@ function extractDetailRecord(payload) {
   }
 
   return typeof payload === 'object' ? payload : null;
+}
+
+function normalizeText(value) {
+  return String(value ?? '')
+    .trim()
+    .toLowerCase();
+}
+
+function isMatchingPledgeRecord(row, record) {
+  if (!row || !record) {
+    return false;
+  }
+
+  const rowNameCandidates = [row.fullName, row.name];
+  const recordNameCandidates = [record.fullName, record.name];
+  const rowEmailCandidates = [row.email];
+  const recordEmailCandidates = [record.email];
+  const rowPhoneCandidates = [row.phone];
+  const recordPhoneCandidates = [record.phone];
+
+  const rowNames = rowNameCandidates.map(normalizeText).filter(Boolean);
+  const recordNames = recordNameCandidates.map(normalizeText).filter(Boolean);
+  const rowEmails = rowEmailCandidates.map(normalizeText).filter(Boolean);
+  const recordEmails = recordEmailCandidates.map(normalizeText).filter(Boolean);
+  const rowPhones = rowPhoneCandidates.map(normalizeText).filter(Boolean);
+  const recordPhones = recordPhoneCandidates.map(normalizeText).filter(Boolean);
+
+  const nameMatch = rowNames.some((rowName) =>
+    recordNames.some((recordName) => rowName === recordName || rowName.includes(recordName) || recordName.includes(rowName))
+  );
+
+  const emailMatch = rowEmails.some((rowEmail) =>
+    recordEmails.some((recordEmail) => rowEmail === recordEmail)
+  );
+
+  const phoneMatch = rowPhones.some((rowPhone) =>
+    recordPhones.some((recordPhone) => rowPhone === recordPhone)
+  );
+
+  const idMatch = normalizeText(row._id || row.id) === normalizeText(record._id || record.id);
+
+  return nameMatch || emailMatch || phoneMatch || idMatch;
 }
 
 function formatDetailValue(value) {
@@ -127,6 +169,7 @@ function buildPledgeDetails(payload) {
 
 function RegistryPage({ adminToken }) {
   const [rows, setRows] = useState([]);
+  const [pledgeRows, setPledgeRows] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState('');
@@ -170,6 +213,28 @@ function RegistryPage({ adminToken }) {
     [adminToken]
   );
 
+  const loadPledgeRows = useCallback(
+    async () => {
+      if (!adminToken) {
+        setPledgeRows([]);
+        setPledgeError('Please sign in as admin to view pledge data.');
+        return;
+      }
+
+      setPledgeError('');
+
+      try {
+        const response = await apiRequest(pledgeEndpoint, { token: adminToken });
+        const nextRows = extractRegistryRows(response);
+        setPledgeRows(nextRows);
+      } catch (err) {
+        setPledgeRows([]);
+        setPledgeError(isAuthError(err.message) ? 'Unable to load pledge data right now.' : err.message);
+      }
+    },
+    [adminToken]
+  );
+
   useEffect(() => {
     let active = true;
 
@@ -186,11 +251,12 @@ function RegistryPage({ adminToken }) {
 
     checkRoot();
     loadRegistry();
+    loadPledgeRows();
 
     return () => {
       active = false;
     };
-  }, [loadRegistry]);
+  }, [loadPledgeRows, loadRegistry]);
 
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
@@ -221,8 +287,11 @@ function RegistryPage({ adminToken }) {
   );
 
   const selectedPledgeDetails = useMemo(
-    () => buildPledgeDetails(selectedPledgeRaw),
-    [selectedPledgeRaw]
+    () => {
+      const matchedRecord = pledgeRows.find((record) => isMatchingPledgeRecord(selectedRow, record));
+      return buildPledgeDetails(matchedRecord || selectedPledgeRaw);
+    },
+    [pledgeRows, selectedPledgeRaw, selectedRow]
   );
 
   useEffect(() => {
@@ -332,19 +401,9 @@ function RegistryPage({ adminToken }) {
     setSelectedRowId(id);
     setSelectedPledgeRaw(null);
     setPledgeError('');
-    setPledgeLoading(true);
-
-    try {
-      const response = await apiRequest(`${pledgeEndpoint}/${id}`, { token: adminToken });
-      setSelectedPledgeRaw(extractDetailRecord(response) || response);
-    } catch (err) {
-      setPledgeError(
-        isAuthError(err.message) ? 'Unable to load pledge data right now.' : err.message
-      );
-      setSelectedPledgeRaw(row);
-    } finally {
-      setPledgeLoading(false);
-    }
+    const matchedRecord = pledgeRows.find((record) => isMatchingPledgeRecord(row, record));
+    setSelectedPledgeRaw(matchedRecord || null);
+    setPledgeLoading(false);
   }
 
   return (
