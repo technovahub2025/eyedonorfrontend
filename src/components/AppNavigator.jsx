@@ -6,8 +6,8 @@ const navItems = [
   { key: 'terms', label: 'Review' },
   { key: 'verification', label: 'Check' },
   { key: 'thank-you', label: 'Done' },
-  { key: 'admin-login', label: 'Team sign in' },
-  { key: 'registry', label: 'People list' },
+  { key: 'admin-login', label: 'Admin sign in' },
+  { key: 'registry', label: 'User list' },
 ];
 
 const roleNavMap = {

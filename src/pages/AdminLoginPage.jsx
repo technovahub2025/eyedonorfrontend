@@ -96,13 +96,13 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
     <div className="admin-login-page">
       <aside className="admin-login-page__panel">
         <div className="admin-login-page__brand">
-          <BrandMark title="VisionGift" subtitle="Team access" />
+          <BrandMark title="VisionGift" subtitle="Admin access" />
         </div>
 
         <div className="admin-login-page__panel-copy">
-          <p className="admin-login-page__eyebrow">Team access</p>
+          <p className="admin-login-page__eyebrow">Admin access</p>
           <h1>Sign in</h1>
-          <p>Use your team details to review people and keep things moving.</p>
+          <p>Use your admin details to review people and keep things moving.</p>
         </div>
 
         <div className="admin-login-page__trust-grid">
@@ -124,7 +124,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           <span className="material-symbols-outlined" aria-hidden="true">
             shield
           </span>
-          <p>Team access is limited to approved members.</p>
+          <p>Admin access is limited to approved members.</p>
         </div>
       </aside>
 
@@ -132,7 +132,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
         <section className="admin-login-card" aria-labelledby="admin-login-title">
           <header className="admin-login-card__header">
             <p className="admin-login-card__kicker">VisionGift</p>
-            <h2 id="admin-login-title">Team sign in</h2>
+            <h2 id="admin-login-title">Admin sign in</h2>
             <p>Enter your details to open the list and tools.</p>
             <p className="admin-login-card__status">{rootStatus}</p>
           </header>
@@ -141,7 +141,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <FormField
               id="admin-username"
               label="Email or name"
-              placeholder="team@example.com"
+              placeholder="admin@example.com"
               icon="person"
               value={form.username}
               onChange={(event) => setForm({ ...form, username: event.target.value })}
@@ -199,7 +199,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <span className="material-symbols-outlined" aria-hidden="true">
               verified_user
             </span>
-            <p>All team access is protected and kept for the team.</p>
+            <p>All admin access is protected and kept for approved admins.</p>
           </div>
 
           <div className="admin-login-card__profile">

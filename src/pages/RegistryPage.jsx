@@ -363,13 +363,13 @@ function RegistryPage({ adminToken }) {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    setMessage(`Exported ${filteredRows.length} person${filteredRows.length === 1 ? '' : 's'}.`);
+    setMessage(`Exported ${filteredRows.length} user${filteredRows.length === 1 ? '' : 's'}.`);
     setError('');
   }
 
   async function deleteuser(id) {
     if (!id) return;
-    if (!window.confirm('Delete this person?')) return;
+    if (!window.confirm('Delete this user?')) return;
 
     setActionLoading(id);
     setMessage('');
@@ -380,7 +380,7 @@ function RegistryPage({ adminToken }) {
         method: 'DELETE',
         token: adminToken,
       });
-      setMessage(`Deleted person ${id}.`);
+      setMessage(`Deleted user ${id}.`);
       if (selectedRowId === id) {
         setSelectedRowId('');
         setSelectedPledgeRaw(null);
@@ -388,7 +388,7 @@ function RegistryPage({ adminToken }) {
       }
       await loadRegistry();
     } catch (err) {
-      setError(isAuthError(err.message) ? 'Unable to delete this person right now.' : err.message);
+      setError(isAuthError(err.message) ? 'Unable to delete this user right now.' : err.message);
     } finally {
       setActionLoading('');
     }
@@ -411,18 +411,18 @@ function RegistryPage({ adminToken }) {
       <main className="registry-page__main">
         <section className="registry-page__hero">
           <div className="registry-page__breadcrumb">
-            <span>Team</span>
+            <span>Admin</span>
             <span className="material-symbols-outlined" aria-hidden="true">
               chevron_right
             </span>
-            <span className="registry-page__breadcrumb-current">People list</span>
+            <span className="registry-page__breadcrumb-current">User list</span>
           </div>
 
           <div className="registry-page__hero-row">
             <div>
-              <h1>People list</h1>
+              <h1>User list</h1>
               <p>
-                Manage and review all registered people. New submissions arrive here, and you can
+                Manage and review all registered users. New submissions arrive here, and you can
                 download, search, or remove them as needed.
               </p>
               <p className="registry-page__status">{rootStatus}</p>
@@ -497,7 +497,7 @@ function RegistryPage({ adminToken }) {
                   {loading ? (
                     <tr>
                       <td className="registry-page__empty" colSpan={5}>
-                        Loading people...
+                        Loading users...
                       </td>
                     </tr>
                   ) : paginatedRows.length ? (
@@ -516,7 +516,7 @@ function RegistryPage({ adminToken }) {
                         <RegistryRow
                           key={id || row.email}
                           initials={initials}
-                          name={row.fullName || row.name || 'Unnamed person'}
+                          name={row.fullName || row.name || 'Unnamed user'}
                           email={row.email || 'No email'}
                           phone={row.phone || 'No phone'}
                           date={
@@ -534,7 +534,7 @@ function RegistryPage({ adminToken }) {
                   ) : (
                     <tr>
                       <td className="registry-page__empty" colSpan={5}>
-                        No people found. Sign in to add the first one.
+                        No users found. Sign in to add the first one.
                       </td>
                     </tr>
                   )}
@@ -546,7 +546,7 @@ function RegistryPage({ adminToken }) {
               <span>
                 Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
                 {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length}{' '}
-                matching people
+                matching users
               </span>
               <div className="registry-page__pages">
                 <button
@@ -588,8 +588,8 @@ function RegistryPage({ adminToken }) {
           <aside className="registry-page__sidebar">
             <div className="registry-page__sidebar-header">
               <div>
-                <p className="registry-page__eyebrow">Team only</p>
-                <h2>Selected person</h2>
+                <p className="registry-page__eyebrow">Admin only</p>
+                <h2>Selected user</h2>
               </div>
               <span className="registry-page__sidebar-badge">
                 {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
@@ -603,8 +603,8 @@ function RegistryPage({ adminToken }) {
             ) : (
               <div className="registry-page__detail-list">
                 <article className="registry-page__sidebar-card">
-                  <p className="registry-page__sidebar-label">Selected person</p>
-                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed person'}</strong>
+                  <p className="registry-page__sidebar-label">Selected user</p>
+                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed user'}</strong>
                   <span>{selectedRow.email || 'No email provided'}</span>
                   <span>{selectedRow.phone || 'No phone provided'}</span>
                 </article>
@@ -635,7 +635,7 @@ function RegistryPage({ adminToken }) {
                     </div>
                   ) : (
                     <div className="registry-page__sidebar-empty">
-                      No extra details were found for this person.
+                      No extra details were found for this user.
                     </div>
                   )}
                 </article>
@@ -654,7 +654,7 @@ function RegistryPage({ adminToken }) {
               </span>
             </div>
             <div>
-              <p>Total People</p>
+              <p>Total Users</p>
               <strong>{totalCount || rows.length}</strong>
             </div>
           </article>

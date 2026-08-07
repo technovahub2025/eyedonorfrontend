@@ -98,7 +98,7 @@ function TermsPage({ onAccept, onDecline }) {
                 </span>
                 <div>
                   <strong>Complete the form</strong>
-                  <p>Your submission is saved for the team to review.</p>
+                  <p>Your submission is saved for the admin to review.</p>
                 </div>
               </div>
             </div>
@@ -196,7 +196,7 @@ function TermsPage({ onAccept, onDecline }) {
             <span className="material-symbols-outlined" aria-hidden="true">
               info
             </span>
-            <p>You can change your mind later by contacting our support team.</p>
+            <p>You can change your mind later by contacting our support staff.</p>
           </section>
         </section>
       </main>
