@@ -9,8 +9,8 @@ const steps = [
   { label: 'Confirm' },
 ];
 
-const termsEndpoint = '/api/terms';
-const createTermsEndpoint = '/api/terms';
+const termsEndpoint = '/api/terms/getall';
+const createTermsEndpoint = '/api/terms/createterms';
 
 const initialTermForm = {
   name: '',
@@ -178,7 +178,7 @@ function TermsPage({ onAccept, onDecline }) {
                   <p className="terms-card__eyebrow">User entry</p>
                   <h2 id="terms-admin-title">Enter your details</h2>
                 </div>
-                <span className="terms-card__admin-badge">POST /api/donors</span>
+                <span className="terms-card__admin-badge">POST /api/terms/createterms</span>
               </div>
 
               <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
