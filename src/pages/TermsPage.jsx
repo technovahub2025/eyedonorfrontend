@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProgressStepper from '../components/ProgressStepper';
 import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
@@ -9,7 +9,6 @@ const steps = [
   { label: 'Confirm' },
 ];
 
-const termsEndpoint = '/api/terms/getall';
 const createTermsEndpoint = '/api/terms/createterms';
 
 const initialTermForm = {
@@ -18,46 +17,9 @@ const initialTermForm = {
   gender: '',
 };
 
-function getSalutation(gender) {
-  const value = String(gender || '').trim().toLowerCase();
-
-  if (['male', 'm', 'mr', 'man'].includes(value)) {
-    return 'Mr';
-  }
-
-  if (['female', 'f', 'mrs', 'woman'].includes(value)) {
-    return 'Mrs';
-  }
-
-  return '';
-}
-
-function extractItems(payload) {
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-
-  return payload?.data || payload?.terms || payload?.items || payload?.records || payload?.result || [];
-}
-
-function normalizeTerm(item, index) {
-  const salutation = getSalutation(item?.gender);
-  const baseName = item?.fullName || item?.name || item?.title || item?.label || `Term ${index + 1}`;
-
-  return {
-    id: item?._id || item?.id || item?.termId || `term-${index}`,
-    name: salutation ? `${salutation} ${baseName}` : baseName,
-    age: item?.age ?? '',
-    gender: item?.gender ?? '',
-    body: item?.body || item?.description || item?.details || item?.note || '',
-  };
-}
-
 function TermsPage({ onAccept, onDecline }) {
   const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [accepted, setAccepted] = useState(false);
-  const [terms, setTerms] = useState([]);
-  const [loadingTerms, setLoadingTerms] = useState(true);
   const [savingTerm, setSavingTerm] = useState(false);
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
@@ -77,40 +39,12 @@ function TermsPage({ onAccept, onDecline }) {
       }
     }
 
-    async function loadTerms() {
-      setLoadingTerms(true);
-      try {
-        const response = await apiRequest(termsEndpoint);
-        if (!active) return;
-
-        setTerms(extractItems(response).map(normalizeTerm));
-        setTermsError('');
-      } catch (err) {
-        if (!active) return;
-        setTerms([]);
-        setTermsError(err.message);
-      } finally {
-        if (active) {
-          setLoadingTerms(false);
-        }
-      }
-    }
-
     checkRoot();
-    loadTerms();
 
     return () => {
       active = false;
     };
   }, []);
-
-  const summaryText = useMemo(() => {
-    if (!terms.length) {
-      return 'No terms have been loaded yet.';
-    }
-
-    return `${terms.length} term${terms.length === 1 ? '' : 's'} ready to review.`;
-  }, [terms]);
 
   async function handleCreateTerm(event) {
     event.preventDefault();
@@ -133,9 +67,6 @@ function TermsPage({ onAccept, onDecline }) {
 
       setTermsMessage('Your details were submitted successfully.');
       setTermForm(initialTermForm);
-
-      const response = await apiRequest(termsEndpoint);
-      setTerms(extractItems(response).map(normalizeTerm));
     } catch (err) {
       setTermsError(err.message);
     } finally {
@@ -166,7 +97,7 @@ function TermsPage({ onAccept, onDecline }) {
                   checklist
                 </span>
                 <div>
-                  <strong>{summaryText}</strong>
+                  <strong>Fill out your details</strong>
                   <p>Your submission is saved to the admin record list.</p>
                 </div>
               </div>
@@ -225,33 +156,6 @@ function TermsPage({ onAccept, onDecline }) {
 
               {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
               {termsError ? <p className="terms-card__error">{termsError}</p> : null}
-
-              <div className="terms-card__scroll custom-scrollbar">
-                {loadingTerms ? (
-                  <div className="terms-card__empty">Loading saved entries...</div>
-                ) : terms.length ? (
-                  terms.map((item, index) => (
-                    <article className="terms-card__row" key={item.id || `${item.name}-${index}`}>
-                      <div className="terms-card__row-index">{index + 1}</div>
-                      <div className="terms-card__row-content">
-                        <div className="terms-card__row-heading">
-                          <h3>{item.name}</h3>
-                          {item.age !== '' || item.gender ? (
-                            <span className="terms-card__row-meta">
-                              {[item.age !== '' ? `Age ${item.age}` : null, getSalutation(item.gender) || item.gender || null]
-                                .filter(Boolean)
-                                .join(' · ')}
-                            </span>
-                          ) : null}
-                        </div>
-                        <p>{item.body || 'No additional description was provided.'}</p>
-                      </div>
-                    </article>
-                  ))
-                ) : (
-                  <div className="terms-card__empty">No saved entries yet.</div>
-                )}
-              </div>
             </section>
 
             <label className="terms-card__agree">
