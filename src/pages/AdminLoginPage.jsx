@@ -54,10 +54,13 @@ function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
         },
       });
 
-      setLoginData(data || null);
+      setLoginData({
+        username: form.username,
+        password: form.password,
+      });
       setShowDetails(false);
       setMessage(data?.message || 'admin sign in successful.');
-      onAdminLoginSuccess?.(data);
+      onAdminLoginSuccess?.();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -195,8 +198,8 @@ function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
               <p>No details loaded yet.</p>
             ) : showDetails ? (
               <div>
-                <p>Username: {loginData.username || loginData.name || 'Not provided'}</p>
-                <p>Password: hidden</p>
+                <p>Username: {loginData.username || 'Not provided'}</p>
+                <p>Password: {loginData.password || 'Not provided'}</p>
               </div>
             ) : (
               <p>Your details are ready. Use Show Details to reveal them.</p>

@@ -11,6 +11,11 @@ const initialSearch = {
 const registryEndpoint = '/api/donors';
 const pledgeEndpoint = '/api/terms/gettermsbyid';
 
+function isAuthError(message = '') {
+  const text = String(message).toLowerCase();
+  return text.includes('token') || text.includes('unauthorized') || text.includes('forbidden');
+}
+
 function extractRegistryRows(payload) {
   if (Array.isArray(payload)) {
     return payload;
@@ -150,7 +155,7 @@ function RegistryPage() {
       } catch (err) {
         setRows([]);
         setTotalCount(0);
-        setError(err.message);
+        setError(isAuthError(err.message) ? 'Unable to load user records right now.' : err.message);
       } finally {
         setLoading(false);
       }
@@ -306,7 +311,7 @@ function RegistryPage() {
       }
       await loadRegistry();
     } catch (err) {
-      setError(err.message);
+      setError(isAuthError(err.message) ? 'Unable to delete this record right now.' : err.message);
     } finally {
       setActionLoading('');
     }
@@ -325,7 +330,9 @@ function RegistryPage() {
       const response = await apiRequest(`${pledgeEndpoint}/${id}`);
       setSelectedPledgeRaw(extractDetailRecord(response) || response);
     } catch (err) {
-      setPledgeError(err.message);
+      setPledgeError(
+        isAuthError(err.message) ? 'Unable to load pledge data right now.' : err.message
+      );
       setSelectedPledgeRaw(row);
     } finally {
       setPledgeLoading(false);
