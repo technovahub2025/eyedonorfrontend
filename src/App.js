@@ -21,7 +21,6 @@ const pages = {
 function App() {
   const [activePage, setActivePage] = useState('role-select');
   const [activeRole, setActiveRole] = useState(null);
-  const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
   const PageComponent = pages[activePage] || RoleSelectPage;
 
@@ -87,8 +86,6 @@ function App() {
         onAdminLogout={handleAdminLogout}
         onUserLogout={handleUserLogout}
         onUserTokenChange={setUserToken}
-        adminToken={activePage === 'admin-login' || activePage === 'registry' ? adminToken : undefined}
-        onAdminTokenChange={setAdminToken}
       />
     </div>
   );

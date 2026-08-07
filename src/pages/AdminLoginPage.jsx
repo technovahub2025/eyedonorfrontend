@@ -6,38 +6,17 @@ import './AdminLoginPage.css';
 const initialForm = {
   username: '',
   password: '',
-  otp: '',
 };
 
-function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, onAdminLogout }) {
+function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
-  const [token, setToken] = useState(adminToken || '');
-  const [profile, setProfile] = useState(null);
+  const [loginData, setLoginData] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profileLoading, setProfileLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [rootStatus, setRootStatus] = useState('Checking your connection...');
-
-  async function loadProfile(authToken = token) {
-    if (!authToken) {
-      return;
-    }
-
-    setProfileLoading(true);
-    try {
-      const data = await apiRequest('/api/admin/me', { token: authToken });
-      setProfile(data);
-    } catch (err) {
-      setProfile(null);
-      setError(err.message);
-      setToken('');
-      onAdminTokenChange?.('');
-    } finally {
-      setProfileLoading(false);
-    }
-  }
 
   useEffect(() => {
     let active = true;
@@ -55,16 +34,10 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
     checkRoot();
 
-    setToken(adminToken || '');
-    if (adminToken) {
-      loadProfile(adminToken);
-    }
-
     return () => {
       active = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [adminToken]);
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -81,18 +54,11 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
         },
       });
 
-      const nextToken = data?.token || data?.accessToken || data?.adminToken;
-      if (!nextToken) {
-        throw new Error('Login response did not include a token.');
-      }
-
-      setToken(nextToken);
-      onAdminTokenChange?.(nextToken);
+      setLoginData(data || null);
+      setShowDetails(false);
       setMessage(data?.message || 'admin sign in successful.');
-      onAdminLoginSuccess?.(nextToken, data);
-      await loadProfile(nextToken);
+      onAdminLoginSuccess?.(data);
     } catch (err) {
-      setProfile(null);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -100,11 +66,10 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
   }
 
   function handleLogout() {
-    setToken('');
-    setProfile(null);
+    setLoginData(null);
+    setShowDetails(false);
     setMessage('');
     setError('');
-    onAdminTokenChange?.('');
     onAdminLogout?.();
   }
 
@@ -204,10 +169,15 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           {error ? <p className="admin-login-card__error">{error}</p> : null}
 
           <div className="admin-login-card__actions">
-            <button type="button" className="admin-login-card__secondary" onClick={() => loadProfile()}>
-              {profileLoading ? 'Refreshing...' : 'Refresh Details'}
+            <button
+              type="button"
+              className="admin-login-card__secondary"
+              onClick={() => setShowDetails((current) => !current)}
+              disabled={!loginData}
+            >
+              {showDetails ? 'Hide Details' : 'Show Details'}
             </button>
-            <button type="button" className="admin-login-card__ghost" onClick={handleLogout} disabled={!token}>
+            <button type="button" className="admin-login-card__ghost" onClick={handleLogout}>
               Logout
             </button>
           </div>
@@ -221,13 +191,16 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
 
           <div className="admin-login-card__profile">
             <span className="admin-login-card__profile-label">admin details</span>
-            <p>
-              {profileLoading
-                ? 'Loading your details...'
-                : profile
-                ? 'Your details are ready.'
-                : 'No details loaded yet.'}
-            </p>
+            {!loginData ? (
+              <p>No details loaded yet.</p>
+            ) : showDetails ? (
+              <div>
+                <p>Username: {loginData.username || loginData.name || 'Not provided'}</p>
+                <p>Password: hidden</p>
+              </div>
+            ) : (
+              <p>Your details are ready. Use Show Details to reveal them.</p>
+            )}
           </div>
         </section>
       </main>
