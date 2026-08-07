@@ -121,8 +121,7 @@ function buildPledgeDetails(payload, fallbackRow) {
   return details;
 }
 
-function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
-  const [token, setToken] = useState(adminToken || '');
+function RegistryPage() {
   const [rows, setRows] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -139,18 +138,12 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
   const pageSize = 10;
 
   const loadRegistry = useCallback(
-    async (authToken = token) => {
-      if (!authToken) {
-        setLoading(false);
-        setError('admin sign in is needed to view the list.');
-        return;
-      }
-
+    async () => {
       setLoading(true);
       setError('');
 
       try {
-        const response = await apiRequest(registryEndpoint, { token: authToken });
+        const response = await apiRequest(registryEndpoint);
         const nextRows = extractRegistryRows(response);
         setRows(nextRows);
         setTotalCount(response?.count ?? response?.total ?? response?.totalCount ?? nextRows.length);
@@ -162,7 +155,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         setLoading(false);
       }
     },
-    [token]
+    []
   );
 
   useEffect(() => {
@@ -180,16 +173,12 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     }
 
     checkRoot();
-    loadRegistry(token);
+    loadRegistry();
 
     return () => {
       active = false;
     };
-  }, [loadRegistry, token]);
-
-  useEffect(() => {
-    setToken(adminToken || '');
-  }, [adminToken]);
+  }, [loadRegistry]);
 
   const filteredRows = useMemo(() => {
     return rows.filter((row) => {
@@ -308,7 +297,6 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     try {
       await apiRequest(`${registryEndpoint}/${id}`, {
         method: 'DELETE',
-        token,
       });
       setMessage(`Deleted record ${id}.`);
       if (selectedRowId === id) {
@@ -316,7 +304,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
         setSelectedPledgeRaw(null);
         setPledgeError('');
       }
-      await loadRegistry(token);
+      await loadRegistry();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -334,7 +322,7 @@ function RegistryPage({ adminToken, onAdminTokenChange, onAdminLogout }) {
     setPledgeLoading(true);
 
     try {
-      const response = await apiRequest(`${pledgeEndpoint}/${id}`, { token });
+      const response = await apiRequest(`${pledgeEndpoint}/${id}`);
       setSelectedPledgeRaw(extractDetailRecord(response) || response);
     } catch (err) {
       setPledgeError(err.message);

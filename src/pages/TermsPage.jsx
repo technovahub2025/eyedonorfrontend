@@ -10,7 +10,7 @@ const steps = [
 ];
 
 const termsEndpoint = '/api/donors';
-const createTermsEndpoint = '/api/donors';
+const createTermsEndpoint = '/api/terms';
 
 const initialTermForm = {
   name: '',
@@ -53,7 +53,7 @@ function normalizeTerm(item, index) {
   };
 }
 
-function TermsPage({ onAccept, onDecline, adminToken }) {
+function TermsPage({ onAccept, onDecline }) {
   const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [accepted, setAccepted] = useState(false);
   const [terms, setTerms] = useState([]);
@@ -80,10 +80,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
     async function loadTerms() {
       setLoadingTerms(true);
       try {
-        const response = await apiRequest(
-          termsEndpoint,
-          adminToken ? { token: adminToken } : undefined
-        );
+        const response = await apiRequest(termsEndpoint);
         if (!active) return;
 
         setTerms(extractItems(response).map(normalizeTerm));
@@ -105,7 +102,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
     return () => {
       active = false;
     };
-  }, [adminToken]);
+  }, []);
 
   const summaryText = useMemo(() => {
     if (!terms.length) {
@@ -137,7 +134,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
       setTermsMessage('Your details were submitted successfully.');
       setTermForm(initialTermForm);
 
-      const response = await apiRequest(termsEndpoint, adminToken ? { token: adminToken } : undefined);
+      const response = await apiRequest(termsEndpoint);
       setTerms(extractItems(response).map(normalizeTerm));
     } catch (err) {
       setTermsError(err.message);

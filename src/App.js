@@ -75,7 +75,6 @@ function App() {
         <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
       ) : null}
       <PageComponent
-        adminToken={adminToken}
         userToken={userToken}
         onRoleSelect={handleRoleSelect}
         onDataSuccess={handleDataSuccess}
@@ -87,8 +86,9 @@ function App() {
         onAdminLoginSuccess={handleAdminLoginSuccess}
         onAdminLogout={handleAdminLogout}
         onUserLogout={handleUserLogout}
-        onAdminTokenChange={setAdminToken}
         onUserTokenChange={setUserToken}
+        adminToken={activePage === 'admin-login' || activePage === 'registry' ? adminToken : undefined}
+        onAdminTokenChange={setAdminToken}
       />
     </div>
   );
