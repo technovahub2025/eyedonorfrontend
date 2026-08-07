@@ -137,7 +137,7 @@ function buildPledgeDetails(payload) {
   add('Notes', record.notes || record.body || record.description || record.note);
   add('Created At', record.createdAt || record.created_at);
   add('Updated At', record.updatedAt || record.updated_at);
-  add('Record ID', record._id || record.id || record.termId);
+  add('Reference ID', record._id || record.id || record.termId);
 
   Object.entries(record).forEach(([key, value]) => {
     const normalizedKey = key.toLowerCase();
@@ -363,13 +363,13 @@ function RegistryPage({ adminToken }) {
     link.click();
     link.remove();
     URL.revokeObjectURL(url);
-    setMessage(`Exported ${filteredRows.length} record${filteredRows.length === 1 ? '' : 's'}.`);
+    setMessage(`Exported ${filteredRows.length} person${filteredRows.length === 1 ? '' : 's'}.`);
     setError('');
   }
 
   async function deleteuser(id) {
     if (!id) return;
-    if (!window.confirm('Delete this record?')) return;
+    if (!window.confirm('Delete this person?')) return;
 
     setActionLoading(id);
     setMessage('');
@@ -380,7 +380,7 @@ function RegistryPage({ adminToken }) {
         method: 'DELETE',
         token: adminToken,
       });
-      setMessage(`Deleted record ${id}.`);
+      setMessage(`Deleted person ${id}.`);
       if (selectedRowId === id) {
         setSelectedRowId('');
         setSelectedPledgeRaw(null);
@@ -388,7 +388,7 @@ function RegistryPage({ adminToken }) {
       }
       await loadRegistry();
     } catch (err) {
-      setError(isAuthError(err.message) ? 'Unable to delete this record right now.' : err.message);
+      setError(isAuthError(err.message) ? 'Unable to delete this person right now.' : err.message);
     } finally {
       setActionLoading('');
     }
@@ -469,11 +469,11 @@ function RegistryPage({ adminToken }) {
             <option value="inactive">Inactive</option>
           </select>
 
-            <button type="button" className="registry-page__action registry-page__action--ghost">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                tune
-              </span>
-              More filters
+          <button type="button" className="registry-page__action registry-page__action--ghost">
+            <span className="material-symbols-outlined" aria-hidden="true">
+              tune
+            </span>
+            More filters
           </button>
         </section>
 
@@ -516,7 +516,7 @@ function RegistryPage({ adminToken }) {
                         <RegistryRow
                           key={id || row.email}
                           initials={initials}
-                          name={row.fullName || row.name || 'Unnamed user'}
+                          name={row.fullName || row.name || 'Unnamed person'}
                           email={row.email || 'No email'}
                           phone={row.phone || 'No phone'}
                           date={
@@ -589,7 +589,7 @@ function RegistryPage({ adminToken }) {
             <div className="registry-page__sidebar-header">
               <div>
                 <p className="registry-page__eyebrow">Team only</p>
-                <h2>Selected user</h2>
+                <h2>Selected person</h2>
               </div>
               <span className="registry-page__sidebar-badge">
                 {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
@@ -603,8 +603,8 @@ function RegistryPage({ adminToken }) {
             ) : (
               <div className="registry-page__detail-list">
                 <article className="registry-page__sidebar-card">
-                  <p className="registry-page__sidebar-label">Selected user</p>
-                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed user'}</strong>
+                  <p className="registry-page__sidebar-label">Selected person</p>
+                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed person'}</strong>
                   <span>{selectedRow.email || 'No email provided'}</span>
                   <span>{selectedRow.phone || 'No phone provided'}</span>
                 </article>
@@ -654,7 +654,7 @@ function RegistryPage({ adminToken }) {
               </span>
             </div>
             <div>
-              <p>Total Records</p>
+              <p>Total People</p>
               <strong>{totalCount || rows.length}</strong>
             </div>
           </article>

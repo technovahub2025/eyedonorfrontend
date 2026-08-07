@@ -26,7 +26,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
       } catch (err) {
         if (!active) return;
         setRootStatus(`Connection check failed: ${err.message}`);
@@ -116,7 +116,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           </article>
           <article>
             <strong>Activity log</strong>
-            <span>A record of changes</span>
+            <span>A simple history of changes</span>
           </article>
         </div>
 
@@ -150,14 +150,14 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             />
 
             <div className="admin-login-form__password-row">
-                <FormField
-                  id="admin-password"
-                  label="Password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your passcode"
-                  icon="lock"
-                  value={form.password}
-                  onChange={(event) => setForm({ ...form, password: event.target.value })}
+              <FormField
+                id="admin-password"
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your passcode"
+                icon="lock"
+                value={form.password}
+                onChange={(event) => setForm({ ...form, password: event.target.value })}
                 autoComplete="current-password"
                 required
               />
@@ -199,7 +199,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <span className="material-symbols-outlined" aria-hidden="true">
               verified_user
             </span>
-            <p>All team access is protected and kept on record.</p>
+            <p>All team access is protected and kept for the team.</p>
           </div>
 
           <div className="admin-login-card__profile">
