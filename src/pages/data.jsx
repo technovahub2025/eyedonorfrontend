@@ -23,7 +23,7 @@ function DataPage({ onDataSuccess }) {
       try {
         const data = await apiRequest('/');
         if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is connected.');
+        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
       } catch (err) {
         if (!active) return;
         setRootStatus(`Connection check failed: ${err.message}`);
@@ -52,7 +52,7 @@ function DataPage({ onDataSuccess }) {
         },
       });
 
-      setMessage(data?.message || 'Your details were saved and are waiting for verification.');
+      setMessage(data?.message || 'Your details were saved and are waiting for the next step.');
       setForm(initialForm);
       onDataSuccess?.(data);
     } catch (err) {
@@ -70,15 +70,15 @@ function DataPage({ onDataSuccess }) {
         <section className="login-page__layout">
           <div className="login-page__intro">
             <p className="login-page__eyebrow">Your details</p>
-            <h1>Enter the details for your registration</h1>
+            <h1>Tell us a little about yourself</h1>
             <p className="login-page__copy">
-              Share the details that will be checked before the next step.
+              Share the details we need before you continue.
             </p>
 
             <div className="login-page__highlights" aria-label="Highlights">
               <article>
-                <strong>Check</strong>
-                <span>Details verification step</span>
+                <strong>Simple</strong>
+                <span>Easy to complete</span>
               </article>
               <article>
                 <strong>Quick</strong>
@@ -89,9 +89,9 @@ function DataPage({ onDataSuccess }) {
 
           <section className="login-card" aria-labelledby="login-title">
             <header className="login-card__header">
-              <p className="login-card__kicker">VisionGift Data Form</p>
-              <h2 id="login-title">Submit your details</h2>
-              <p>Please provide the registration information needed to continue.</p>
+              <p className="login-card__kicker">VisionGift</p>
+              <h2 id="login-title">Share your details</h2>
+              <p>Please fill in the information needed to continue.</p>
             </header>
 
             <form className="login-form" onSubmit={handleSubmit}>
@@ -132,7 +132,7 @@ function DataPage({ onDataSuccess }) {
                 <span>Notes</span>
                 <textarea
                   rows={4}
-                  placeholder="I want to donate eyes after death"
+                  placeholder="I want to support eye donation"
                   value={form.notes}
                   onChange={(event) => setForm({ ...form, notes: event.target.value })}
                   required

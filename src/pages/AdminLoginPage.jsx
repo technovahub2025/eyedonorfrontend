@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import BrandMark from '../components/BrandMark';
 import FormField from '../components/FormField';
 import { apiRequest } from '../lib/apiClient';
 import './AdminLoginPage.css';
@@ -73,7 +74,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
       });
       onAdminTokenChange?.(nextToken);
       setShowDetails(false);
-      setMessage(data?.message || 'admin sign in successful.');
+      setMessage(data?.message || 'Sign in successful.');
       onAdminLoginSuccess?.(nextToken, data);
     } catch (err) {
       setError(err.message);
@@ -95,33 +96,27 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
     <div className="admin-login-page">
       <aside className="admin-login-page__panel">
         <div className="admin-login-page__brand">
-          <span className="material-symbols-outlined" aria-hidden="true">
-            visibility
-          </span>
-          <span>VisionGift Admin</span>
+          <BrandMark title="VisionGift" subtitle="Team access" />
         </div>
 
         <div className="admin-login-page__panel-copy">
-          <p className="admin-login-page__eyebrow">Protected access</p>
-          <h1>admin Sign In</h1>
-          <p>
-            Use your admin details to manage user lists, check requests, and handle important
-            tasks.
-          </p>
+          <p className="admin-login-page__eyebrow">Team access</p>
+          <h1>Sign in</h1>
+          <p>Use your team details to review people and keep things moving.</p>
         </div>
 
         <div className="admin-login-page__trust-grid">
           <article>
             <strong>Extra check</strong>
-            <span>Optional added verification</span>
+            <span>A second layer before entry</span>
           </article>
           <article>
             <strong>Private access</strong>
-            <span>Careful entry controls</span>
+            <span>Only approved people can enter</span>
           </article>
           <article>
             <strong>Activity log</strong>
-            <span>Record of admin actions</span>
+            <span>A record of changes</span>
           </article>
         </div>
 
@@ -129,24 +124,24 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           <span className="material-symbols-outlined" aria-hidden="true">
             shield
           </span>
-          <p>admin access is watched and limited to approved team members.</p>
+          <p>Team access is limited to approved members.</p>
         </div>
       </aside>
 
       <main className="admin-login-page__main">
         <section className="admin-login-card" aria-labelledby="admin-login-title">
           <header className="admin-login-card__header">
-            <p className="admin-login-card__kicker">VisionGift Secure Portal</p>
-            <h2 id="admin-login-title">admin Login</h2>
-            <p>Enter your details to open the dashboard and user tools.</p>
+            <p className="admin-login-card__kicker">VisionGift</p>
+            <h2 id="admin-login-title">Team sign in</h2>
+            <p>Enter your details to open the list and tools.</p>
             <p className="admin-login-card__status">{rootStatus}</p>
           </header>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
             <FormField
               id="admin-username"
-              label="Username or Email"
-              placeholder="admin@example.com"
+              label="Email or name"
+              placeholder="team@example.com"
               icon="person"
               value={form.username}
               onChange={(event) => setForm({ ...form, username: event.target.value })}
@@ -155,14 +150,14 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             />
 
             <div className="admin-login-form__password-row">
-              <FormField
-                id="admin-password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                icon="lock"
-                value={form.password}
-                onChange={(event) => setForm({ ...form, password: event.target.value })}
+                <FormField
+                  id="admin-password"
+                  label="Password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your passcode"
+                  icon="lock"
+                  value={form.password}
+                  onChange={(event) => setForm({ ...form, password: event.target.value })}
                 autoComplete="current-password"
                 required
               />
@@ -176,7 +171,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             </div>
 
             <button className="admin-login-form__submit" type="submit" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign In to Dashboard'}
+              {loading ? 'Signing in...' : 'Sign in'}
               <span className="material-symbols-outlined" aria-hidden="true">
                 arrow_forward
               </span>
@@ -204,11 +199,11 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <span className="material-symbols-outlined" aria-hidden="true">
               verified_user
             </span>
-            <p>All admin access is logged and protected with secure sign-in handling.</p>
+            <p>All team access is protected and kept on record.</p>
           </div>
 
           <div className="admin-login-card__profile">
-            <span className="admin-login-card__profile-label">admin details</span>
+            <span className="admin-login-card__profile-label">Saved details</span>
             {!loginData ? (
               <p>No details loaded yet.</p>
             ) : showDetails ? (
@@ -217,7 +212,7 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
                 <p>Password: {loginData.password || 'Not provided'}</p>
               </div>
             ) : (
-              <p>Your details are ready. Use Show Details to reveal them.</p>
+              <p>Your details are ready. Use Show Details to see them.</p>
             )}
           </div>
         </section>

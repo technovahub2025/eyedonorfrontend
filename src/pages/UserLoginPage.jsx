@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import BrandMark from '../components/BrandMark';
 import FormField from '../components/FormField';
 import { apiRequest } from '../lib/apiClient';
 import './UserLoginPage.css';
@@ -89,39 +90,36 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
     <div className="user-login-page">
       <section className="user-login-page__hero">
         <div className="user-login-page__brand">
-          <span className="material-symbols-outlined" aria-hidden="true">
-            visibility
-          </span>
-          <span>VisionGift</span>
+          <BrandMark title="VisionGift" subtitle="Start with your details" />
         </div>
 
         <div className="user-login-page__hero-copy">
-          <p className="user-login-page__eyebrow">User access</p>
+          <p className="user-login-page__eyebrow">Start here</p>
           <h1>Sign in with your email and phone</h1>
-          <p>Use your details to sign in and continue with your registration.</p>
+          <p>Use your contact details to continue.</p>
         </div>
 
         <div className="user-login-page__facts">
           <article>
-            <strong>Sign in</strong>
+            <strong>Quick start</strong>
             <span>Email and phone</span>
           </article>
           <article>
             <strong>Your details</strong>
-            <span>Saved information</span>
+            <span>Kept for the next step</span>
           </article>
           <article>
-            <strong>Saved here</strong>
-            <span>On this device</span>
+            <strong>Private</strong>
+            <span>Only on this device</span>
           </article>
         </div>
       </section>
 
       <section className="user-login-card" aria-labelledby="user-login-title">
         <header className="user-login-card__header">
-          <p className="user-login-card__kicker">VisionGift User Portal</p>
-          <h2 id="user-login-title">User Login</h2>
-          <p>Use your registered details to sign in and see your information.</p>
+          <p className="user-login-card__kicker">VisionGift</p>
+          <h2 id="user-login-title">Sign in</h2>
+          <p>Use your registered details to continue.</p>
         </header>
 
         <form className="user-login-form" onSubmit={handleSubmit}>

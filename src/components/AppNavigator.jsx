@@ -1,12 +1,13 @@
 import './AppNavigator.css';
+import BrandMark from './BrandMark';
 
 const navItems = [
-  { key: 'login-data', label: 'Your Details' },
-  { key: 'terms', label: 'Terms' },
-  { key: 'verification', label: 'Verify' },
+  { key: 'login-data', label: 'Start' },
+  { key: 'terms', label: 'Review' },
+  { key: 'verification', label: 'Check' },
   { key: 'thank-you', label: 'Done' },
-  { key: 'admin-login', label: 'admin Sign In' },
-  { key: 'registry', label: 'user List' },
+  { key: 'admin-login', label: 'Team sign in' },
+  { key: 'registry', label: 'People list' },
 ];
 
 const roleNavMap = {
@@ -23,13 +24,7 @@ function AppNavigator({ activePage, activeRole, onNavigate }) {
     <header className="app-navigator">
       <div className="app-navigator__inner">
         <div className="app-navigator__brand">
-          <span className="material-symbols-outlined" aria-hidden="true">
-            visibility
-          </span>
-          <div>
-            <strong>VisionGift</strong>
-            <span>Where you are</span>
-          </div>
+          <BrandMark title="VisionGift" subtitle="A kinder way to register" />
         </div>
 
         <nav className="app-navigator__tabs" aria-label="Page navigation">
