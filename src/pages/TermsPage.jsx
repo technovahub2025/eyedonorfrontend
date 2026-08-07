@@ -63,8 +63,6 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
   const [termsError, setTermsError] = useState('');
   const [termForm, setTermForm] = useState(initialTermForm);
 
-  const isAdmin = Boolean(adminToken);
-
   useEffect(() => {
     let active = true;
 
@@ -84,7 +82,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
       try {
         const response = await apiRequest(
           termsEndpoint,
-          isAdmin && adminToken ? { token: adminToken } : undefined
+          adminToken ? { token: adminToken } : undefined
         );
         if (!active) return;
 
@@ -107,7 +105,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
     return () => {
       active = false;
     };
-  }, [adminToken, isAdmin]);
+  }, [adminToken]);
 
   const summaryText = useMemo(() => {
     if (!terms.length) {
@@ -119,8 +117,6 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
 
   async function handleCreateTerm(event) {
     event.preventDefault();
-    if (!isAdmin) return;
-
     setSavingTerm(true);
     setTermsMessage('');
     setTermsError('');
@@ -134,14 +130,13 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
     try {
       await apiRequest(createTermsEndpoint, {
         method: 'POST',
-        token: adminToken,
         body: payload,
       });
 
-      setTermsMessage('Term row saved successfully.');
+      setTermsMessage('Your details were submitted successfully.');
       setTermForm(initialTermForm);
 
-      const response = await apiRequest(termsEndpoint, { token: adminToken });
+      const response = await apiRequest(termsEndpoint, adminToken ? { token: adminToken } : undefined);
       setTerms(extractItems(response).map(normalizeTerm));
     } catch (err) {
       setTermsError(err.message);
@@ -174,10 +169,65 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
                 </span>
                 <div>
                   <strong>{summaryText}</strong>
-                  <p>Admin users can add rows without exposing them to the user flow.</p>
+                  <p>Your submission is saved to the admin record list.</p>
                 </div>
               </div>
             </div>
+
+            <section className="terms-card__admin-panel" aria-labelledby="terms-admin-title">
+              <div className="terms-card__admin-header">
+                <div>
+                  <p className="terms-card__eyebrow">User entry</p>
+                  <h2 id="terms-admin-title">Enter your details</h2>
+                </div>
+                <span className="terms-card__admin-badge">POST /api/terms/createterms</span>
+              </div>
+
+              <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
+                <label className="terms-card__field">
+                  <span>Name</span>
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    value={termForm.name}
+                    onChange={(event) => setTermForm({ ...termForm, name: event.target.value })}
+                    required
+                  />
+                </label>
+
+                <label className="terms-card__field">
+                  <span>Age</span>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="25"
+                    value={termForm.age}
+                    onChange={(event) => setTermForm({ ...termForm, age: event.target.value })}
+                    required
+                  />
+                </label>
+
+                <label className="terms-card__field">
+                  <span>Gender</span>
+                  <select
+                    value={termForm.gender}
+                    onChange={(event) => setTermForm({ ...termForm, gender: event.target.value })}
+                    required
+                  >
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </label>
+
+                <button className="terms-card__submit" type="submit" disabled={savingTerm}>
+                  {savingTerm ? 'Saving...' : 'Save Details'}
+                </button>
+              </form>
+
+              {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
+              {termsError ? <p className="terms-card__error">{termsError}</p> : null}
+            </section>
 
             <div className="terms-card__scroll custom-scrollbar">
               {loadingTerms ? (
@@ -205,63 +255,6 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
                 <div className="terms-card__empty">No terms were returned by the API.</div>
               )}
             </div>
-
-            {isAdmin ? (
-              <section className="terms-card__admin-panel" aria-labelledby="terms-admin-title">
-                <div className="terms-card__admin-header">
-                  <div>
-                    <p className="terms-card__eyebrow">Admin only</p>
-                    <h2 id="terms-admin-title">Add term row</h2>
-                  </div>
-                  <span className="terms-card__admin-badge">POST /api/terms/createterms</span>
-                </div>
-
-                <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
-                  <label className="terms-card__field">
-                    <span>Name</span>
-                    <input
-                      type="text"
-                      placeholder="John Doe"
-                      value={termForm.name}
-                      onChange={(event) => setTermForm({ ...termForm, name: event.target.value })}
-                      required
-                    />
-                  </label>
-
-                  <label className="terms-card__field">
-                    <span>Age</span>
-                    <input
-                      type="number"
-                      min="0"
-                      placeholder="25"
-                      value={termForm.age}
-                      onChange={(event) => setTermForm({ ...termForm, age: event.target.value })}
-                      required
-                    />
-                  </label>
-
-                  <label className="terms-card__field">
-                    <span>Gender</span>
-                    <select
-                      value={termForm.gender}
-                      onChange={(event) => setTermForm({ ...termForm, gender: event.target.value })}
-                      required
-                    >
-                      <option value="">Select gender</option>
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
-                  </label>
-
-                  <button className="terms-card__submit" type="submit" disabled={savingTerm}>
-                    {savingTerm ? 'Saving...' : 'Add Row'}
-                  </button>
-                </form>
-
-                {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
-                {termsError ? <p className="terms-card__error">{termsError}</p> : null}
-              </section>
-            ) : null}
 
             <label className="terms-card__agree">
               <input
