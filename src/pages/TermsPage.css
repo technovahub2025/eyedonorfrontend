@@ -17,42 +17,8 @@
   font-family: 'Inter', sans-serif;
 }
 
-.terms-page__header,
-.terms-page__footer {
-  border-color: #c3c6d5;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-}
-
-.terms-page__header {
-  border-bottom: 1px solid #c3c6d5;
-}
-
-.terms-page__brand,
-.terms-page__footer-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #003c90;
-  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
-  font-weight: 700;
-}
-
-.terms-page__brand {
-  justify-content: center;
-  width: min(1200px, calc(100% - 32px));
-  margin: 0 auto;
-  padding: 20px 0;
-  font-size: 1.35rem;
-}
-
-.terms-page__brand .material-symbols-outlined,
-.terms-page__footer-brand .material-symbols-outlined {
-  color: #003c90;
-}
-
 .terms-page__main {
-  width: min(640px, calc(100% - 32px));
+  width: min(760px, calc(100% - 32px));
   margin: 0 auto;
   padding: 40px 0 36px;
 }
@@ -67,6 +33,13 @@
   background: rgba(255, 255, 255, 0.88);
   box-shadow: 0 18px 48px rgba(15, 82, 186, 0.08);
   padding: 28px;
+}
+
+.terms-card__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(240px, 0.95fr);
+  gap: 20px;
+  align-items: start;
 }
 
 .terms-card h1 {
@@ -90,6 +63,33 @@
   line-height: 1.5;
 }
 
+.terms-card__summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #c3c6d5;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(0, 60, 144, 0.08), rgba(122, 247, 233, 0.12));
+  color: #1a1c1e;
+}
+
+.terms-card__summary .material-symbols-outlined {
+  color: #003c90;
+}
+
+.terms-card__summary strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.98rem;
+}
+
+.terms-card__summary p {
+  margin: 0;
+  color: #4e5666;
+  line-height: 1.5;
+}
+
 .terms-card__scroll {
   height: 20rem;
   overflow-y: auto;
@@ -100,21 +100,174 @@
   background: #f3f3f6;
 }
 
-.terms-card__section + .terms-card__section {
+.terms-card__row + .terms-card__row {
   margin-top: 18px;
 }
 
-.terms-card__section h3 {
-  margin: 0 0 8px;
+.terms-card__row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid #d8dbe6;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.terms-card__row-index {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #d9e2ff;
+  color: #003c90;
+  font-weight: 800;
+}
+
+.terms-card__row-content h3 {
+  margin: 0;
   color: #1a1c1e;
   font-size: 1rem;
   line-height: 1.4;
 }
 
-.terms-card__section p {
+.terms-card__row-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.terms-card__row-meta {
+  color: #006a63;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.terms-card__row p {
   margin: 0;
   color: #4e5666;
   line-height: 1.7;
+}
+
+.terms-card__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  color: #4e5666;
+  text-align: center;
+}
+
+.terms-card__admin-panel {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #c3c6d5;
+  border-radius: 18px;
+  background: rgba(249, 249, 252, 0.85);
+}
+
+.terms-card__admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.terms-card__eyebrow {
+  margin: 0 0 4px;
+  color: #006a63;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.terms-card__admin-header h2 {
+  margin: 0;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+  font-size: 1.2rem;
+}
+
+.terms-card__admin-badge {
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #d9e2ff;
+  color: #003c90;
+  font-size: 0.75rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.terms-card__admin-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.terms-card__field {
+  display: grid;
+  gap: 8px;
+}
+
+.terms-card__field span {
+  color: #4e5666;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.terms-card__field input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #c3c6d5;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1a1c1e;
+  font: inherit;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.terms-card__field input:focus {
+  border-color: #003c90;
+  box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.1);
+}
+
+.terms-card__submit {
+  min-height: 48px;
+  border: 0;
+  border-radius: 12px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, #003c90 0%, #0f52ba 100%);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.terms-card__submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.terms-card__success,
+.terms-card__error {
+  margin: 12px 0 0;
+  line-height: 1.6;
+}
+
+.terms-card__success {
+  color: #006a63;
+}
+
+.terms-card__error {
+  color: #ba1a1a;
 }
 
 .terms-card__agree {
@@ -190,38 +343,6 @@
   line-height: 1.6;
 }
 
-.terms-page__footer {
-  border-top: 1px solid #c3c6d5;
-}
-
-.terms-page__footer-inner {
-  width: min(1200px, calc(100% - 32px));
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-  padding: 22px 0 26px;
-}
-
-.terms-page__powered-by {
-  color: #003c90;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.terms-page__powered-by:hover {
-  text-decoration: underline;
-}
-
-.terms-page__footer p {
-  margin: 0;
-  color: #43474b;
-  font-size: 0.8rem;
-  text-align: center;
-}
-
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
@@ -241,9 +362,7 @@
 }
 
 @media (max-width: 640px) {
-  .terms-page__main,
-  .terms-page__brand,
-  .terms-page__footer-inner {
+  .terms-page__main {
     width: min(100% - 20px, 1200px);
   }
 
@@ -252,12 +371,16 @@
     border-radius: 20px;
   }
 
-  .terms-card__actions {
+  .terms-card__header,
+  .terms-card__admin-form {
+    grid-template-columns: 1fr;
+  }
+
+  .terms-card__admin-header {
     flex-direction: column;
   }
 
-  .terms-page__footer-inner {
-    justify-content: center;
-    text-align: center;
+  .terms-card__actions {
+    flex-direction: column;
   }
 }
