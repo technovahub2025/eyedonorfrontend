@@ -72,9 +72,8 @@ function formatDetailValue(value) {
   return String(value);
 }
 
-function buildPledgeDetails(payload, fallbackRow) {
+function buildPledgeDetails(payload) {
   const record = extractDetailRecord(payload) || {};
-  const merged = { ...fallbackRow, ...record };
   const details = [];
   const seen = new Set();
 
@@ -87,16 +86,16 @@ function buildPledgeDetails(payload, fallbackRow) {
     seen.add(label);
   }
 
-  add('Name', merged.name || merged.fullName);
-  add('Age', merged.age);
-  add('Gender', merged.gender);
-  add('Email', merged.email);
-  add('Phone', merged.phone);
-  add('Status', merged.status);
-  add('Notes', merged.notes || merged.body || merged.description || merged.note);
-  add('Created At', merged.createdAt || merged.created_at);
-  add('Updated At', merged.updatedAt || merged.updated_at);
-  add('Record ID', merged._id || merged.id || merged.termId);
+  add('Name', record.name || record.fullName);
+  add('Age', record.age);
+  add('Gender', record.gender);
+  add('Email', record.email);
+  add('Phone', record.phone);
+  add('Status', record.status);
+  add('Notes', record.notes || record.body || record.description || record.note);
+  add('Created At', record.createdAt || record.created_at);
+  add('Updated At', record.updatedAt || record.updated_at);
+  add('Record ID', record._id || record.id || record.termId);
 
   Object.entries(record).forEach(([key, value]) => {
     const normalizedKey = key.toLowerCase();
@@ -222,8 +221,8 @@ function RegistryPage({ adminToken }) {
   );
 
   const selectedPledgeDetails = useMemo(
-    () => buildPledgeDetails(selectedPledgeRaw, selectedRow),
-    [selectedPledgeRaw, selectedRow]
+    () => buildPledgeDetails(selectedPledgeRaw),
+    [selectedPledgeRaw]
   );
 
   useEffect(() => {
@@ -531,7 +530,7 @@ function RegistryPage({ adminToken }) {
             <div className="registry-page__sidebar-header">
               <div>
                 <p className="registry-page__eyebrow">Admin only</p>
-                <h2>Pledge data</h2>
+                <h2>Selected user</h2>
               </div>
               <span className="registry-page__sidebar-badge">
                 {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
@@ -543,33 +542,45 @@ function RegistryPage({ adminToken }) {
                 Click a user row to load the related pledge data from the API.
               </div>
             ) : (
-              <>
-                <div className="registry-page__sidebar-card">
+              <div className="registry-page__detail-list">
+                <article className="registry-page__sidebar-card">
                   <p className="registry-page__sidebar-label">Selected user</p>
                   <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed user'}</strong>
                   <span>{selectedRow.email || 'No email provided'}</span>
-                </div>
+                  <span>{selectedRow.phone || 'No phone provided'}</span>
+                </article>
 
-                {pledgeLoading ? <div className="registry-page__sidebar-empty">Loading pledge data...</div> : null}
-                {pledgeError ? <div className="registry-page__toast registry-page__toast--error">{pledgeError}</div> : null}
-
-                {selectedPledgeDetails.length ? (
-                  <div className="registry-page__detail-list">
-                    {selectedPledgeDetails.map((detail) => (
-                      <article key={detail.label} className="registry-page__detail-item">
-                        <span>{detail.label}</span>
-                        <strong>{detail.value}</strong>
-                      </article>
-                    ))}
+                <article className="registry-page__sidebar-card">
+                  <div className="registry-page__sidebar-header">
+                    <div>
+                      <p className="registry-page__eyebrow">Filtered result</p>
+                      <h2>Pledge data</h2>
+                    </div>
+                    <span className="registry-page__sidebar-badge">
+                      {pledgeLoading ? 'Loading...' : 'By user'}
+                    </span>
                   </div>
-                ) : null}
 
-                {!pledgeLoading && !selectedPledgeDetails.length ? (
-                  <div className="registry-page__sidebar-empty">
-                    The API returned no pledge fields for this record.
-                  </div>
-                ) : null}
-              </>
+                  {pledgeLoading ? (
+                    <div className="registry-page__sidebar-empty">Loading pledge data...</div>
+                  ) : pledgeError ? (
+                    <div className="registry-page__toast registry-page__toast--error">{pledgeError}</div>
+                  ) : selectedPledgeDetails.length ? (
+                    <div className="registry-page__detail-list">
+                      {selectedPledgeDetails.map((detail) => (
+                        <article key={detail.label} className="registry-page__detail-item">
+                          <span>{detail.label}</span>
+                          <strong>{detail.value}</strong>
+                        </article>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="registry-page__sidebar-empty">
+                      The API returned no pledge fields for this user.
+                    </div>
+                  )}
+                </article>
+              </div>
             )}
           </aside>
         </section>
