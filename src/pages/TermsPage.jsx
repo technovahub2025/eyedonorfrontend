@@ -181,7 +181,7 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
                   <p className="terms-card__eyebrow">User entry</p>
                   <h2 id="terms-admin-title">Enter your details</h2>
                 </div>
-                  <span className="terms-card__admin-badge">POST /api/donors</span>
+                <span className="terms-card__admin-badge">POST /api/donors</span>
               </div>
 
               <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
@@ -228,9 +228,34 @@ function TermsPage({ onAccept, onDecline, adminToken }) {
 
               {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
               {termsError ? <p className="terms-card__error">{termsError}</p> : null}
-            </section>
 
-            
+              <div className="terms-card__scroll custom-scrollbar">
+                {loadingTerms ? (
+                  <div className="terms-card__empty">Loading saved entries...</div>
+                ) : terms.length ? (
+                  terms.map((item, index) => (
+                    <article className="terms-card__row" key={item.id || `${item.name}-${index}`}>
+                      <div className="terms-card__row-index">{index + 1}</div>
+                      <div className="terms-card__row-content">
+                        <div className="terms-card__row-heading">
+                          <h3>{item.name}</h3>
+                          {item.age !== '' || item.gender ? (
+                            <span className="terms-card__row-meta">
+                              {[item.age !== '' ? `Age ${item.age}` : null, getSalutation(item.gender) || item.gender || null]
+                                .filter(Boolean)
+                                .join(' · ')}
+                            </span>
+                          ) : null}
+                        </div>
+                        <p>{item.body || 'No additional description was provided.'}</p>
+                      </div>
+                    </article>
+                  ))
+                ) : (
+                  <div className="terms-card__empty">No saved entries yet.</div>
+                )}
+              </div>
+            </section>
 
             <label className="terms-card__agree">
               <input
