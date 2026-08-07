@@ -9,7 +9,7 @@ const initialSearch = {
 };
 
 const registryEndpoint = '/api/donors';
-const pledgeEndpoint = '/api/terms/gettermsbyid';
+const pledgeEndpoint = '/api/donors';
 
 function extractRegistryRows(payload) {
   if (Array.isArray(payload)) {
