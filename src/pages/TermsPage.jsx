@@ -9,7 +9,7 @@ const steps = [
   { label: 'Confirm' },
 ];
 
-const termsEndpoint = '/api/donors';
+const termsEndpoint = '/api/terms';
 const createTermsEndpoint = '/api/terms';
 
 const initialTermForm = {
