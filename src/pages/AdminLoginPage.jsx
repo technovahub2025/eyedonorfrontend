@@ -8,7 +8,7 @@ const initialForm = {
   password: '',
 };
 
-function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
+function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, onAdminLogout }) {
   const [form, setForm] = useState(initialForm);
   const [showPassword, setShowPassword] = useState(false);
   const [loginData, setLoginData] = useState(null);
@@ -39,6 +39,14 @@ function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
     };
   }, []);
 
+  useEffect(() => {
+    if (!adminToken) {
+      return;
+    }
+
+    setLoginData((current) => current || { username: '', password: '' });
+  }, [adminToken]);
+
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);
@@ -54,13 +62,19 @@ function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
         },
       });
 
+      const nextToken = data?.token || data?.accessToken || data?.adminToken;
+      if (!nextToken) {
+        throw new Error('Login response did not include a token.');
+      }
+
       setLoginData({
         username: form.username,
         password: form.password,
       });
+      onAdminTokenChange?.(nextToken);
       setShowDetails(false);
       setMessage(data?.message || 'admin sign in successful.');
-      onAdminLoginSuccess?.();
+      onAdminLoginSuccess?.(nextToken, data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -73,6 +87,7 @@ function AdminLoginPage({ onAdminLoginSuccess, onAdminLogout }) {
     setShowDetails(false);
     setMessage('');
     setError('');
+    onAdminTokenChange?.('');
     onAdminLogout?.();
   }
 

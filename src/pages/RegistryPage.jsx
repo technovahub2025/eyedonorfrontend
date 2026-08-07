@@ -126,7 +126,7 @@ function buildPledgeDetails(payload, fallbackRow) {
   return details;
 }
 
-function RegistryPage() {
+function RegistryPage({ adminToken }) {
   const [rows, setRows] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -144,11 +144,19 @@ function RegistryPage() {
 
   const loadRegistry = useCallback(
     async () => {
+      if (!adminToken) {
+        setRows([]);
+        setTotalCount(0);
+        setError('Please sign in as admin to view user records.');
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       setError('');
 
       try {
-        const response = await apiRequest(registryEndpoint);
+        const response = await apiRequest(registryEndpoint, { token: adminToken });
         const nextRows = extractRegistryRows(response);
         setRows(nextRows);
         setTotalCount(response?.count ?? response?.total ?? response?.totalCount ?? nextRows.length);
@@ -160,7 +168,7 @@ function RegistryPage() {
         setLoading(false);
       }
     },
-    []
+    [adminToken]
   );
 
   useEffect(() => {
@@ -302,6 +310,7 @@ function RegistryPage() {
     try {
       await apiRequest(`${registryEndpoint}/${id}`, {
         method: 'DELETE',
+        token: adminToken,
       });
       setMessage(`Deleted record ${id}.`);
       if (selectedRowId === id) {
@@ -327,7 +336,7 @@ function RegistryPage() {
     setPledgeLoading(true);
 
     try {
-      const response = await apiRequest(`${pledgeEndpoint}/${id}`);
+      const response = await apiRequest(`${pledgeEndpoint}/${id}`, { token: adminToken });
       setSelectedPledgeRaw(extractDetailRecord(response) || response);
     } catch (err) {
       setPledgeError(
