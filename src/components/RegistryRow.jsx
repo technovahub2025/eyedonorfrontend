@@ -11,6 +11,8 @@ function RegistryRow({
   actionLoading = false,
   selected = false,
 }) {
+  const hasDeleteAction = typeof onDelete === 'function';
+
   return (
     <tr
       className={`registry-row ${selected ? 'registry-row--selected' : ''}`}
@@ -36,20 +38,22 @@ function RegistryRow({
       <td className="registry-row__cell">{phone}</td>
       <td className="registry-row__cell">{date}</td>
       <td className="registry-row__cell registry-row__cell--actions">
-        <div className="registry-row__actions">
-          <button
-            className="registry-row__menu material-symbols-outlined"
-            type="button"
-            aria-label={`Delete ${name}`}
-            onClick={(event) => {
-              event.stopPropagation();
-              onDelete?.();
-            }}
-            disabled={actionLoading}
-          >
-            more_vert
-          </button>
-        </div>
+        {hasDeleteAction ? (
+          <div className="registry-row__actions">
+            <button
+              className="registry-row__menu material-symbols-outlined"
+              type="button"
+              aria-label={`Delete ${name}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                onDelete();
+              }}
+              disabled={actionLoading}
+            >
+              more_vert
+            </button>
+          </div>
+        ) : null}
       </td>
     </tr>
   );

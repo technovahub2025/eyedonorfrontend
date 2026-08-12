@@ -24,6 +24,23 @@ function extractRegistryRows(payload) {
   return payload?.data || payload?.users || payload?.donors || payload?.records || payload?.items || payload?.result || [];
 }
 
+function getRowKind(row) {
+  return row?.__source || row?.source || row?.kind || 'donor';
+}
+
+function getRowId(row) {
+  const rawId = row?._id || row?.id || row?.termId || `${row?.email || row?.name || 'row'}`;
+  return `${getRowKind(row)}:${rawId}`;
+}
+
+function normalizeRow(row, source) {
+  return {
+    ...row,
+    __source: source,
+    __rowId: getRowId({ ...row, __source: source }),
+  };
+}
+
 function extractDetailRecord(payload) {
   if (!payload) {
     return null;
@@ -184,6 +201,19 @@ function RegistryPage({ adminToken }) {
   const [pledgeError, setPledgeError] = useState('');
   const pageSize = 10;
 
+  const combinedRows = useMemo(() => {
+    const nextRows = [
+      ...rows.map((row) => normalizeRow(row, 'donor')),
+      ...pledgeRows.map((row) => normalizeRow(row, 'term')),
+    ];
+
+    return nextRows.sort((left, right) => {
+      const leftTime = new Date(left.createdAt || left.updatedAt || 0).getTime();
+      const rightTime = new Date(right.createdAt || right.updatedAt || 0).getTime();
+      return rightTime - leftTime;
+    });
+  }, [pledgeRows, rows]);
+
   const loadRegistry = useCallback(
     async () => {
       if (!adminToken) {
@@ -221,6 +251,7 @@ function RegistryPage({ adminToken }) {
         return;
       }
 
+      setPledgeLoading(true);
       setPledgeError('');
 
       try {
@@ -230,6 +261,8 @@ function RegistryPage({ adminToken }) {
       } catch (err) {
         setPledgeRows([]);
         setPledgeError(isAuthError(err.message) ? 'Unable to load details right now.' : err.message);
+      } finally {
+        setPledgeLoading(false);
       }
     },
     [adminToken]
@@ -259,11 +292,13 @@ function RegistryPage({ adminToken }) {
   }, [loadPledgeRows, loadRegistry]);
 
   const filteredRows = useMemo(() => {
-    return rows.filter((row) => {
+    return combinedRows.filter((row) => {
       const haystack = [
         row.fullName || row.name || '',
         row.email || '',
         row.phone || '',
+        row.age || '',
+        row.gender || '',
         row._id || row.id || '',
       ]
         .join(' ')
@@ -279,16 +314,19 @@ function RegistryPage({ adminToken }) {
 
       return matchesQuery && matchesStatus;
     });
-  }, [rows, search]);
+  }, [combinedRows, search]);
 
   const selectedRow = useMemo(
-    () => rows.find((row) => (row._id || row.id || '') === selectedRowId) || null,
-    [rows, selectedRowId]
+    () => combinedRows.find((row) => row.__rowId === selectedRowId) || null,
+    [combinedRows, selectedRowId]
   );
 
   const selectedPledgeDetails = useMemo(
     () => {
-      const matchedRecord = pledgeRows.find((record) => isMatchingPledgeRecord(selectedRow, record));
+      const matchedRecord =
+        selectedRow?.__source === 'term'
+          ? selectedRow
+          : pledgeRows.find((record) => isMatchingPledgeRecord(selectedRow, record));
       return buildPledgeDetails(matchedRecord || selectedPledgeRaw);
     },
     [pledgeRows, selectedPledgeRaw, selectedRow]
@@ -326,9 +364,12 @@ function RegistryPage({ adminToken }) {
     }
 
     const headers = [
+      'Record Type',
       'Full Name',
       'Email Address',
       'Phone Number',
+      'Age',
+      'Gender',
       'Notes',
       'Status',
       'Active',
@@ -340,9 +381,12 @@ function RegistryPage({ adminToken }) {
       headers.join(','),
       ...filteredRows.map((row) =>
         [
+          row.__source === 'term' ? 'Terms' : 'User',
           row.fullName || row.name || '',
           row.email || '',
           row.phone || '',
+          row.age || '',
+          row.gender || '',
           row.notes || '',
           row.status || '',
           row.isActive === false ? 'No' : 'Yes',
@@ -367,8 +411,10 @@ function RegistryPage({ adminToken }) {
     setError('');
   }
 
-  async function deleteuser(id) {
-    if (!id) return;
+  async function deleteuser(row) {
+    const id = row?.__rowId;
+    const rawId = row?._id || row?.id;
+    if (!id || row?.__source !== 'donor' || !rawId) return;
     if (!window.confirm('Delete this user?')) return;
 
     setActionLoading(id);
@@ -395,7 +441,7 @@ function RegistryPage({ adminToken }) {
   }
 
   async function handleSelectRow(row) {
-    const id = row._id || row.id;
+    const id = row.__rowId;
     if (!id) return;
 
     setSelectedRowId(id);
@@ -502,7 +548,7 @@ function RegistryPage({ adminToken }) {
                     </tr>
                   ) : paginatedRows.length ? (
                     paginatedRows.map((row) => {
-                      const id = row._id || row.id;
+                      const id = row.__rowId;
                       const initials =
                         (row.fullName || row.name || 'user')
                           .split(' ')
@@ -525,7 +571,7 @@ function RegistryPage({ adminToken }) {
                               : row.date || 'Unknown'
                           }
                           onSelect={() => handleSelectRow(row)}
-                          onDelete={() => deleteuser(id)}
+                          onDelete={row.__source === 'donor' ? () => deleteuser(row) : undefined}
                           actionLoading={actionLoading === id}
                           selected={selectedRowId === id}
                         />
@@ -543,7 +589,7 @@ function RegistryPage({ adminToken }) {
             </div>
 
             <div className="registry-page__pagination">
-              <span>
+                <span>
                 Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
                 {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length}{' '}
                 matching users
