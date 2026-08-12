@@ -4,14 +4,13 @@ import BrandMark from './BrandMark';
 const navItems = [
   { key: 'login-data', label: 'Start' },
   { key: 'terms', label: 'Review' },
-  { key: 'verification', label: 'Check' },
   { key: 'thank-you', label: 'Done' },
   { key: 'admin-login', label: 'Admin sign in' },
   { key: 'registry', label: 'User list' },
 ];
 
 const roleNavMap = {
-  user: ['login-data', 'terms', 'verification', 'thank-you'],
+  user: ['login-data', 'terms', 'thank-you'],
   admin: ['admin-login', 'registry'],
 };
 
