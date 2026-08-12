@@ -422,11 +422,11 @@ function RegistryPage({ adminToken }) {
     setError('');
 
     try {
-      await apiRequest(`${registryEndpoint}/${id}`, {
+      await apiRequest(`${registryEndpoint}/${rawId}`, {
         method: 'DELETE',
         token: adminToken,
       });
-      setMessage(`Deleted user ${id}.`);
+      setMessage(`Deleted user ${rawId}.`);
       if (selectedRowId === id) {
         setSelectedRowId('');
         setSelectedPledgeRaw(null);
@@ -701,7 +701,7 @@ function RegistryPage({ adminToken }) {
             </div>
             <div>
               <p>Total Users</p>
-              <strong>{totalCount || rows.length}</strong>
+              <strong>{combinedRows.length || totalCount || rows.length}</strong>
             </div>
           </article>
         </section>
