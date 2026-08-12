@@ -164,7 +164,7 @@ function buildPledgeDetails(payload) {
 
     if (
       seen.has(label) ||
-      ['_id', 'id', 'termid', 'createdat', 'updatedat', 'created_at', 'updated_at'].includes(
+      ['_id', 'id', 'v', '__v', 'termid', 'createdat', 'updatedat', 'created_at', 'updated_at'].includes(
         normalizedKey
       ) ||
       value === undefined ||
