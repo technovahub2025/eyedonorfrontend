@@ -421,7 +421,6 @@ function RegistryPage({ adminToken }) {
       if (selectedRowId === id) {
         setSelectedRowId('');
         setSelectedPledgeRaw(null);
-        setPledgeError('');
       }
       await loadRegistry();
     } catch (err) {
