@@ -253,6 +253,12 @@
   cursor: pointer;
 }
 
+.terms-card__scroll,
+.terms-card__agree,
+.terms-card__actions {
+  grid-column: 1 / -1;
+}
+
 .terms-card__submit:disabled {
   opacity: 0.65;
   cursor: not-allowed;
@@ -291,7 +297,9 @@
 .terms-card__actions {
   display: flex;
   gap: 14px;
-  margin-top: 24px;
+  margin-top: 8px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .terms-card__button {
@@ -384,5 +392,9 @@
 
   .terms-card__actions {
     flex-direction: column;
+  }
+
+  .terms-card__button {
+    width: 100%;
   }
 }
