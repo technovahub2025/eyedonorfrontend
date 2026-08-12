@@ -41,150 +41,7 @@ function normalizeRow(row, source) {
   };
 }
 
-function extractDetailRecord(payload) {
-  if (!payload) {
-    return null;
-  }
-
-  if (Array.isArray(payload)) {
-    return payload[0] || null;
-  }
-
-  const candidates = [
-    payload.data,
-    payload.record,
-    payload.item,
-    payload.result,
-    payload.terms,
-    payload.pledge,
-    payload.donor,
-  ];
-
-  for (const candidate of candidates) {
-    if (candidate && typeof candidate === 'object') {
-      return candidate;
-    }
-
-    if (Array.isArray(candidate)) {
-      return candidate[0] || null;
-    }
-  }
-
-  return typeof payload === 'object' ? payload : null;
-}
-
-function normalizeText(value) {
-  return String(value ?? '')
-    .trim()
-    .toLowerCase();
-}
-
-function isMatchingPledgeRecord(row, record) {
-  if (!row || !record) {
-    return false;
-  }
-
-  const rowNameCandidates = [row.fullName, row.name];
-  const recordNameCandidates = [record.fullName, record.name];
-  const rowEmailCandidates = [row.email];
-  const recordEmailCandidates = [record.email];
-  const rowPhoneCandidates = [row.phone];
-  const recordPhoneCandidates = [record.phone];
-
-  const rowNames = rowNameCandidates.map(normalizeText).filter(Boolean);
-  const recordNames = recordNameCandidates.map(normalizeText).filter(Boolean);
-  const rowEmails = rowEmailCandidates.map(normalizeText).filter(Boolean);
-  const recordEmails = recordEmailCandidates.map(normalizeText).filter(Boolean);
-  const rowPhones = rowPhoneCandidates.map(normalizeText).filter(Boolean);
-  const recordPhones = recordPhoneCandidates.map(normalizeText).filter(Boolean);
-
-  const nameMatch = rowNames.some((rowName) =>
-    recordNames.some((recordName) => rowName === recordName || rowName.includes(recordName) || recordName.includes(rowName))
-  );
-
-  const emailMatch = rowEmails.some((rowEmail) =>
-    recordEmails.some((recordEmail) => rowEmail === recordEmail)
-  );
-
-  const phoneMatch = rowPhones.some((rowPhone) =>
-    recordPhones.some((recordPhone) => rowPhone === recordPhone)
-  );
-
-  const idMatch = normalizeText(row._id || row.id) === normalizeText(record._id || record.id);
-
-  return nameMatch || emailMatch || phoneMatch || idMatch;
-}
-
-function formatDetailValue(value) {
-  if (value === null || value === undefined || value === '') {
-    return 'Not provided';
-  }
-
-  if (Array.isArray(value)) {
-    return value.join(', ');
-  }
-
-  if (typeof value === 'object') {
-    return JSON.stringify(value, null, 2);
-  }
-
-  return String(value);
-}
-
-function buildPledgeDetails(payload) {
-  const record = extractDetailRecord(payload) || {};
-  const details = [];
-  const seen = new Set();
-
-  function add(label, value) {
-    if (value === undefined || value === null || value === '') {
-      return;
-    }
-
-    details.push({ label, value: formatDetailValue(value) });
-    seen.add(label);
-  }
-
-  add('Name', record.name || record.fullName);
-  add('Age', record.age);
-  add('Gender', record.gender);
-  add('Email', record.email);
-  add('Phone', record.phone);
-  add('Status', record.status);
-  add('Notes', record.notes || record.body || record.description || record.note);
-  add('Created At', record.createdAt || record.created_at);
-  add('Updated At', record.updatedAt || record.updated_at);
-  add('Reference ID', record._id || record.id || record.termId);
-
-  Object.entries(record).forEach(([key, value]) => {
-    const normalizedKey = key.toLowerCase();
-    const label = key
-      .replace(/[_-]+/g, ' ')
-      .replace(/\b\w/g, (char) => char.toUpperCase());
-
-    if (
-      seen.has(label) ||
-      ['_id', 'id', 'v', '__v', 'termid', 'createdat', 'updatedat', 'created_at', 'updated_at'].includes(
-        normalizedKey
-      ) ||
-      value === undefined ||
-      value === null ||
-      value === ''
-    ) {
-      return;
-    }
-
-    if (typeof value === 'object' && !Array.isArray(value)) {
-      return;
-    }
-
-    add(label, value);
-  });
-
-  return details;
-}
-
-function RegistryPage({ adminToken }) {
+function RegistryPage({ adminToken, onAdminRowSelect }) {
   const [rows, setRows] = useState([]);
   const [pledgeRows, setPledgeRows] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -196,7 +53,6 @@ function RegistryPage({ adminToken }) {
   const [search, setSearch] = useState(initialSearch);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRowId, setSelectedRowId] = useState('');
-  const [selectedPledgeRaw, setSelectedPledgeRaw] = useState(null);
   const pageSize = 10;
 
   const combinedRows = useMemo(() => {
@@ -307,22 +163,6 @@ function RegistryPage({ adminToken }) {
     });
   }, [combinedRows, search]);
 
-  const selectedRow = useMemo(
-    () => combinedRows.find((row) => row.__rowId === selectedRowId) || null,
-    [combinedRows, selectedRowId]
-  );
-
-  const selectedPledgeDetails = useMemo(
-    () => {
-      const matchedRecord =
-        selectedRow?.__source === 'term'
-          ? selectedRow
-          : pledgeRows.find((record) => isMatchingPledgeRecord(selectedRow, record));
-      return buildPledgeDetails(matchedRecord || selectedPledgeRaw);
-    },
-    [pledgeRows, selectedPledgeRaw, selectedRow]
-  );
-
   useEffect(() => {
     setCurrentPage(1);
   }, [search.query, search.status]);
@@ -420,7 +260,6 @@ function RegistryPage({ adminToken }) {
       setMessage(`Deleted user ${rawId}.`);
       if (selectedRowId === id) {
         setSelectedRowId('');
-        setSelectedPledgeRaw(null);
       }
       await loadRegistry();
     } catch (err) {
@@ -435,9 +274,7 @@ function RegistryPage({ adminToken }) {
     if (!id) return;
 
     setSelectedRowId(id);
-    setSelectedPledgeRaw(null);
-    const matchedRecord = pledgeRows.find((record) => isMatchingPledgeRecord(row, record));
-    setSelectedPledgeRaw(matchedRecord || null);
+    onAdminRowSelect?.(row);
   }
 
   return (
@@ -618,61 +455,6 @@ function RegistryPage({ adminToken }) {
               </div>
             </div>
           </section>
-        </section>
-
-        <section className="registry-page__details-card">
-          <div className="registry-page__details-header">
-            <div>
-              <p className="registry-page__eyebrow">Admin only</p>
-              <h2>Submission details table</h2>
-            </div>
-            <span className="registry-page__sidebar-badge">
-              {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
-            </span>
-          </div>
-
-          {!selectedRow ? (
-            <div className="registry-page__details-empty">
-              Click a row in the table above to see its details here.
-            </div>
-          ) : (
-            <div className="registry-page__table-scroll">
-              <table className="registry-details-table">
-                <thead>
-                  <tr>
-                    <th>Field</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Selected user</td>
-                    <td>
-                      {selectedRow.fullName || selectedRow.name || 'Unnamed user'}
-                      <div className="registry-details-table__subtext">
-                        {selectedRow.email || 'No email provided'}
-                      </div>
-                      <div className="registry-details-table__subtext">
-                        {selectedRow.phone || 'No phone provided'}
-                      </div>
-                    </td>
-                  </tr>
-                  {selectedPledgeDetails.length ? (
-                    selectedPledgeDetails.map((detail) => (
-                      <tr key={detail.label}>
-                        <td>{detail.label}</td>
-                        <td>{detail.value}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={2}>No extra details were found for this user.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
         </section>
 
         <section className="registry-page__insights">

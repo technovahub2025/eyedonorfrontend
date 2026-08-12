@@ -4,6 +4,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import DataPage from './pages/data';
 import RoleSelectPage from './pages/RoleSelectPage';
 import RegistryPage from './pages/RegistryPage';
+import RegistryDetailsPage from './pages/RegistryDetailsPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
 
@@ -14,6 +15,7 @@ const pages = {
   'thank-you': ThankYouPage,
   'admin-login': AdminLoginPage,
   registry: RegistryPage,
+  'registry-details': RegistryDetailsPage,
 };
 
 function App() {
@@ -21,10 +23,16 @@ function App() {
   const [activeRole, setActiveRole] = useState(null);
   const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
+  const [selectedAdminRow, setSelectedAdminRow] = useState(null);
   const PageComponent = pages[activePage] || RoleSelectPage;
 
   function navigate(nextPage) {
     setActivePage(nextPage);
+  }
+
+  function handleAdminRowSelect(row) {
+    setSelectedAdminRow(row || null);
+    setActivePage('registry-details');
   }
 
   function handleRoleSelect(role) {
@@ -58,12 +66,18 @@ function App() {
   function handleAdminLogout() {
     setAdminToken('');
     setActiveRole(null);
+    setSelectedAdminRow(null);
     setActivePage('role-select');
   }
 
   function handleUserLogout() {
     setActiveRole(null);
+    setSelectedAdminRow(null);
     setActivePage('role-select');
+  }
+
+  function handleDetailsBack() {
+    setActivePage('registry');
   }
 
   return (
@@ -85,6 +99,9 @@ function App() {
         onUserTokenChange={setUserToken}
         adminToken={adminToken}
         onAdminTokenChange={setAdminToken}
+        selectedAdminRow={selectedAdminRow}
+        onAdminRowSelect={handleAdminRowSelect}
+        onDetailsBack={handleDetailsBack}
       />
     </div>
   );
