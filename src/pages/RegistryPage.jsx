@@ -197,8 +197,6 @@ function RegistryPage({ adminToken }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRowId, setSelectedRowId] = useState('');
   const [selectedPledgeRaw, setSelectedPledgeRaw] = useState(null);
-  const [pledgeLoading, setPledgeLoading] = useState(false);
-  const [pledgeError, setPledgeError] = useState('');
   const pageSize = 10;
 
   const combinedRows = useMemo(() => {
@@ -247,12 +245,8 @@ function RegistryPage({ adminToken }) {
     async () => {
       if (!adminToken) {
         setPledgeRows([]);
-        setPledgeError('Please sign in to view details.');
         return;
       }
-
-      setPledgeLoading(true);
-      setPledgeError('');
 
       try {
         const response = await apiRequest(pledgeEndpoint, { token: adminToken });
@@ -260,9 +254,6 @@ function RegistryPage({ adminToken }) {
         setPledgeRows(nextRows);
       } catch (err) {
         setPledgeRows([]);
-        setPledgeError(isAuthError(err.message) ? 'Unable to load details right now.' : err.message);
-      } finally {
-        setPledgeLoading(false);
       }
     },
     [adminToken]
@@ -446,10 +437,8 @@ function RegistryPage({ adminToken }) {
 
     setSelectedRowId(id);
     setSelectedPledgeRaw(null);
-    setPledgeError('');
     const matchedRecord = pledgeRows.find((record) => isMatchingPledgeRecord(row, record));
     setSelectedPledgeRaw(matchedRecord || null);
-    setPledgeLoading(false);
   }
 
   return (
@@ -589,7 +578,7 @@ function RegistryPage({ adminToken }) {
             </div>
 
             <div className="registry-page__pagination">
-                <span>
+              <span>
                 Showing {filteredRows.length ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
                 {Math.min(currentPage * pageSize, filteredRows.length)} of {filteredRows.length}{' '}
                 matching users
@@ -630,64 +619,61 @@ function RegistryPage({ adminToken }) {
               </div>
             </div>
           </section>
+        </section>
 
-          <aside className="registry-page__sidebar">
-            <div className="registry-page__sidebar-header">
-              <div>
-                <p className="registry-page__eyebrow">Admin only</p>
-                <h2>Selected user</h2>
-              </div>
-              <span className="registry-page__sidebar-badge">
-                {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
-              </span>
+        <section className="registry-page__details-card">
+          <div className="registry-page__details-header">
+            <div>
+              <p className="registry-page__eyebrow">Admin only</p>
+              <h2>Submission details table</h2>
             </div>
+            <span className="registry-page__sidebar-badge">
+              {selectedRowId ? `ID ${selectedRowId}` : 'Select a row'}
+            </span>
+          </div>
 
-            {!selectedRow ? (
-              <div className="registry-page__sidebar-empty">
-                Click a row to load the related details.
-              </div>
-            ) : (
-              <div className="registry-page__detail-list">
-                <article className="registry-page__sidebar-card">
-                  <p className="registry-page__sidebar-label">Selected user</p>
-                  <strong>{selectedRow.fullName || selectedRow.name || 'Unnamed user'}</strong>
-                  <span>{selectedRow.email || 'No email provided'}</span>
-                  <span>{selectedRow.phone || 'No phone provided'}</span>
-                </article>
-
-                <article className="registry-page__sidebar-card">
-                  <div className="registry-page__sidebar-header">
-                    <div>
-                      <p className="registry-page__eyebrow">Filtered result</p>
-                      <h2>Submission details</h2>
-                    </div>
-                    <span className="registry-page__sidebar-badge">
-                      {pledgeLoading ? 'Loading...' : 'By user'}
-                    </span>
-                  </div>
-
-                  {pledgeLoading ? (
-                      <div className="registry-page__sidebar-empty">Loading details...</div>
-                  ) : pledgeError ? (
-                    <div className="registry-page__toast registry-page__toast--error">{pledgeError}</div>
-                  ) : selectedPledgeDetails.length ? (
-                    <div className="registry-page__detail-list">
-                      {selectedPledgeDetails.map((detail) => (
-                        <article key={detail.label} className="registry-page__detail-item">
-                          <span>{detail.label}</span>
-                          <strong>{detail.value}</strong>
-                        </article>
-                      ))}
-                    </div>
+          {!selectedRow ? (
+            <div className="registry-page__details-empty">
+              Click a row in the table above to see its details here.
+            </div>
+          ) : (
+            <div className="registry-page__table-scroll">
+              <table className="registry-details-table">
+                <thead>
+                  <tr>
+                    <th>Field</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Selected user</td>
+                    <td>
+                      {selectedRow.fullName || selectedRow.name || 'Unnamed user'}
+                      <div className="registry-details-table__subtext">
+                        {selectedRow.email || 'No email provided'}
+                      </div>
+                      <div className="registry-details-table__subtext">
+                        {selectedRow.phone || 'No phone provided'}
+                      </div>
+                    </td>
+                  </tr>
+                  {selectedPledgeDetails.length ? (
+                    selectedPledgeDetails.map((detail) => (
+                      <tr key={detail.label}>
+                        <td>{detail.label}</td>
+                        <td>{detail.value}</td>
+                      </tr>
+                    ))
                   ) : (
-                    <div className="registry-page__sidebar-empty">
-                      No extra details were found for this user.
-                    </div>
+                    <tr>
+                      <td colSpan={2}>No extra details were found for this user.</td>
+                    </tr>
                   )}
-                </article>
-              </div>
-            )}
-          </aside>
+                </tbody>
+              </table>
+            </div>
+          )}
         </section>
 
         <section className="registry-page__insights">
