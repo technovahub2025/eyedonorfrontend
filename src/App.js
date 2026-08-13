@@ -6,6 +6,7 @@ import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
 import UserLoginPage from './pages/UserLoginPage';
 import UserDashboardPage from './pages/UserDashboardPage';
+import './App.css';
 
 const pages = {
   'role-select': RoleSelectPage,
@@ -80,21 +81,48 @@ function App() {
       {activePage !== 'role-select' ? (
         <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
       ) : null}
-      <PageComponent
-        userToken={userToken}
-        onRoleSelect={handleRoleSelect}
-        onAccept={handleTermsAccept}
-        onDecline={handleTermsDecline}
-        onCancel={handleUserLogout}
-        onRestart={handleUserLogout}
-        onAdminLoginSuccess={handleAdminLoginSuccess}
-        onAdminLogout={handleAdminLogout}
-        onUserLogout={handleUserLogout}
-        onUserTokenChange={setUserToken}
-        adminToken={adminToken}
-        onAdminTokenChange={setAdminToken}
-        onLoginSuccess={handleUserLoginSuccess}
-      />
+      <main className="app-shell__content">
+        <PageComponent
+          userToken={userToken}
+          onRoleSelect={handleRoleSelect}
+          onAccept={handleTermsAccept}
+          onDecline={handleTermsDecline}
+          onCancel={handleUserLogout}
+          onRestart={handleUserLogout}
+          onAdminLoginSuccess={handleAdminLoginSuccess}
+          onAdminLogout={handleAdminLogout}
+          onUserLogout={handleUserLogout}
+          onUserTokenChange={setUserToken}
+          adminToken={adminToken}
+          onAdminTokenChange={setAdminToken}
+          onLoginSuccess={handleUserLoginSuccess}
+        />
+      </main>
+      <footer className="app-footer">
+        <div className="app-footer__inner">
+          <div className="app-footer__center">
+            <p className="app-footer__title">JOTHI EYE CARE CENTRE</p>
+            <p>152 &amp; 154, Calve Subraya Chetty Street,</p>
+            <p>Puducherry - 605 001.</p>
+            <p>
+              <a href="tel:+914132224534">+91-413-2224534</a>,{' '}
+              <a href="tel:+914132337659">+91-413-2337659</a>
+            </p>
+            <p>
+              <a href="mailto:jothieyecare@gmail.com">jothieyecare@gmail.com</a>
+            </p>
+          </div>
+
+          <a
+            className="app-footer__powered"
+            href="https://www.technovahub.in"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Powered by TechnovaHub
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
