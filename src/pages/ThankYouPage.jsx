@@ -1,12 +1,6 @@
-import { useCallback } from 'react';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect }) {
-  const handleStartOver = useCallback(() => {
-    onRestart?.();
-    onRoleSelect?.('user-login');
-  }, [onRestart, onRoleSelect]);
-
   return (
     <div className="thank-you-page">
       <main className="thank-you-page__shell">
@@ -23,10 +17,7 @@ function ThankYouPage({ onRestart, onRoleSelect }) {
             Your details have been submitted. Thank you for taking the time to complete the
             process.
           </p>
-
-        
         </section>
-
       </main>
     </div>
   );
