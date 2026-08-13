@@ -1,3 +1,4 @@
+import { ArrowLeft, CheckCircle2, Eye, HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect }) {
@@ -6,17 +7,103 @@ function ThankYouPage({ onRestart, onRoleSelect }) {
       <main className="thank-you-page__shell">
         <section className="thank-you-page__card">
           <div className="thank-you-page__badge">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              verified
-            </span>
+            <CheckCircle2 aria-hidden="true" />
             <span>Completed</span>
           </div>
 
-          <h1>Thank you</h1>
-          <p>
-            Your details have been submitted. Thank you for taking the time to complete the
-            process.
+          <p className="thank-you-page__eyebrow">The gift of sight</p>
+          <h1>Thank you for taking this step.</h1>
+          <p className="thank-you-page__lead">
+            Your details have been submitted successfully. We appreciate your time and your
+            compassionate choice.
           </p>
+
+          <div className="thank-you-page__actions">
+            <button
+              className="thank-you-page__button thank-you-page__button--primary"
+              type="button"
+              onClick={() => onRoleSelect?.('role-select')}
+            >
+              <Sparkles aria-hidden="true" />
+              <span>Go to Home</span>
+            </button>
+
+            <button
+              className="thank-you-page__button thank-you-page__button--secondary"
+              type="button"
+              onClick={() => onRestart?.()}
+            >
+              <ArrowLeft aria-hidden="true" />
+              <span>Restart</span>
+            </button>
+          </div>
+
+          <div className="thank-you-page__mini-notes">
+            <article className="thank-you-page__note">
+              <ShieldCheck aria-hidden="true" />
+              <div>
+                <strong>Secure</strong>
+                <span>Your entry has been recorded</span>
+              </div>
+            </article>
+            <article className="thank-you-page__note">
+              <HeartHandshake aria-hidden="true" />
+              <div>
+                <strong>Compassionate</strong>
+                <span>You helped create a hopeful path</span>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside className="thank-you-page__visual" aria-label="Celebration illustration">
+          <div className="thank-you-page__halo" aria-hidden="true">
+            <div className="thank-you-page__eye-rings" />
+            <div className="thank-you-page__eye">
+              <div className="thank-you-page__eyelid thank-you-page__eyelid--top" />
+              <div className="thank-you-page__eyelid thank-you-page__eyelid--bottom" />
+              <div className="thank-you-page__iris">
+                <div className="thank-you-page__pupil" />
+              </div>
+            </div>
+            <div className="thank-you-page__floating thank-you-page__floating--heart">
+              <HeartHandshake aria-hidden="true" />
+            </div>
+            <div className="thank-you-page__floating thank-you-page__floating--shield">
+              <ShieldCheck aria-hidden="true" />
+            </div>
+            <div className="thank-you-page__floating thank-you-page__floating--eye">
+              <Eye aria-hidden="true" />
+            </div>
+          </div>
+
+          <div className="thank-you-page__stats">
+            <article className="thank-you-page__stat">
+              <strong>Submitted</strong>
+              <span>Your pledge is now recorded</span>
+            </article>
+            <article className="thank-you-page__stat">
+              <strong>One step</strong>
+              <span>Closer to helping someone see again</span>
+            </article>
+            <article className="thank-you-page__stat">
+              <strong>Thank you</strong>
+              <span>For choosing a compassionate path</span>
+            </article>
+          </div>
+        </aside>
+
+        <section className="thank-you-page__footer-card">
+          <div>
+            <p className="thank-you-page__footer-kicker">What happens next</p>
+            <p className="thank-you-page__footer-text">
+              If you need to make another entry or return to the beginning, you can use the buttons
+              above.
+            </p>
+          </div>
+          <div className="thank-you-page__footer-pulse" aria-hidden="true">
+            <CheckCircle2 />
+          </div>
         </section>
       </main>
     </div>
