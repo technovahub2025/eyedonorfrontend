@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { CheckCircle2, Eye, Heart, ShieldCheck, Sparkles, Stethoscope } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
@@ -25,7 +26,6 @@ const initialTermForm = {
 
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
-  const [rootStatus, setRootStatus] = useState('Checking your connection...');
   const [savingTerm, setSavingTerm] = useState(false);
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
@@ -38,27 +38,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [rowMessage, setRowMessage] = useState('');
   const [rowError, setRowError] = useState('');
   const [addingRow, setAddingRow] = useState(false);
-
-  useEffect(() => {
-    let active = true;
-
-    async function checkRoot() {
-      try {
-        const data = await apiRequest('/');
-        if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
-      } catch (err) {
-        if (!active) return;
-        setRootStatus(`Connection check failed: ${err.message}`);
-      }
-    }
-
-    checkRoot();
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   useEffect(() => {
     let active = true;
@@ -194,9 +173,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
             </div>
           ) : null}
 
-          <section className="terms-card" aria-labelledby="terms-title">
+        <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
-              <div>
+              <div className="terms-card__header-copy">
                 <h1 id="terms-title">
                   {isAdminView ? 'Terms page submissions' : 'Enter your details and confirm your pledge'}
                 </h1>
@@ -205,20 +184,41 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     ? 'Admins can review only the records submitted through the terms page.'
                     : 'First share your name, age, and gender. Then review and accept the pledge before submitting.'}
                 </p>
-                <p className="terms-card__status">{rootStatus}</p>
               </div>
 
-              {!isAdminView ? (
-                <div className="terms-card__summary">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    checklist
-                  </span>
-                  <div>
-                    <strong>Two-part step</strong>
-                    <p>Fill in your details, then confirm the pledge below.</p>
+              <div className="terms-card__hero-visual" aria-hidden="true">
+                <div className="terms-card__eye-rings" />
+                <div className="terms-card__eye">
+                  <div className="terms-card__eyelid terms-card__eyelid--top" />
+                  <div className="terms-card__eyelid terms-card__eyelid--bottom" />
+                  <div className="terms-card__iris">
+                    <div className="terms-card__pupil" />
                   </div>
                 </div>
-              ) : null}
+                <div className="terms-card__leaf terms-card__leaf--left">
+                  <Sparkles />
+                </div>
+                <div className="terms-card__leaf terms-card__leaf--right">
+                  <Heart />
+                </div>
+                <div className="terms-card__leaf terms-card__leaf--bottom">
+                  <ShieldCheck />
+                </div>
+              </div>
+
+              <div className="terms-card__summary">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  checklist
+                </span>
+                <div>
+                  <strong>{isAdminView ? 'Admin review' : 'Two-part step'}</strong>
+                  <p>
+                    {isAdminView
+                      ? 'Review the records that came through the terms page.'
+                      : 'Fill in your details, then confirm the pledge below.'}
+                  </p>
+                </div>
+              </div>
             </div>
 
             <section className="terms-card__admin-panel" aria-labelledby="terms-admin-title">
@@ -239,6 +239,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   <p className="terms-card__admin-copy">
                     Review only the entries that came through the terms page.
                   </p>
+
+                  <div className="terms-card__admin-icons" aria-hidden="true">
+                    <div className="terms-card__admin-icon">
+                      <CheckCircle2 />
+                    </div>
+                    <div className="terms-card__admin-icon terms-card__admin-icon--pink">
+                      <Eye />
+                    </div>
+                    <div className="terms-card__admin-icon">
+                      <Stethoscope />
+                    </div>
+                  </div>
 
                   {adminLoading ? (
                     <p className="terms-card__empty">Loading terms data...</p>
@@ -398,11 +410,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               )}
             </section>
 
-            {!isAdminView ? (
-              <section className="terms-page__notice">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  info
-                </span>
+              {!isAdminView ? (
+                <section className="terms-page__notice">
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    info
+                  </span>
                 <p>This step collects your details first, then asks you to confirm the pledge.</p>
               </section>
             ) : null}
