@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import BrandMark from '../components/BrandMark';
-import FormField from '../components/FormField';
 import { apiRequest } from '../lib/apiClient';
 import './AdminLoginPage.css';
 
@@ -95,37 +94,48 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
   return (
     <div className="admin-login-page">
       <aside className="admin-login-page__panel">
-        <div className="admin-login-page__brand">
-          <BrandMark title="VisionGift" subtitle="Admin access" />
+        <div className="admin-login-page__brand-wrap">
+          <BrandMark
+            title="VisionGift"
+            subtitle="Admin access"
+            className="admin-login-page__brand"
+          />
         </div>
 
-        <div className="admin-login-page__panel-copy">
+        <div className="admin-login-page__hero">
           <p className="admin-login-page__eyebrow">Admin access</p>
-          <h1>Sign in</h1>
-          <p>Use your admin details to review people and keep things moving.</p>
+          <h1>Welcome back!</h1>
+          <span className="admin-login-page__accent" aria-hidden="true" />
+          <p className="admin-login-page__lead">
+            Use your admin details to review people and keep things moving.
+          </p>
         </div>
 
-        <div className="admin-login-page__trust-grid">
+        <div className="admin-login-page__feature-grid">
           <article>
+            <div className="admin-login-page__feature-icon" aria-hidden="true">
+              <span className="material-symbols-outlined">verified_user</span>
+            </div>
             <strong>Extra check</strong>
-            <span>A second layer before entry</span>
+            <span>A second layer of security</span>
           </article>
           <article>
+            <div className="admin-login-page__feature-icon" aria-hidden="true">
+              <span className="material-symbols-outlined">lock</span>
+            </div>
             <strong>Private access</strong>
-            <span>Only approved people can enter</span>
+            <span>Secure and restricted access</span>
           </article>
           <article>
+            <div className="admin-login-page__feature-icon" aria-hidden="true">
+              <span className="material-symbols-outlined">assignment</span>
+            </div>
             <strong>Activity log</strong>
-            <span>A simple history of changes</span>
+            <span>A simple audit history</span>
           </article>
         </div>
 
-        <div className="admin-login-page__notice">
-          <span className="material-symbols-outlined" aria-hidden="true">
-            shield
-          </span>
-          <p>Admin access is limited to approved members.</p>
-        </div>
+        <div className="admin-login-page__overlay-eye" aria-hidden="true" />
       </aside>
 
       <main className="admin-login-page__main">
@@ -134,41 +144,66 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <p className="admin-login-card__kicker">VisionGift</p>
             <h2 id="admin-login-title">Admin sign in</h2>
             <p>Enter your details to open the list and tools.</p>
-            <p className="admin-login-card__status">{rootStatus}</p>
+            <div className="admin-login-card__status" role="status" aria-live="polite">
+              <span className="admin-login-card__status-badge">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  check_circle
+                </span>
+                VisionGift API Running
+              </span>
+              <span className="admin-login-card__status-copy">{rootStatus}</span>
+            </div>
           </header>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
-            <FormField
-              id="admin-username"
-              label="Email or name"
-              placeholder="admin@example.com"
-              icon="person"
-              value={form.username}
-              onChange={(event) => setForm({ ...form, username: event.target.value })}
-              autoComplete="username"
-              required
-            />
+            <label className="admin-login-form__field" htmlFor="admin-username">
+              <span className="admin-login-form__label">Email or name</span>
+              <div className="admin-login-form__control">
+                <span className="material-symbols-outlined admin-login-form__icon" aria-hidden="true">
+                  person
+                </span>
+                <input
+                  id="admin-username"
+                  className="admin-login-form__input"
+                  type="text"
+                  placeholder="admin"
+                  value={form.username}
+                  onChange={(event) => setForm({ ...form, username: event.target.value })}
+                  autoComplete="username"
+                  required
+                />
+              </div>
+            </label>
 
-            <div className="admin-login-form__password-row">
-              <FormField
-                id="admin-password"
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your passcode"
-                icon="lock"
-                value={form.password}
-                onChange={(event) => setForm({ ...form, password: event.target.value })}
-                autoComplete="current-password"
-                required
-              />
-              <button
-                className="admin-login-form__toggle"
-                type="button"
-                onClick={() => setShowPassword((current) => !current)}
-              >
-                {showPassword ? 'Hide' : 'Show'}
-              </button>
-            </div>
+            <label className="admin-login-form__field" htmlFor="admin-password">
+              <span className="admin-login-form__label">Password</span>
+              <div className="admin-login-form__control admin-login-form__control--password">
+                <span className="material-symbols-outlined admin-login-form__icon" aria-hidden="true">
+                  lock
+                </span>
+                <input
+                  id="admin-password"
+                  className="admin-login-form__input admin-login-form__input--password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••••"
+                  value={form.password}
+                  onChange={(event) => setForm({ ...form, password: event.target.value })}
+                  autoComplete="current-password"
+                  required
+                />
+                <button
+                  className="admin-login-form__toggle"
+                  type="button"
+                  onClick={() => setShowPassword((current) => !current)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    visibility
+                  </span>
+                  {showPassword ? 'Hide' : 'Show'}
+                </button>
+              </div>
+            </label>
 
             <button className="admin-login-form__submit" type="submit" disabled={loading}>
               {loading ? 'Signing in...' : 'Sign in'}
@@ -178,8 +213,11 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             </button>
           </form>
 
-          {message ? <p className="admin-login-card__success">{message}</p> : null}
-          {error ? <p className="admin-login-card__error">{error}</p> : null}
+          <div className="admin-login-card__separator" aria-hidden="true">
+            <span />
+            <span>or</span>
+            <span />
+          </div>
 
           <div className="admin-login-card__actions">
             <button
@@ -188,19 +226,21 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
               onClick={() => setShowDetails((current) => !current)}
               disabled={!loginData}
             >
+              <span className="material-symbols-outlined" aria-hidden="true">
+                info
+              </span>
               {showDetails ? 'Hide Details' : 'Show Details'}
             </button>
             <button type="button" className="admin-login-card__ghost" onClick={handleLogout}>
+              <span className="material-symbols-outlined" aria-hidden="true">
+                logout
+              </span>
               Logout
             </button>
           </div>
 
-          <div className="admin-login-card__footer">
-            <span className="material-symbols-outlined" aria-hidden="true">
-              verified_user
-            </span>
-            <p>All admin access is protected and kept for approved admins.</p>
-          </div>
+          {message ? <p className="admin-login-card__success">{message}</p> : null}
+          {error ? <p className="admin-login-card__error">{error}</p> : null}
 
           <div className="admin-login-card__profile">
             <span className="admin-login-card__profile-label">Saved details</span>
@@ -217,7 +257,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
           </div>
         </section>
       </main>
-
     </div>
   );
 }
