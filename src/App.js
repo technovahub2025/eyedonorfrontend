@@ -3,7 +3,6 @@ import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
 import DataPage from './pages/data';
 import RoleSelectPage from './pages/RoleSelectPage';
-import RegistryPage from './pages/RegistryPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
 import UserLoginPage from './pages/UserLoginPage';
@@ -17,7 +16,6 @@ const pages = {
   'admin-login': AdminLoginPage,
   'user-login': UserLoginPage,
   'user-dashboard': UserDashboardPage,
-  registry: RegistryPage,
 };
 
 function App() {
@@ -62,7 +60,7 @@ function App() {
       setAdminToken(nextToken);
     }
     setActiveRole('admin');
-    setActivePage('registry');
+    setActivePage('terms');
   }
 
   function handleAdminLogout() {

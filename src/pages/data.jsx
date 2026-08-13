@@ -7,6 +7,7 @@ const initialForm = {
   email: '',
   phone: '',
   notes: '',
+  supportEyeDonation: false,
 };
 
 function DataPage({ onDataSuccess }) {
@@ -44,6 +45,11 @@ function DataPage({ onDataSuccess }) {
     setMessage('');
 
     try {
+      if (!form.supportEyeDonation) {
+        setError('Please confirm that you support eye donation to continue.');
+        return;
+      }
+
       const data = await apiRequest('/api/donors', {
         method: 'POST',
         body: {
@@ -73,6 +79,10 @@ function DataPage({ onDataSuccess }) {
             <h1>Tell us a little about yourself</h1>
             <p className="login-page__copy">
               Share the details we need before you continue.
+            </p>
+            <p className="login-page__support-copy">
+              Eye donation can help restore sight and give someone a new chance at life. Please
+              confirm your support before moving to the pledge step.
             </p>
 
             <div className="login-page__highlights" aria-label="Highlights">
@@ -137,6 +147,18 @@ function DataPage({ onDataSuccess }) {
                   onChange={(event) => setForm({ ...form, notes: event.target.value })}
                   required
                 />
+              </label>
+
+              <label className="login-form__support">
+                <input
+                  type="checkbox"
+                  checked={form.supportEyeDonation}
+                  onChange={(event) =>
+                    setForm({ ...form, supportEyeDonation: event.target.checked })
+                  }
+                  required
+                />
+                <span>I support eye donation</span>
               </label>
 
               <button className="login-form__submit" type="submit" disabled={loading}>

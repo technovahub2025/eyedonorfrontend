@@ -8,12 +8,11 @@ const navItems = [
   { key: 'user-login', label: 'Sign in' },
   { key: 'user-dashboard', label: 'Dashboard' },
   { key: 'admin-login', label: 'Admin sign in' },
-  { key: 'registry', label: 'User details' },
 ];
 
 const roleNavMap = {
   user: ['login-data', 'terms', 'thank-you', 'user-login', 'user-dashboard'],
-  admin: ['admin-login', 'registry'],
+  admin: ['admin-login', 'terms'],
 };
 
 function AppNavigator({ activePage, activeRole, onNavigate }) {
