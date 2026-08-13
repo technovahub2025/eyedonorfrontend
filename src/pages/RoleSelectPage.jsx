@@ -13,7 +13,7 @@ function RoleSelectPage({ onRoleSelect }) {
     }
 
     setError('');
-    onRoleSelect?.('user');
+    onRoleSelect?.('terms');
   }
 
   return (

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
-import DataPage from './pages/data';
 import RoleSelectPage from './pages/RoleSelectPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
@@ -10,7 +9,6 @@ import UserDashboardPage from './pages/UserDashboardPage';
 
 const pages = {
   'role-select': RoleSelectPage,
-  'login-data': DataPage,
   terms: TermsPage,
   'thank-you': ThankYouPage,
   'admin-login': AdminLoginPage,
@@ -35,14 +33,11 @@ function App() {
       setActivePage('admin-login');
     } else if (role === 'user-login') {
       setActivePage('user-login');
+    } else if (role === 'terms') {
+      setActivePage('terms');
     } else {
-      setActivePage('login-data');
+      setActivePage('terms');
     }
-  }
-
-  function handleDataSuccess() {
-    setActiveRole('user');
-    setActivePage('terms');
   }
 
   function handleTermsAccept() {
@@ -88,7 +83,6 @@ function App() {
       <PageComponent
         userToken={userToken}
         onRoleSelect={handleRoleSelect}
-        onDataSuccess={handleDataSuccess}
         onAccept={handleTermsAccept}
         onDecline={handleTermsDecline}
         onCancel={handleUserLogout}
