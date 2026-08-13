@@ -304,6 +304,8 @@ function TermsPage({ onAccept, onDecline }) {
                 </section>
               )}
 
+            </section>
+
             <section className="terms-page__notice">
               <span className="material-symbols-outlined" aria-hidden="true">
                 info

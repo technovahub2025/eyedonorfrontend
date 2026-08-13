@@ -102,7 +102,6 @@ function App() {
         adminToken={adminToken}
         onAdminTokenChange={setAdminToken}
         onLoginSuccess={handleUserLoginSuccess}
-        onRoleSelect={handleRoleSelect}
       />
     </div>
   );
