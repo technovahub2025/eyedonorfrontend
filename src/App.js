@@ -68,24 +68,18 @@ function App() {
   function handleAdminLogout() {
     setAdminToken('');
     setActiveRole(null);
-    setSelectedAdminRow(null);
     setActivePage('role-select');
   }
 
   function handleUserLogout() {
     setUserToken('');
     setActiveRole(null);
-    setSelectedAdminRow(null);
     setActivePage('role-select');
   }
 
   function handleUserLoginSuccess() {
     setActiveRole('user');
     setActivePage('terms');
-  }
-
-  function handleDetailsBack() {
-    setActivePage('registry');
   }
 
   return (
