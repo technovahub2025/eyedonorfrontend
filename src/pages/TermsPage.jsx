@@ -31,9 +31,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
   const [termForm, setTermForm] = useState(initialTermForm);
+  const [submittedRows, setSubmittedRows] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
+  const [rowMessage, setRowMessage] = useState('');
+  const [rowError, setRowError] = useState('');
+  const [addingRow, setAddingRow] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -125,6 +129,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         body: payload,
       });
 
+      const newRow = {
+        ...payload,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+      setSubmittedRows((current) => [newRow, ...current]);
+
       if (!isAdminView) {
         onAccept?.();
       }
@@ -135,6 +146,41 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsError(err.message);
     } finally {
       setSavingTerm(false);
+    }
+  }
+
+  async function handleAddAnotherRow(event) {
+    event.preventDefault();
+    setAddingRow(true);
+    setRowMessage('');
+    setRowError('');
+
+    const payload = {
+      fullName: termForm.name.trim(),
+      name: termForm.name.trim(),
+      age: termForm.age === '' ? '' : Number(termForm.age),
+      gender: termForm.gender.trim(),
+    };
+
+    try {
+      await apiRequest(createTermsEndpoint, {
+        method: 'POST',
+        body: payload,
+      });
+
+      const newRow = {
+        ...payload,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+      setSubmittedRows((current) => [newRow, ...current]);
+      setRowMessage('New row added successfully.');
+      setTermForm(initialTermForm);
+      setPledgeAccepted(false);
+    } catch (err) {
+      setRowError(err.message);
+    } finally {
+      setAddingRow(false);
     }
   }
 
@@ -266,16 +312,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </select>
                     </label>
 
-                    <div className="terms-card__form-actions">
-                      <button
-                        className="terms-card__submit"
-                        type="submit"
-                        disabled={savingTerm || !pledgeAccepted}
-                      >
-                        {savingTerm ? 'Submitting...' : 'Submit pledge'}
-                      </button>
-                    </div>
-
                     <section className="terms-card__scroll" aria-label="Pledge points">
                       {pledgePoints.map((point, index) => (
                         <article key={point} className="terms-card__row">
@@ -301,17 +337,28 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <span>I pledge that the details I shared are correct and I want to continue.</span>
                     </label>
 
-                    <div className="terms-card__actions">
+                    {rowMessage ? <p className="terms-card__success">{rowMessage}</p> : null}
+                    {rowError ? <p className="terms-card__error">{rowError}</p> : null}
+
+                    <div className="terms-card__form-actions terms-card__form-actions--bottom">
                       <button
-                        className="terms-card__button terms-card__button--primary"
+                        className="terms-card__add-row"
+                        type="button"
+                        onClick={handleAddAnotherRow}
+                        disabled={addingRow}
+                      >
+                        {addingRow ? 'Adding...' : 'Add Row'}
+                      </button>
+                      <button
+                        className="terms-card__submit"
                         type="submit"
                         disabled={savingTerm || !pledgeAccepted}
                       >
-                        <span>Submit pledge</span>
-                        <span className="material-symbols-outlined" aria-hidden="true">
-                          arrow_forward
-                        </span>
+                        {savingTerm ? 'Submitting...' : 'Submit pledge'}
                       </button>
+                    </div>
+
+                    <div className="terms-card__actions">
                       <button
                         className="terms-card__button terms-card__button--secondary"
                         type="button"
@@ -327,6 +374,24 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                   {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
                   {termsError ? <p className="terms-card__error">{termsError}</p> : null}
+
+                  {submittedRows.length > 0 ? (
+                    <section className="terms-card__submitted" aria-label="Submitted entries">
+                      <h3>Your submitted entries</h3>
+                      <div className="terms-card__submitted-list">
+                        {submittedRows.map((row) => (
+                          <div key={row.id} className="terms-card__submitted-row">
+                            <span><strong>Name:</strong> {row.name}</span>
+                            <span><strong>Age:</strong> {row.age}</span>
+                            <span><strong>Gender:</strong> {row.gender}</span>
+                            <span className="terms-card__submitted-time">
+                              {new Date(row.createdAt).toLocaleString()}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
                 </>
               )}
             </section>
