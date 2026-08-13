@@ -277,6 +277,10 @@
   flex-wrap: wrap;
 }
 
+.terms-card__form-actions--bottom {
+  margin-top: 8px;
+}
+
 .terms-card__add-row {
   min-height: 48px;
   border: 1px solid #003c90;
