@@ -249,6 +249,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         return (
                           <div key={id} className="terms-card__submitted-row">
                             <span>
+                              <strong>Title:</strong> {row.title || 'N/A'}
+                            </span>
+                            <span>
                               <strong>Name:</strong> {row.name || 'Unnamed'}
                             </span>
                             <span>
