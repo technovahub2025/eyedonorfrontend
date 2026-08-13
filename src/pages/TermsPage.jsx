@@ -30,6 +30,10 @@ function TermsPage({ onAccept, onDecline }) {
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
   const [termForm, setTermForm] = useState(initialTermForm);
+  const [submittedRows, setSubmittedRows] = useState([]);
+  const [rowMessage, setRowMessage] = useState('');
+  const [rowError, setRowError] = useState('');
+  const [addingRow, setAddingRow] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -77,14 +81,54 @@ function TermsPage({ onAccept, onDecline }) {
         body: payload,
       });
 
+      const newRow = {
+        ...payload,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+      setSubmittedRows((current) => [newRow, ...current]);
       setTermsMessage('Your details and pledge were submitted successfully.');
       setTermForm(initialTermForm);
       setPledgeAccepted(false);
-      onAccept?.();
     } catch (err) {
       setTermsError(err.message);
     } finally {
       setSavingTerm(false);
+    }
+  }
+
+  async function handleAddAnotherRow(event) {
+    event.preventDefault();
+    setAddingRow(true);
+    setRowMessage('');
+    setRowError('');
+
+    const payload = {
+      fullName: termForm.name.trim(),
+      name: termForm.name.trim(),
+      age: termForm.age === '' ? '' : Number(termForm.age),
+      gender: termForm.gender.trim(),
+    };
+
+    try {
+      await apiRequest(createTermsEndpoint, {
+        method: 'POST',
+        body: payload,
+      });
+
+      const newRow = {
+        ...payload,
+        id: Date.now(),
+        createdAt: new Date().toISOString(),
+      };
+      setSubmittedRows((current) => [newRow, ...current]);
+      setRowMessage('New row added successfully.');
+      setTermForm(initialTermForm);
+      setPledgeAccepted(false);
+    } catch (err) {
+      setRowError(err.message);
+    } finally {
+      setAddingRow(false);
     }
   }
 
@@ -163,9 +207,20 @@ function TermsPage({ onAccept, onDecline }) {
                     <option value="Female">Female</option>
                   </select>
                 </label>
-                <button className="terms-card__submit" type="submit" disabled={savingTerm}>
-                  {savingTerm ? 'Saving...' : 'Save Details'}
-                </button>
+
+                <div className="terms-card__form-actions">
+                  <button className="terms-card__submit" type="submit" disabled={savingTerm}>
+                    {savingTerm ? 'Saving...' : 'Save Details'}
+                  </button>
+                  <button
+                    className="terms-card__add-row"
+                    type="button"
+                    onClick={handleAddAnotherRow}
+                    disabled={addingRow}
+                  >
+                    {addingRow ? 'Adding...' : 'Add Row'}
+                  </button>
+                </div>
 
                 <section className="terms-card__scroll" aria-label="Pledge points">
                   {pledgePoints.map((point, index) => (
@@ -218,7 +273,36 @@ function TermsPage({ onAccept, onDecline }) {
 
               {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
               {termsError ? <p className="terms-card__error">{termsError}</p> : null}
-            </section>
+              {rowMessage ? <p className="terms-card__success">{rowMessage}</p> : null}
+              {rowError ? <p className="terms-card__error">{rowError}</p> : null}
+
+              {submittedRows.length > 0 && (
+                <section className="terms-card__submitted" aria-label="Submitted entries">
+                  <h3>Your submitted entries</h3>
+                  <div className="terms-card__submitted-list">
+                    {submittedRows.map((row) => (
+                      <div key={row.id} className="terms-card__submitted-row">
+                        <span><strong>Name:</strong> {row.name}</span>
+                        <span><strong>Age:</strong> {row.age}</span>
+                        <span><strong>Gender:</strong> {row.gender}</span>
+                        <span className="terms-card__submitted-time">
+                          {new Date(row.createdAt).toLocaleString()}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    className="terms-card__complete"
+                    type="button"
+                    onClick={onAccept}
+                  >
+                    Complete and Continue
+                    <span className="material-symbols-outlined" aria-hidden="true">
+                      arrow_forward
+                    </span>
+                  </button>
+                </section>
+              )}
 
             <section className="terms-page__notice">
               <span className="material-symbols-outlined" aria-hidden="true">

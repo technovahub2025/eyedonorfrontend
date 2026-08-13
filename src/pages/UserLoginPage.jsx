@@ -9,7 +9,7 @@ const initialForm = {
   phone: '',
 };
 
-function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLogout }) {
+function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLogout, onRoleSelect }) {
   const [form, setForm] = useState(initialForm);
   const [token, setToken] = useState(userToken || '');
   const [loading, setLoading] = useState(false);
@@ -86,6 +86,10 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
     onUserLogout?.();
   }
 
+  function handleAdminClick() {
+    onRoleSelect?.('admin');
+  }
+
   return (
     <div className="user-login-page">
       <section className="user-login-page__hero">
@@ -152,6 +156,14 @@ function UserLoginPage({ userToken, onUserTokenChange, onLoginSuccess, onUserLog
             <span className="material-symbols-outlined" aria-hidden="true">
               arrow_forward
             </span>
+          </button>
+
+          <button
+            type="button"
+            className="user-login-form__admin"
+            onClick={handleAdminClick}
+          >
+            Admin Login
           </button>
         </form>
 

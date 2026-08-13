@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Atkinson+Hyperlegible+Next:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+.user-dashboard-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 36px 24px;
+  background:
+    radial-gradient(circle at top left, rgba(0, 60, 144, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(122, 247, 233, 0.14), transparent 26%),
+    #f9f9fc;
+  color: #1a1c1e;
+  font-family: 'Inter', sans-serif;
+}
+
+.user-dashboard-page__main {
+  width: min(1100px, 100%);
+}
+
+.user-dashboard-card {
+  border: 1px solid #d6deea;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 20px 50px rgba(15, 82, 186, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 40px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.user-dashboard-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.user-dashboard-card__header h2 {
+  margin: 0;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+  font-size: 2rem;
+}
+
+.user-dashboard-card__status {
+  color: #4e5666;
+  line-height: 1.6;
+}
+
+.user-dashboard-card__error {
+  color: #ba1a1a;
+  font-weight: 600;
+}
+
+.user-dashboard-card__profile {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 18px;
+  background: #f3f3f6;
+  border: 1px solid #c3c6d5;
+  margin-bottom: 24px;
+}
+
+.user-dashboard-card__profile p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.user-dashboard-card__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.user-dashboard-card__ghost {
+  border: 1px solid #c3c6d5;
+  border-radius: 14px;
+  padding: 12px 18px;
+  background: transparent;
+  color: #4e5666;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.user-dashboard-card__ghost:hover {
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .user-dashboard-page {
+    padding: 16px;
+  }
+
+  .user-dashboard-card {
+    padding: 22px;
+  }
+
+  .user-dashboard-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

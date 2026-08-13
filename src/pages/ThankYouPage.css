@@ -67,6 +67,24 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.thank-you-page__button:hover {
+  transform: translateY(-1px);
+}
+
+.thank-you-page__button--secondary {
+  background: transparent;
+  border: 1px solid #c3c6d5;
+  color: #4e5666;
+}
+
+.thank-you-page__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 640px) {

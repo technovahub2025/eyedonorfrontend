@@ -142,6 +142,27 @@
   box-shadow: 0 16px 30px rgba(15, 82, 186, 0.18);
 }
 
+.user-login-form__admin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: transparent;
+  color: #003c90;
+  border: 1px solid #003c90;
+  border-radius: 14px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.user-login-form__admin:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 60, 144, 0.04);
+}
+
 .user-login-form__submit:hover,
 .user-login-card__secondary:hover,
 .user-login-card__ghost:hover {

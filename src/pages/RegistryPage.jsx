@@ -354,63 +354,56 @@ function RegistryPage({ adminToken, onAdminRowSelect }) {
         <section className="registry-page__workspace">
           <section className="registry-page__table-card">
             <div className="registry-page__table-scroll">
-              <table className="registry-table">
-                <thead>
-                  <tr>
-                    <th>Full Name</th>
-                    <th>Email Address</th>
-                    <th>Phone Number</th>
-                    <th>Registration Date</th>
-                    <th className="registry-table__actions">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
+                <table className="registry-table">
+                  <thead>
                     <tr>
-                      <td className="registry-page__empty" colSpan={5}>
-                        Loading users...
-                      </td>
+                      <th>Full Name</th>
+                      <th>Age</th>
+                      <th>Gender</th>
                     </tr>
-                  ) : paginatedRows.length ? (
-                    paginatedRows.map((row) => {
-                      const id = row.__rowId;
-                      const initials =
-                        (row.fullName || row.name || 'user')
-                          .split(' ')
-                          .filter(Boolean)
-                          .slice(0, 2)
-                          .map((part) => part[0])
-                          .join('')
-                          .toUpperCase() || 'DN';
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td className="registry-page__empty" colSpan={3}>
+                          Loading users...
+                        </td>
+                      </tr>
+                    ) : paginatedRows.length ? (
+                      paginatedRows.map((row) => {
+                        const id = row.__rowId;
+                        const initials =
+                          (row.fullName || row.name || 'user')
+                            .split(' ')
+                            .filter(Boolean)
+                            .slice(0, 2)
+                            .map((part) => part[0])
+                            .join('')
+                            .toUpperCase() || 'DN';
 
-                      return (
-                        <RegistryRow
-                          key={id || row.email}
-                          initials={initials}
-                          name={row.fullName || row.name || 'Unnamed user'}
-                          email={row.email || 'No email'}
-                          phone={row.phone || 'No phone'}
-                          date={
-                            row.createdAt
-                              ? new Date(row.createdAt).toLocaleDateString()
-                              : row.date || 'Unknown'
-                          }
-                          onSelect={() => handleSelectRow(row)}
-                          onDelete={row.__source === 'donor' ? () => deleteuser(row) : undefined}
-                          actionLoading={actionLoading === id}
-                          selected={selectedRowId === id}
-                        />
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td className="registry-page__empty" colSpan={5}>
-                        No users found. Sign in to add the first one.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                        return (
+                          <RegistryRow
+                            key={id || row.email}
+                            initials={initials}
+                            name={row.fullName || row.name || 'Unnamed user'}
+                            age={row.age || 'N/A'}
+                            gender={row.gender || 'N/A'}
+                            onSelect={() => handleSelectRow(row)}
+                            onDelete={row.__source === 'donor' ? () => deleteuser(row) : undefined}
+                            actionLoading={actionLoading === id}
+                            selected={selectedRowId === id}
+                          />
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td className="registry-page__empty" colSpan={3}>
+                          No users found. Sign in to add the first one.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
             </div>
 
             <div className="registry-page__pagination">

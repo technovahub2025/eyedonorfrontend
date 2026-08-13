@@ -264,6 +264,36 @@
   cursor: not-allowed;
 }
 
+.terms-card__form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.terms-card__add-row {
+  min-height: 48px;
+  border: 1px solid #003c90;
+  border-radius: 12px;
+  padding: 0 18px;
+  background: transparent;
+  color: #003c90;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.terms-card__add-row:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 60, 144, 0.04);
+}
+
+.terms-card__add-row:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 .terms-card__success,
 .terms-card__error {
   margin: 12px 0 0;
@@ -351,6 +381,72 @@
 .terms-page__notice p {
   margin: 0;
   line-height: 1.6;
+}
+
+.terms-card__submitted {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #c3c6d5;
+  border-radius: 18px;
+  background: rgba(249, 249, 252, 0.85);
+}
+
+.terms-card__submitted h3 {
+  margin: 0 0 14px;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+  font-size: 1.1rem;
+}
+
+.terms-card__submitted-list {
+  display: grid;
+  gap: 10px;
+}
+
+.terms-card__submitted-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid #d8dbe6;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.terms-card__submitted-row strong {
+  color: #003c90;
+}
+
+.terms-card__submitted-time {
+  grid-column: 1 / -1;
+  color: #4e5666;
+  font-size: 0.85rem;
+}
+
+.terms-card__complete {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #006a63 0%, #00897b 100%);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.terms-card__complete:hover {
+  transform: translateY(-1px);
+}
+
+.terms-card__complete:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
