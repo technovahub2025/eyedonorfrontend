@@ -13,7 +13,7 @@ const roleNavMap = {
 
 function AppNavigator({ activePage, activeRole, onNavigate }) {
   const visibleItems = activeRole
-    ? navItems.filter((item) => roleNavMap[activeRole].includes(item.key))
+    ? navItems.filter((item) => (roleNavMap[activeRole] || []).includes(item.key))
     : [];
 
   return (
