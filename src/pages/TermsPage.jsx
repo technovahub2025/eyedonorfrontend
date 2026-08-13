@@ -1,5 +1,17 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Eye, Heart, ShieldCheck, Sparkles, Stethoscope } from 'lucide-react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  ClipboardList,
+  Eye,
+  Handshake,
+  Heart,
+  ListChecks,
+  ShieldCheck,
+  Sparkles,
+  Stethoscope,
+  UserRound,
+} from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
@@ -207,9 +219,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               </div>
 
               <div className="terms-card__summary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  checklist
-                </span>
+                <ListChecks aria-hidden="true" />
                 <div>
                   <strong>{isAdminView ? 'Admin review' : 'Two-part step'}</strong>
                   <p>
@@ -288,66 +298,99 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               ) : (
                 <>
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
-                    <div className="terms-card__field terms-card__field--with-action">
-                      <label className="terms-card__field-label">
-                        <span>Name</span>
-                        <input
-                          type="text"
-                          placeholder="John Doe"
-                          value={termForm.name}
-                          onChange={(event) => setTermForm({ ...termForm, name: event.target.value })}
-                          required
-                        />
-                      </label>
-                      <button
-                        className="terms-card__add-row terms-card__add-row--inline"
-                        type="button"
-                        onClick={handleAddAnotherRow}
-                        disabled={addingRow}
-                      >
-                        {addingRow ? 'Adding...' : 'Add Row'}
-                      </button>
-                    </div>
+                    <section className="terms-card__section terms-card__section--details">
+                      <div className="terms-card__section-header">
+                        <div className="terms-card__section-title">
+                          <UserRound aria-hidden="true" />
+                          <span>YOUR DETAILS</span>
+                        </div>
+                        <span className="terms-card__admin-badge">Saved automatically</span>
+                      </div>
 
-                    <label className="terms-card__field">
-                      <span>Age</span>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="25"
-                        value={termForm.age}
-                        onChange={(event) => setTermForm({ ...termForm, age: event.target.value })}
-                        required
-                      />
-                    </label>
+                      <div className="terms-card__field terms-card__field--with-action">
+                        <label className="terms-card__field-label">
+                          <span>Full Name</span>
+                          <input
+                            type="text"
+                            placeholder="Enter your full name"
+                            value={termForm.name}
+                            onChange={(event) =>
+                              setTermForm({ ...termForm, name: event.target.value })
+                            }
+                            required
+                          />
+                        </label>
+                        <button
+                          className="terms-card__add-row terms-card__add-row--inline"
+                          type="button"
+                          onClick={handleAddAnotherRow}
+                          disabled={addingRow}
+                        >
+                          {addingRow ? 'Adding...' : 'Add Row'}
+                        </button>
+                      </div>
 
-                    <label className="terms-card__field">
-                      <span>Gender</span>
-                      <select
-                        value={termForm.gender}
-                        onChange={(event) => setTermForm({ ...termForm, gender: event.target.value })}
-                        required
-                      >
-                        <option value="">Select gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                      </select>
-                    </label>
+                      <div className="terms-card__details-grid">
+                        <label className="terms-card__field">
+                          <span>Age</span>
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder="Enter your age"
+                            value={termForm.age}
+                            onChange={(event) => setTermForm({ ...termForm, age: event.target.value })}
+                            required
+                          />
+                        </label>
 
-                    <section className="terms-card__scroll" aria-label="Pledge points">
-                      {pledgePoints.map((point, index) => (
-                        <article key={point} className="terms-card__row">
-                          <div className="terms-card__row-index">
-                            {String(index + 1).padStart(2, '0')}
-                          </div>
-                          <div className="terms-card__row-content">
-                            <div className="terms-card__row-heading">
-                              <h3>Pledge point {index + 1}</h3>
-                            </div>
-                            <p>{point}</p>
-                          </div>
-                        </article>
-                      ))}
+                        <label className="terms-card__field">
+                          <span>Gender</span>
+                          <select
+                            value={termForm.gender}
+                            onChange={(event) =>
+                              setTermForm({ ...termForm, gender: event.target.value })
+                            }
+                            required
+                          >
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                          </select>
+                        </label>
+                      </div>
+                    </section>
+
+                    <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
+                      <div className="terms-card__section-header">
+                        <div className="terms-card__section-title">
+                          <ShieldCheck aria-hidden="true" />
+                          <span>YOUR PLEDGE</span>
+                        </div>
+                      </div>
+
+                      <div className="terms-card__scroll">
+                        {pledgePoints.map((point, index) => {
+                          const rowIcons = [Handshake, ClipboardList, Heart];
+                          const RowIcon = rowIcons[index] || Heart;
+
+                          return (
+                            <article key={point} className="terms-card__row">
+                              <div className="terms-card__row-index">
+                                {String(index + 1).padStart(2, '0')}
+                              </div>
+                              <div className="terms-card__row-icon">
+                                <RowIcon aria-hidden="true" />
+                              </div>
+                              <div className="terms-card__row-content">
+                                <div className="terms-card__row-heading">
+                                  <h3>Pledge point {index + 1}</h3>
+                                </div>
+                                <p>{point}</p>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
                     </section>
 
                     <label className="terms-card__agree">
@@ -364,24 +407,21 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                     <div className="terms-card__form-actions terms-card__form-actions--bottom">
                       <button
-                        className="terms-card__submit"
-                        type="submit"
-                        disabled={savingTerm || !pledgeAccepted}
-                      >
-                        {savingTerm ? 'Submitting...' : 'Submit pledge'}
-                      </button>
-                    </div>
-
-                    <div className="terms-card__actions">
-                      <button
                         className="terms-card__button terms-card__button--secondary"
                         type="button"
                         onClick={() => onDecline?.()}
                       >
+                        <ArrowLeft aria-hidden="true" />
                         <span>Back</span>
-                        <span className="material-symbols-outlined" aria-hidden="true">
-                          close
-                        </span>
+                      </button>
+
+                      <button
+                        className="terms-card__button terms-card__button--primary"
+                        type="submit"
+                        disabled={savingTerm || !pledgeAccepted}
+                      >
+                        <Heart aria-hidden="true" />
+                        <span>{savingTerm ? 'Submitting...' : 'Submit pledge'}</span>
                       </button>
                     </div>
                   </form>
