@@ -194,6 +194,12 @@
   font-size: 1.2rem;
 }
 
+.terms-card__admin-copy {
+  margin: 0 0 16px;
+  color: #4e5666;
+  line-height: 1.6;
+}
+
 .terms-card__admin-badge {
   padding: 8px 10px;
   border-radius: 999px;
@@ -400,6 +406,10 @@
 .terms-card__submitted-list {
   display: grid;
   gap: 10px;
+}
+
+.terms-card__submitted-list--admin {
+  margin-top: 4px;
 }
 
 .terms-card__submitted-row {
