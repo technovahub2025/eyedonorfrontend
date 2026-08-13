@@ -7,7 +7,6 @@ const pledgeEndpoint = '/api/terms/getall';
 
 function RegistryPage({ adminToken }) {
   const [rows, setRows] = useState([]);
-  const [pledgeRows, setPledgeRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -17,7 +16,6 @@ function RegistryPage({ adminToken }) {
     async function loadData() {
       if (!adminToken) {
         setRows([]);
-        setPledgeRows([]);
         setError('Please sign in to view details.');
         setLoading(false);
         return;
@@ -66,10 +64,8 @@ function RegistryPage({ adminToken }) {
         });
 
         setRows(combined);
-        setPledgeRows(terms);
       } catch (err) {
         setRows([]);
-        setPledgeRows([]);
         setError(err.message);
       } finally {
         if (active) {
