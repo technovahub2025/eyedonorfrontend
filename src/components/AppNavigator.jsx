@@ -2,17 +2,13 @@ import './AppNavigator.css';
 import BrandMark from './BrandMark';
 
 const navItems = [
-  { key: 'login-data', label: 'Start' },
   { key: 'terms', label: 'Review' },
   { key: 'thank-you', label: 'Done' },
-  { key: 'user-login', label: 'Sign in' },
-  { key: 'user-dashboard', label: 'Dashboard' },
-  { key: 'admin-login', label: 'Admin sign in' },
 ];
 
 const roleNavMap = {
-  user: ['login-data', 'terms', 'thank-you', 'user-login', 'user-dashboard'],
-  admin: ['admin-login', 'terms'],
+  user: ['terms', 'thank-you'],
+  admin: ['terms', 'thank-you'],
 };
 
 function AppNavigator({ activePage, activeRole, onNavigate }) {

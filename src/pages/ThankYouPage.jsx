@@ -24,14 +24,7 @@ function ThankYouPage({ onRestart, onRoleSelect }) {
             process.
           </p>
 
-          <div className="thank-you-page__actions">
-            <button className="thank-you-page__button" type="button" onClick={handleStartOver}>
-              Return to Login
-            </button>
-            <button className="thank-you-page__button thank-you-page__button--secondary" type="button" onClick={onRestart}>
-              New Registration
-            </button>
-          </div>
+        
         </section>
 
       </main>
