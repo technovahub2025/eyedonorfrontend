@@ -186,9 +186,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     <div className="terms-page">
       <main className="terms-page__main">
         <section className="terms-page__content">
-          <div className="terms-page__stepper-wrap">
-            <ProgressStepper steps={steps} currentStep={2} />
-          </div>
+          {!isAdminView ? (
+            <div className="terms-page__stepper-wrap">
+              <ProgressStepper steps={steps} currentStep={2} />
+            </div>
+          ) : null}
 
           <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
@@ -204,15 +206,17 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                 <p className="terms-card__status">{rootStatus}</p>
               </div>
 
-              <div className="terms-card__summary">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  checklist
-                </span>
-                <div>
-                  <strong>Two-part step</strong>
-                  <p>Fill in your details, then confirm the pledge below.</p>
+              {!isAdminView ? (
+                <div className="terms-card__summary">
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    checklist
+                  </span>
+                  <div>
+                    <strong>Two-part step</strong>
+                    <p>Fill in your details, then confirm the pledge below.</p>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
 
             <section className="terms-card__admin-panel" aria-labelledby="terms-admin-title">
@@ -402,12 +406,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               )}
             </section>
 
-            <section className="terms-page__notice">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                info
-              </span>
-              <p>This step collects your details first, then asks you to confirm the pledge.</p>
-            </section>
+            {!isAdminView ? (
+              <section className="terms-page__notice">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  info
+                </span>
+                <p>This step collects your details first, then asks you to confirm the pledge.</p>
+              </section>
+            ) : null}
           </section>
         </section>
       </main>

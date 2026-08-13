@@ -161,7 +161,11 @@ function DataPage({ onDataSuccess }) {
                 <span>I support eye donation</span>
               </label>
 
-              <button className="login-form__submit" type="submit" disabled={loading}>
+              <button
+                className="login-form__submit"
+                type="submit"
+                disabled={loading || !form.supportEyeDonation}
+              >
                 {loading ? 'Saving...' : 'Save and Continue'}
                 <span className="material-symbols-outlined" aria-hidden="true">
                   arrow_forward
