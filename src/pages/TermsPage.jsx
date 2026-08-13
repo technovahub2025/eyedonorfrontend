@@ -276,16 +276,26 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               ) : (
                 <>
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
-                    <label className="terms-card__field">
-                      <span>Name</span>
-                      <input
-                        type="text"
-                        placeholder="John Doe"
-                        value={termForm.name}
-                        onChange={(event) => setTermForm({ ...termForm, name: event.target.value })}
-                        required
-                      />
-                    </label>
+                    <div className="terms-card__field terms-card__field--with-action">
+                      <label className="terms-card__field-label">
+                        <span>Name</span>
+                        <input
+                          type="text"
+                          placeholder="John Doe"
+                          value={termForm.name}
+                          onChange={(event) => setTermForm({ ...termForm, name: event.target.value })}
+                          required
+                        />
+                      </label>
+                      <button
+                        className="terms-card__add-row terms-card__add-row--inline"
+                        type="button"
+                        onClick={handleAddAnotherRow}
+                        disabled={addingRow}
+                      >
+                        {addingRow ? 'Adding...' : 'Add Row'}
+                      </button>
+                    </div>
 
                     <label className="terms-card__field">
                       <span>Age</span>
@@ -341,14 +351,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     {rowError ? <p className="terms-card__error">{rowError}</p> : null}
 
                     <div className="terms-card__form-actions terms-card__form-actions--bottom">
-                      <button
-                        className="terms-card__add-row"
-                        type="button"
-                        onClick={handleAddAnotherRow}
-                        disabled={addingRow}
-                      >
-                        {addingRow ? 'Adding...' : 'Add Row'}
-                      </button>
                       <button
                         className="terms-card__submit"
                         type="submit"

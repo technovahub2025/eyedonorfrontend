@@ -222,6 +222,18 @@
   gap: 8px;
 }
 
+.terms-card__field--with-action {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.terms-card__field-label {
+  display: grid;
+  gap: 8px;
+}
+
 .terms-card__field span {
   color: #4e5666;
   font-size: 0.86rem;
@@ -292,6 +304,10 @@
   font-weight: 800;
   cursor: pointer;
   transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.terms-card__add-row--inline {
+  align-self: end;
 }
 
 .terms-card__add-row:hover {
@@ -496,6 +512,10 @@
     grid-template-columns: 1fr;
   }
 
+  .terms-card__field--with-action {
+    grid-template-columns: 1fr;
+  }
+
   .terms-card__admin-header {
     flex-direction: column;
   }
@@ -505,6 +525,10 @@
   }
 
   .terms-card__button {
+    width: 100%;
+  }
+
+  .terms-card__add-row--inline {
     width: 100%;
   }
 }
