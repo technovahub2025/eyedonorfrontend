@@ -119,6 +119,7 @@ function App() {
         onAdminRowSelect={handleAdminRowSelect}
         onDetailsBack={handleDetailsBack}
         onLoginSuccess={handleUserLoginSuccess}
+        onRoleSelect={handleRoleSelect}
       />
     </div>
   );
