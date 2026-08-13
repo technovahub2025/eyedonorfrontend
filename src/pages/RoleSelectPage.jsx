@@ -20,19 +20,31 @@ function RoleSelectPage({ onRoleSelect }) {
               admin_panel_settings
             </span>
             <strong>Admin</strong>
-            <span>Sign in and view the list</span>
+            <span>Admin sign in</span>
           </button>
 
           <button
             className="role-select-card role-select-card--user"
             type="button"
+            onClick={() => onRoleSelect?.('user-login')}
+          >
+            <span className="material-symbols-outlined" aria-hidden="true">
+              login
+            </span>
+            <strong>User Login</strong>
+            <span>Sign in with your email and phone</span>
+          </button>
+
+          <button
+            className="role-select-card role-select-card--register"
+            type="button"
             onClick={() => onRoleSelect?.('user')}
           >
             <span className="material-symbols-outlined" aria-hidden="true">
-              badge
+              how_to_reg
             </span>
-            <strong>User</strong>
-            <span>Share details, verify, and finish</span>
+            <strong>New User</strong>
+            <span>Register and share your details</span>
           </button>
         </section>
 

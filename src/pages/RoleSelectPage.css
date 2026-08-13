@@ -118,6 +118,12 @@
     #ffffff;
 }
 
+.role-select-card--register {
+  background:
+    linear-gradient(135deg, rgba(0, 60, 144, 0.04), rgba(255, 255, 255, 0.96)),
+    #ffffff;
+}
+
 @media (max-width: 900px) {
   .role-select-page__shell {
     grid-template-columns: 1fr;
