@@ -1,11 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
+import eyeLogo from '../asset/eye.jpg';
 import './RoleSelectPage.css';
-
-const LEGACY_LOGO =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuAhJ_z0EkPnnnhcrdezixrZhsfHIKmgKeqj3T2QGLF5Gw18u0CF7Djlp_EDiJz2_yN-B48dJH1pUuOhoHyNwEb_figOuCK6CSXlo7uTaQAaNsfEPKdnwDxuy6VuYRpeYOITdhHZ-bBhEP6rFn4W4JPdf5-QEqHbEWLBfmbzKBoKykMQzbQJUxzrIABQH2HA0jWrs1KwZrQ55ryKdB4_wEdVTCL6jQf4DbHtz4zKj0SvcryS3D_l3CRUkg';
-const HERO_IMAGE =
-  'https://lh3.googleusercontent.com/aida-public/AB6AXuBi_pztuGdU1dxmV0py4vKsNR64KtYneJA3Msfd6-amdrFBS9dH9rxqfPP3mCnb-bHiyh-rvZQP3HnitAOrSrY-qlgGuw0aOUTV1wblsW2eNkHvz7dik2_kfKZqt_fWZlVM2yk4vm2yRA5vh7pWrKCtHhahEUl9ruPrPu2EdY-BBtMNXMJe0SH5QOTGKKbGLXiL-bEgum75CJr6fruyedxhroidDN6WJZsOUpeqficNeLgHgIOmcHy3Vw';
 
 function RoleSelectPage({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -30,7 +26,7 @@ function RoleSelectPage({ onRoleSelect }) {
       <header className="landing-header">
         <div className="landing-header__inner">
           <a href="#" className="landing-header__logo" onClick={(e) => e.preventDefault()}>
-            <img alt="LegacyEye Logo" className="landing-header__logo-img" src={LEGACY_LOGO} />
+            <img alt="VisionGift eye donation logo" className="landing-header__logo-img" src={eyeLogo} />
             <span>LegacyEye</span>
           </a>
           <nav className="landing-nav" aria-label="Main navigation">
@@ -87,6 +83,8 @@ function RoleSelectPage({ onRoleSelect }) {
                 Your pledge can help restore vision to others.
               </div>
 
+              <p className="hero-slogan">இருவிழி கொடுப்போம், இருளை விரட்டுவோம்!</p>
+
               <h1 className="hero-title">
                 Give the <br />
                 <span className="hero-title__gradient">Gift of Sight</span>
@@ -125,7 +123,7 @@ function RoleSelectPage({ onRoleSelect }) {
             </div>
 
             <div className="hero-illustration" aria-label="Eye donation illustration">
-              <img className="hero-illustration__img" alt="Hero visual" src={HERO_IMAGE} />
+              <img className="hero-illustration__img" alt="Eye representing the gift of sight" src={eyeLogo} />
               <div className="hero-illustration__overlay" aria-hidden="true" />
               <div className="hero-illustration__note">
                 <div className="hero-illustration__icon">
@@ -286,7 +284,7 @@ function RoleSelectPage({ onRoleSelect }) {
         <div className="landing-footer__inner">
           <div className="footer-brand">
             <div className="footer-brand__logo">
-              <img alt="LegacyEye Logo" src={LEGACY_LOGO} />
+              <img alt="VisionGift eye donation logo" src={eyeLogo} />
             </div>
             <p className="footer-brand__text">
               Dedicated to facilitating eye donations and restoring vision through compassion and
