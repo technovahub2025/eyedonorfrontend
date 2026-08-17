@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
-import eyeLogo from '../asset/eye.jpg';
+import eyeHero from '../asset/eye.jpg';
+import eyeLogo from '../asset/eyes.jpg';
 import './RoleSelectPage.css';
 
 function RoleSelectPage({ onRoleSelect }) {
@@ -123,7 +124,7 @@ function RoleSelectPage({ onRoleSelect }) {
             </div>
 
             <div className="hero-illustration" aria-label="Eye donation illustration">
-              <img className="hero-illustration__img" alt="Eye representing the gift of sight" src={eyeLogo} />
+              <img className="hero-illustration__img" alt="Eye representing the gift of sight" src={eyeHero} />
               <div className="hero-illustration__overlay" aria-hidden="true" />
               <div className="hero-illustration__note">
                 <div className="hero-illustration__icon">
