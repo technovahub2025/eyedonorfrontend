@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import { apiRequest } from '../lib/apiClient';
+import eyeImage from '../asset/eye.jpg';
 import './TermsPage.css';
 
 const steps = [
@@ -207,13 +208,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
               <div className="terms-card__hero-visual" aria-hidden="true">
                 <div className="terms-card__eye-rings" />
-                <div className="terms-card__eye">
-                  <div className="terms-card__eyelid terms-card__eyelid--top" />
-                  <div className="terms-card__eyelid terms-card__eyelid--bottom" />
-                  <div className="terms-card__iris">
-                    <div className="terms-card__pupil" />
-                  </div>
-                </div>
+                <img
+                  src={eyeImage}
+                  alt=""
+                  className="terms-card__eye"
+                  aria-hidden="true"
+                />
                 <div className="terms-card__leaf terms-card__leaf--left">
                   <Sparkles />
                 </div>
