@@ -7,9 +7,11 @@ import {
   Handshake,
   Heart,
   ListChecks,
+  Plus,
   ShieldCheck,
   Sparkles,
   Stethoscope,
+  Trash2,
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
@@ -30,11 +32,15 @@ const pledgePoints = [
   'I am ready to continue to the final thank you step.',
 ];
 
-const initialTermForm = {
-  name: '',
+let personId = 0;
+const initialPerson = () => ({
+  id: ++personId,
+  fullName: '',
   age: '',
   gender: '',
-};
+  phone: '',
+  address: '',
+});
 
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
@@ -42,14 +48,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
-  const [termForm, setTermForm] = useState(initialTermForm);
+  const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [rowMessage, setRowMessage] = useState('');
   const [rowError, setRowError] = useState('');
-  const [addingRow, setAddingRow] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -95,83 +100,85 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     };
   }, [adminToken, isAdminView]);
 
+  function updatePerson(id, field, value) {
+    setPeople((current) =>
+      current.map((person) => (person.id === id ? { ...person, [field]: value } : person))
+    );
+  }
+
+  function addPerson() {
+    setPeople((current) => [...current, initialPerson()]);
+  }
+
+  function removePerson(id) {
+    if (people.length <= 1) return;
+    setPeople((current) => current.filter((person) => person.id !== id));
+  }
+
+  function resetPeople() {
+    setPeople([initialPerson()]);
+  }
+
+  async function submitPerson(person) {
+    const payload = {
+      fullName: person.fullName.trim(),
+      name: person.fullName.trim(),
+      age: person.age === '' ? '' : Number(person.age),
+      gender: person.gender.trim(),
+      phone: person.phone.trim(),
+      address: person.address.trim(),
+    };
+
+    return apiRequest(createTermsEndpoint, {
+      method: 'POST',
+      body: payload,
+    });
+  }
+
   async function handleCreateTerm(event) {
     event.preventDefault();
-    setSavingTerm(true);
     setTermsMessage('');
     setTermsError('');
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
-      setSavingTerm(false);
       return;
     }
 
-    const payload = {
-      fullName: termForm.name.trim(),
-      name: termForm.name.trim(),
-      age: termForm.age === '' ? '' : Number(termForm.age),
-      gender: termForm.gender.trim(),
-    };
+    const incomplete = people.find(
+      (person) => !person.fullName || !person.age || !person.gender || !person.phone || !person.address
+    );
+    if (incomplete) {
+      setTermsError('Please fill in all five fields for each person.');
+      return;
+    }
+
+    setSavingTerm(true);
 
     try {
-      await apiRequest(createTermsEndpoint, {
-        method: 'POST',
-        body: payload,
-      });
+      const saved = [];
+      for (const person of people) {
+        const response = await submitPerson(person);
+        const savedPerson = {
+          ...person,
+          id: response?.data?._id || response?._id || person.id,
+          createdAt: response?.data?.createdAt || response?.createdAt || new Date().toISOString(),
+        };
+        saved.push(savedPerson);
+      }
 
-      const newRow = {
-        ...payload,
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-      };
-      setSubmittedRows((current) => [newRow, ...current]);
+      setSubmittedRows((current) => [...saved, ...current]);
+      setTermsMessage('Your details and pledge were submitted successfully.');
+      resetPeople();
+      setPledgeAccepted(false);
 
       if (!isAdminView) {
         onAccept?.();
       }
-      setTermsMessage('Your details and pledge were submitted successfully.');
-      setTermForm(initialTermForm);
-      setPledgeAccepted(false);
     } catch (err) {
       setTermsError(err.message);
     } finally {
       setSavingTerm(false);
-    }
-  }
-
-  async function handleAddAnotherRow(event) {
-    event.preventDefault();
-    setAddingRow(true);
-    setRowMessage('');
-    setRowError('');
-
-    const payload = {
-      fullName: termForm.name.trim(),
-      name: termForm.name.trim(),
-      age: termForm.age === '' ? '' : Number(termForm.age),
-      gender: termForm.gender.trim(),
-    };
-
-    try {
-      await apiRequest(createTermsEndpoint, {
-        method: 'POST',
-        body: payload,
-      });
-
-      const newRow = {
-        ...payload,
-        id: Date.now(),
-        createdAt: new Date().toISOString(),
-      };
-      setSubmittedRows((current) => [newRow, ...current]);
-      setRowMessage('New row added successfully.');
-      setTermForm(initialTermForm);
-      setPledgeAccepted(false);
-    } catch (err) {
-      setRowError(err.message);
-    } finally {
-      setAddingRow(false);
     }
   }
 
@@ -194,7 +201,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                 <p className="terms-card__intro">
                   {isAdminView
                     ? 'Admins can review only the records submitted through the terms page.'
-                    : 'First share your name, age, and gender. Then review and accept the pledge before submitting.'}
+                    : 'Share the full details for each person. Then review and accept the pledge before submitting.'}
                 </p>
               </div>
 
@@ -225,7 +232,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   <p>
                     {isAdminView
                       ? 'Review the records that came through the terms page.'
-                      : 'Fill in your details, then confirm the pledge below.'}
+                      : 'Fill in the details for each person, then confirm the pledge below.'}
                   </p>
                 </div>
               </div>
@@ -297,7 +304,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                 </>
               ) : (
                 <>
-                  <form className="terms-card__admin-form" onSubmit={handleCreateTerm}>
+                  <form className="terms-card__admin-form" onSubmit={handleCreateTerm} noValidate>
                     <section className="terms-card__section terms-card__section--details">
                       <div className="terms-card__section-header">
                         <div className="terms-card__section-title">
@@ -307,56 +314,98 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         <span className="terms-card__admin-badge">Saved automatically</span>
                       </div>
 
-                      <div className="terms-card__field terms-card__field--with-action">
-                        <label className="terms-card__field-label">
-                          <span>Full Name</span>
-                          <input
-                            type="text"
-                            placeholder="Enter your full name"
-                            value={termForm.name}
-                            onChange={(event) =>
-                              setTermForm({ ...termForm, name: event.target.value })
-                            }
-                            required
-                          />
-                        </label>
+                      {people.map((person, index) => (
+                        <div key={person.id} className="terms-card__person">
+                          <div className="terms-card__field terms-card__field--full">
+                            <label className="terms-card__field-label">
+                              <span>Full Name</span>
+                              <input
+                                type="text"
+                                placeholder="Enter your full name"
+                                value={person.fullName}
+                                onChange={(event) =>
+                                  updatePerson(person.id, 'fullName', event.target.value)
+                                }
+                                required
+                              />
+                            </label>
+                          </div>
+
+                          <div className="terms-card__details-grid">
+                            <label className="terms-card__field">
+                              <span>Age</span>
+                              <input
+                                type="number"
+                                min="0"
+                                placeholder="Enter your age"
+                                value={person.age}
+                                onChange={(event) => updatePerson(person.id, 'age', event.target.value)}
+                                required
+                              />
+                            </label>
+
+                            <label className="terms-card__field">
+                              <span>Gender</span>
+                              <select
+                                value={person.gender}
+                                onChange={(event) =>
+                                  updatePerson(person.id, 'gender', event.target.value)
+                                }
+                                required
+                              >
+                                <option value="">Select gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                            </label>
+
+                            <label className="terms-card__field">
+                              <span>Phone Number</span>
+                              <input
+                                type="tel"
+                                placeholder="Enter your phone number"
+                                value={person.phone}
+                                onChange={(event) => updatePerson(person.id, 'phone', event.target.value)}
+                                required
+                              />
+                            </label>
+
+                            <label className="terms-card__field">
+                              <span>Address</span>
+                              <textarea
+                                placeholder="Enter your address"
+                                value={person.address}
+                                onChange={(event) =>
+                                  updatePerson(person.id, 'address', event.target.value)
+                                }
+                                rows={2}
+                                required
+                              />
+                            </label>
+                          </div>
+
+                          {people.length > 1 ? (
+                            <button
+                              type="button"
+                              className="terms-card__remove-person"
+                              onClick={() => removePerson(person.id)}
+                              aria-label={`Remove person ${index + 1}`}
+                            >
+                              <Trash2 aria-hidden="true" />
+                            </button>
+                          ) : null}
+                        </div>
+                      ))}
+
+                      <div className="terms-card__add-person-wrap">
                         <button
-                          className="terms-card__add-row terms-card__add-row--inline"
                           type="button"
-                          onClick={handleAddAnotherRow}
-                          disabled={addingRow}
+                          className="terms-card__add-row"
+                          onClick={addPerson}
                         >
-                          {addingRow ? 'Adding...' : 'Add Row'}
+                          <Plus aria-hidden="true" />
+                          <span>+ Add Another Person</span>
                         </button>
-                      </div>
-
-                      <div className="terms-card__details-grid">
-                        <label className="terms-card__field">
-                          <span>Age</span>
-                          <input
-                            type="number"
-                            min="0"
-                            placeholder="Enter your age"
-                            value={termForm.age}
-                            onChange={(event) => setTermForm({ ...termForm, age: event.target.value })}
-                            required
-                          />
-                        </label>
-
-                        <label className="terms-card__field">
-                          <span>Gender</span>
-                          <select
-                            value={termForm.gender}
-                            onChange={(event) =>
-                              setTermForm({ ...termForm, gender: event.target.value })
-                            }
-                            required
-                          >
-                            <option value="">Select gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        </label>
                       </div>
                     </section>
 
@@ -435,9 +484,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <div className="terms-card__submitted-list">
                         {submittedRows.map((row) => (
                           <div key={row.id} className="terms-card__submitted-row">
-                            <span><strong>Name:</strong> {row.name}</span>
+                            <span><strong>Name:</strong> {row.fullName || row.name}</span>
                             <span><strong>Age:</strong> {row.age}</span>
                             <span><strong>Gender:</strong> {row.gender}</span>
+                            <span><strong>Phone:</strong> {row.phone || 'N/A'}</span>
+                            <span><strong>Address:</strong> {row.address || 'N/A'}</span>
                             <span className="terms-card__submitted-time">
                               {new Date(row.createdAt).toLocaleString()}
                             </span>
