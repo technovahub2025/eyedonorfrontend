@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
 import './RoleSelectPage.css';
 
@@ -28,7 +29,7 @@ function RoleSelectPage({ onRoleSelect }) {
     <div className="landing-page">
       <header className="landing-header">
         <div className="landing-header__inner">
-          <a href="#" className="landing-header__logo">
+          <a href="#" className="landing-header__logo" onClick={(e) => e.preventDefault()}>
             <img alt="LegacyEye Logo" className="landing-header__logo-img" src={LEGACY_LOGO} />
             <span>LegacyEye</span>
           </a>
@@ -295,15 +296,15 @@ function RoleSelectPage({ onRoleSelect }) {
 
           <div className="footer-links">
             <h4 className="footer-links__title">Quick Links</h4>
-            <a href="#">Medical Advisory Board</a>
-            <a href="#">Partner Hospitals</a>
-            <a href="#">Contact Us</a>
+            <a href="#" onClick={(e) => e.preventDefault()}>Medical Advisory Board</a>
+            <a href="#" onClick={(e) => e.preventDefault()}>Partner Hospitals</a>
+            <a href="#" onClick={(e) => e.preventDefault()}>Contact Us</a>
           </div>
 
           <div className="footer-legal">
             <h4 className="footer-legal__title">Legal</h4>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
+            <a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a>
           </div>
         </div>
 

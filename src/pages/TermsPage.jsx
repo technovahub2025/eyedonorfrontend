@@ -53,8 +53,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminRows, setAdminRows] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
-  const [rowMessage, setRowMessage] = useState('');
-  const [rowError, setRowError] = useState('');
+  const [rowMessage] = useState('');
+  const [rowError] = useState('');
 
   useEffect(() => {
     let active = true;
