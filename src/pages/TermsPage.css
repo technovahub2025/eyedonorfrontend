@@ -5,7 +5,7 @@
     radial-gradient(circle at top right, rgba(232, 79, 138, 0.1), transparent 22%),
     radial-gradient(circle at bottom right, rgba(172, 227, 255, 0.18), transparent 24%),
     #f8fbff;
-  color: #17316f;
+  color: #191c1e;
   font-family: 'Inter', sans-serif;
 }
 
@@ -50,7 +50,7 @@
 
 .terms-card__intro {
   margin: 12px 0 0;
-  color: #51658a;
+  color: #64748b;
   line-height: 1.6;
   max-width: 48ch;
 }
@@ -189,7 +189,7 @@
   place-items: center;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.92);
-  color: #1f4cc9;
+  color: #00668a;
   box-shadow: 0 10px 24px rgba(31, 76, 201, 0.1);
   animation: iconFloat 6s ease-in-out infinite;
 }
@@ -202,7 +202,7 @@
 .terms-card__leaf--left {
   left: 22px;
   top: 24px;
-  color: #1f4cc9;
+  color: #00668a;
 }
 
 .terms-card__leaf--right {
@@ -215,7 +215,7 @@
 .terms-card__leaf--bottom {
   right: 20px;
   bottom: 18px;
-  color: #1f4cc9;
+  color: #00668a;
   animation-delay: 1.4s;
 }
 
@@ -227,7 +227,7 @@
   border: 1px solid rgba(31, 76, 201, 0.12);
   border-radius: 18px;
   background: linear-gradient(135deg, rgba(31, 76, 201, 0.08), rgba(232, 79, 138, 0.08), rgba(255, 255, 255, 0.96));
-  color: #17316f;
+  color: #191c1e;
   min-height: 168px;
   align-self: stretch;
 }
@@ -235,7 +235,7 @@
 .terms-card__summary svg {
   width: 20px;
   height: 20px;
-  color: #1f4cc9;
+  color: #00668a;
   flex: none;
 }
 
@@ -243,12 +243,12 @@
   display: block;
   margin-bottom: 4px;
   font-size: 0.98rem;
-  color: #17316f;
+  color: #191c1e;
 }
 
 .terms-card__summary p {
   margin: 0;
-  color: #52658c;
+  color: #64748b;
   line-height: 1.5;
 }
 
@@ -285,7 +285,7 @@
   align-items: center;
   justify-content: center;
   background: #d9e2ff;
-  color: #1f4cc9;
+  color: #00668a;
   font-weight: 800;
 }
 
@@ -296,7 +296,7 @@
   display: grid;
   place-items: center;
   background: rgba(31, 76, 201, 0.1);
-  color: #1f4cc9;
+  color: #00668a;
 }
 
 .terms-card__row-icon svg {
@@ -306,7 +306,7 @@
 
 .terms-card__row-content h3 {
   margin: 0;
-  color: #17316f;
+  color: #191c1e;
   font-size: 1rem;
   line-height: 1.4;
 }
@@ -328,7 +328,7 @@
 
 .terms-card__row p {
   margin: 0;
-  color: #52658c;
+  color: #64748b;
   line-height: 1.55;
 }
 
@@ -374,7 +374,7 @@
 
 .terms-card__admin-copy {
   margin: 0 0 16px;
-  color: #52658c;
+  color: #64748b;
   line-height: 1.6;
 }
 
@@ -382,7 +382,7 @@
   padding: 8px 10px;
   border-radius: 999px;
   background: rgba(31, 76, 201, 0.12);
-  color: #1f4cc9;
+  color: #00668a;
   font-size: 0.75rem;
   font-weight: 800;
   white-space: nowrap;
@@ -411,7 +411,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: #1f4cc9;
+  color: #00668a;
   font-size: 0.88rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -438,7 +438,7 @@
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, rgba(31, 76, 201, 0.12), rgba(255, 255, 255, 0.96));
-  color: #1f4cc9;
+  color: #00668a;
   box-shadow: 0 10px 22px rgba(31, 76, 201, 0.08);
 }
 
@@ -475,7 +475,7 @@
 }
 
 .terms-card__field span {
-  color: #52658c;
+  color: #64748b;
   font-size: 0.86rem;
   font-weight: 700;
 }
@@ -495,7 +495,7 @@
 
 .terms-card__field input:focus,
 .terms-card__field select:focus {
-  border-color: #1f4cc9;
+  border-color: #00668a;
   box-shadow: 0 0 0 4px rgba(31, 76, 201, 0.12);
 }
 
@@ -526,11 +526,11 @@
 
 .terms-card__add-row {
   min-height: 48px;
-  border: 1px solid #1f4cc9;
+  border: 1px solid #00668a;
   border-radius: 12px;
   padding: 0 18px;
   background: transparent;
-  color: #1f4cc9;
+  color: #00668a;
   font: inherit;
   font-weight: 800;
   cursor: pointer;
@@ -578,7 +578,7 @@
   margin-top: 4px;
   width: 20px;
   height: 20px;
-  accent-color: #1f4cc9;
+  accent-color: #00668a;
 }
 
 .terms-card__actions {
@@ -608,7 +608,7 @@
 }
 
 .terms-card__button--primary {
-  background: linear-gradient(135deg, #1f4cc9 0%, #0f52ba 100%);
+  background: linear-gradient(135deg, #00668a 0%, #005575 100%);
   color: #ffffff;
   box-shadow: 0 14px 28px rgba(15, 82, 186, 0.18);
   min-width: 280px;
@@ -621,8 +621,8 @@
 
 .terms-card__button--secondary {
   background: transparent;
-  border: 2px solid #1f4cc9;
-  color: #1f4cc9;
+  border: 2px solid #00668a;
+  color: #00668a;
   min-width: 128px;
   background: rgba(255, 255, 255, 0.92);
 }
@@ -689,7 +689,7 @@
 }
 
 .terms-card__submitted-row strong {
-  color: #1f4cc9;
+  color: #00668a;
 }
 
 .terms-card__submitted-time {

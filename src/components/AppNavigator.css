@@ -1,8 +1,9 @@
 .app-navigator {
   z-index: 100;
-  border-bottom: 1px solid #d6deea;
-  background: rgba(255, 255, 255, 0.86);
+  background: rgba(247, 249, 251, 0.80);
   backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .app-navigator__inner {
@@ -20,7 +21,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #003c90;
+  color: #00668a;
   flex: none;
 }
 
@@ -63,12 +64,12 @@
 
 .app-navigator__tab:hover {
   transform: translateY(-1px);
-  border-color: #003c90;
-  color: #003c90;
+  border-color: #00668a;
+  color: #00668a;
 }
 
 .app-navigator__tab--active {
-  background: linear-gradient(135deg, #003c90 0%, #0f52ba 100%);
+  background: linear-gradient(135deg, #00668a 0%, #005575 100%);
   border-color: transparent;
   color: #ffffff;
 }
