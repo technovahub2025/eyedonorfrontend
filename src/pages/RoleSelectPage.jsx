@@ -68,9 +68,7 @@ function RoleSelectPage({ onRoleSelect }) {
               <a className="role-nav__link" href="#contact">
                 Contact Us
               </a>
-              <button className="role-nav__cta role-nav__cta--ghost" type="button" onClick={handleAdmin}>
-                Admin Login
-              </button>
+              
               <button className="role-nav__cta" type="button" onClick={handlePledge}>
                 Pledge My Eyes
               </button>
