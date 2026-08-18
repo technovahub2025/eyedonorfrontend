@@ -18,23 +18,23 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: #737784;
+  color: #64748b;
   transition: color 0.18s ease;
   font-size: 20px;
 }
 
 .form-field:focus-within .form-field__icon {
-  color: #003c90;
+  color: #00668a;
 }
 
 .form-field__input {
   width: 100%;
   box-sizing: border-box;
-  border: 1px solid #c3c6d5;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   background: #ffffff;
   padding: 14px 14px 14px 52px;
-  color: #1a1c1e;
+  color: #191c1e;
   font: inherit;
   line-height: 1.4;
   outline: none;
@@ -42,10 +42,10 @@
 }
 
 .form-field__input::placeholder {
-  color: #8c909b;
+  color: #94a3b8;
 }
 
 .form-field__input:focus {
-  border-color: #003c90;
-  box-shadow: 0 0 0 4px rgba(15, 82, 186, 0.1);
+  border-color: #00668a;
+  box-shadow: 0 0 0 4px rgba(0, 102, 138, 0.12);
 }

@@ -98,6 +98,7 @@ function App() {
           onLoginSuccess={handleUserLoginSuccess}
       />
       </main>
+      {activePage !== 'role-select' && (
       <footer className="app-footer">
         <div className="app-footer__inner">
           <div className="app-footer__promo">
@@ -144,6 +145,7 @@ function App() {
           </div>
         </div>
       </footer>
+      )}
     </div>
   );
 }

@@ -34,14 +34,14 @@
 
 .progress-stepper__circle--active {
   background: #ffffff;
-  color: #003c90;
-  border-color: #0f52ba;
+  color: #00668a;
+  border-color: #00668a;
 }
 
 .progress-stepper__circle--pending {
   background: #f3f3f6;
-  color: #737784;
-  border-color: #c3c6d5;
+  color: #64748b;
+  border-color: #e2e8f0;
 }
 
 .progress-stepper__number {
@@ -62,11 +62,11 @@
 }
 
 .progress-stepper__label--active {
-  color: #003c90;
+  color: #00668a;
 }
 
 .progress-stepper__label--pending {
-  color: #737784;
+  color: #64748b;
 }
 
 .progress-stepper__line {
@@ -75,7 +75,7 @@
   left: calc(50% + 28px);
   right: calc(-50% + 28px);
   height: 2px;
-  background: #c3c6d5;
+  background: #e2e8f0;
   z-index: 0;
 }
 
