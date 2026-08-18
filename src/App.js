@@ -107,7 +107,7 @@ function App() {
             <p className="app-footer__eyebrow">Supporting sight</p>
             <h2>Every registration begins with one thoughtful decision.</h2>
             <p>
-              Jothi Eye Care Centre supports a clear, caring experience for eye donation and
+              JOTHI EYE CARE CENTRE supports a clear, caring experience for eye donation and
               registration.
             </p>
           </div>
