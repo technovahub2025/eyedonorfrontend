@@ -96,9 +96,7 @@ function RoleSelectPage({ onRoleSelect }) {
                 <button className="role-button role-button--primary" type="button" onClick={handlePledge}>
                   Pledge My Eyes
                 </button>
-                <button className="role-button role-button--secondary" type="button" onClick={handleUserLogin}>
-                  User Login
-                </button>
+               
               </div>
 
               <div className="role-mini-stats" aria-label="Impact highlights">
