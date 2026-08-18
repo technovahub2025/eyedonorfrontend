@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   ClipboardList,
+  Download,
   Eye,
   Handshake,
   Heart,
@@ -13,7 +14,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
-import { apiRequest } from '../lib/apiClient';
+import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -47,6 +48,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminRows, setAdminRows] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [rowMessage, setRowMessage] = useState('');
   const [rowError, setRowError] = useState('');
   const [addingRow, setAddingRow] = useState(false);
@@ -175,6 +177,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     }
   }
 
+  async function handleDownloadPdf() {
+    setDownloadingPdf(true);
+
+    try {
+      const blob = await apiDownload('/api/terms/download/pdf', {
+        token: adminToken,
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `terms-data-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      setAdminError(err.message);
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }
+
   return (
     <div className="terms-page">
       <main className="terms-page__main">
@@ -239,9 +264,22 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     {isAdminView ? 'Terms page data' : 'Add your details'}
                   </h2>
                 </div>
-                <span className="terms-card__admin-badge">
-                  {isAdminView ? 'Read only' : 'Saved automatically'}
-                </span>
+                <div className="terms-card__admin-actions">
+                  {isAdminView ? (
+                    <button
+                      type="button"
+                      className="terms-card__download"
+                      onClick={handleDownloadPdf}
+                      disabled={downloadingPdf || adminLoading || adminRows.length === 0}
+                    >
+                      <Download aria-hidden="true" />
+                      <span>{downloadingPdf ? 'Preparing PDF...' : 'Download PDF'}</span>
+                    </button>
+                  ) : null}
+                  <span className="terms-card__admin-badge">
+                    {isAdminView ? 'Read only' : 'Saved automatically'}
+                  </span>
+                </div>
               </div>
 
               {isAdminView ? (
