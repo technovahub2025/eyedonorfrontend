@@ -58,12 +58,7 @@ function RoleSelectPage({ onRoleSelect }) {
               <a className="role-nav__link" href="https://jothieyecare.in/" target="_blank" rel="noreferrer">
                 About Us
               </a>
-              <a className="role-nav__link" href="#process">
-                Eye Donation
-              </a>
-              <a className="role-nav__link" href="#support">
-                Eye Banks
-              </a>
+              
               <a className="role-nav__link" href="#stories">
                 Stories
               </a>
@@ -380,7 +375,7 @@ function RoleSelectPage({ onRoleSelect }) {
           <div className="role-footer__links">
             <strong>Choose a path</strong>
             <button type="button" onClick={handlePledge}>Pledge My Eyes</button>
-            <button type="button" onClick={handleUserLogin}>User Login</button>
+            
             <button type="button" onClick={handleAdmin}>Admin Login</button>
           </div>
         </div>
