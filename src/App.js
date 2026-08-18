@@ -29,13 +29,15 @@ function App() {
   }
 
   function handleRoleSelect(role) {
-    setActiveRole(role);
+    setActiveRole(role === 'role-select' ? null : role);
     if (role === 'admin') {
       setActivePage('admin-login');
     } else if (role === 'user-login') {
       setActivePage('user-login');
     } else if (role === 'terms') {
       setActivePage('terms');
+    } else if (role === 'role-select') {
+      setActivePage('role-select');
     } else {
       setActivePage('terms');
     }
