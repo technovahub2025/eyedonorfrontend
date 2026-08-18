@@ -109,7 +109,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   }
 
   function addPerson() {
-    if (people.length >= 3) return;
     setPeople((current) => [...current, initialPerson()]);
   }
 
@@ -392,7 +391,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <UserRound aria-hidden="true" />
                           <span>YOUR DETAILS</span>
                         </div>
-                        <span className="terms-card__admin-badge">Saved automatically</span>
+                        <span className="terms-card__admin-badge">
+                          {people.length < 3
+                            ? `Add at least 3 people (${people.length}/3 added)`
+                            : `${people.length} people added`}
+                        </span>
                       </div>
 
                       {people.map((person, index) => (
