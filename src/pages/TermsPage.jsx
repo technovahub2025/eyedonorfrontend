@@ -157,11 +157,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     const incomplete = people.find(
       (person) =>
-        !person.fullName || !person.age || !person.gender || !person.phone || !person.address
+        (person.fullName || person.age || person.gender || person.phone || person.address) &&
+        (!person.fullName || !person.age || !person.gender || !person.phone || !person.address)
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all five fields for each person.');
+      setTermsError('Please fill in all five fields for each person you added.');
       setSavingTerm(false);
       return;
     }
