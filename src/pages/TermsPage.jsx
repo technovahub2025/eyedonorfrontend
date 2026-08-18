@@ -109,6 +109,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   }
 
   function addPerson() {
+    if (people.length >= 3) return;
     setPeople((current) => [...current, initialPerson()]);
   }
 
@@ -216,6 +217,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     }
   }
 
+  async function handleDownloadUserPdf(userId) {
+    setDownloadingPdf(true);
+
+    try {
+      const blob = await apiDownload(`/api/terms/download/pdf/${userId}`, {
+        token: adminToken,
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `terms-data-${userId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    } catch (err) {
+      setAdminError(err.message);
+    } finally {
+      setDownloadingPdf(false);
+    }
+  }
+
   return (
     <div className="terms-page">
       <main className="terms-page__main">
@@ -310,38 +334,47 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
                   </div>
 
-                  {adminLoading ? (
-                    <p className="terms-card__empty">Loading terms data...</p>
-                  ) : adminError ? (
-                    <p className="terms-card__error">{adminError}</p>
-                  ) : adminRows.length > 0 ? (
-                    <div className="terms-card__submitted-list terms-card__submitted-list--admin">
-                      {adminRows.map((row) => {
-                        const id = row._id || row.id || `${row.name}-${row.createdAt}`;
-                        return (
-                          <div key={id} className="terms-card__submitted-row">
-                            <span>
-                              <strong>Title:</strong> {row.title || 'N/A'}
-                            </span>
-                            <span>
-                              <strong>Name:</strong> {row.name || row.fullName || 'Unnamed'}
-                            </span>
-                            <span>
-                              <strong>Age:</strong> {row.age ?? 'N/A'}
-                            </span>
-                            <span>
-                              <strong>Gender:</strong> {row.gender || 'N/A'}
-                            </span>
-                            <span className="terms-card__submitted-time">
-                              {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className="terms-card__empty">No terms submissions found.</p>
-                  )}
+{adminLoading ? (
+                     <p className="terms-card__empty">Loading terms data...</p>
+                   ) : adminError ? (
+                     <p className="terms-card__error">{adminError}</p>
+                   ) : adminRows.length > 0 ? (
+                     <div className="terms-card__submitted-list terms-card__submitted-list--admin">
+                       {adminRows.map((row) => {
+                         const id = row._id || row.id || `${row.name}-${row.createdAt}`;
+                         return (
+                           <div key={id} className="terms-card__submitted-row">
+                             <span>
+                               <strong>Title:</strong> {row.title || 'N/A'}
+                             </span>
+                             <span>
+                               <strong>Name:</strong> {row.name || row.fullName || 'Unnamed'}
+                             </span>
+                             <span>
+                               <strong>Age:</strong> {row.age ?? 'N/A'}
+                             </span>
+                             <span>
+                               <strong>Gender:</strong> {row.gender || 'N/A'}
+                             </span>
+                             <span className="terms-card__submitted-time">
+                               {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
+                             </span>
+                             <button
+                               type="button"
+                               className="terms-card__download-user"
+                               onClick={() => handleDownloadUserPdf(id)}
+                               disabled={downloadingPdf}
+                             >
+                               <Download aria-hidden="true" />
+                               <span>Download PDF</span>
+                             </button>
+                           </div>
+                         );
+                       })}
+                     </div>
+                   ) : (
+                     <p className="terms-card__empty">No terms submissions found.</p>
+                   )}
                 </>
               ) : (
                 <>
