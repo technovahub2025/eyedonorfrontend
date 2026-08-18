@@ -22,9 +22,7 @@ function RoleSelectPage({ onRoleSelect }) {
     onRoleSelect?.('admin');
   }
 
-  function handleUserLogin() {
-    onRoleSelect?.('user-login');
-  }
+ 
 
   return (
     <div className="role-landing">
