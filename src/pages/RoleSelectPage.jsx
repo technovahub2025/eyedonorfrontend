@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
-import eyeHero from '../asset/eye.jpg';
-import eyeLogo from '../asset/eyes.jpg';
-import './RoleSelectPage.css';
+import './EyeDonationLanding.css';
 
-function RoleSelectPage({ onRoleSelect }) {
+function EyeDonationLanding({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -23,304 +21,278 @@ function RoleSelectPage({ onRoleSelect }) {
   }
 
   return (
-    <div className="landing-page">
-      <header className="landing-header">
-        <div className="landing-header__inner">
-          <a href="#" className="landing-header__logo" onClick={(e) => e.preventDefault()}>
-            <img alt="VisionGift eye donation logo" className="landing-header__logo-img" src={eyeLogo} />
-            <span>LegacyEye</span>
-          </a>
-          <nav className="landing-nav" aria-label="Main navigation">
-            <button
-              className="landing-nav__toggle"
-              type="button"
-              aria-label="Toggle menu"
-              aria-expanded={mobileOpen}
-              onClick={() => setMobileOpen(!mobileOpen)}
-            >
-              <span className="material-symbols-outlined" aria-hidden="true">
-                {mobileOpen ? 'close' : 'menu'}
-              </span>
-            </button>
-            <div
-              className={
-                'landing-nav__links ' + (mobileOpen ? 'landing-nav__links--open' : '')
-              }
-            >
-              <a className="landing-nav__link landing-nav__link--active" href="#why">
-                Home
-              </a>
-              <a className="landing-nav__link" href="#why">
-                About
-              </a>
-              <a className="landing-nav__link" href="#how-it-works">
-                How It Works
-              </a>
-              <a className="landing-nav__link" href="#why">
-                Myths &amp; Facts
-              </a>
-              <a className="landing-nav__link" href="#why">
-                FAQs
-              </a>
-              <button className="landing-nav__admin" type="button" onClick={handleAdmin}>
-                Admin
+    <div className="eye-donation-landing">
+      {/* Header */}
+      <header className="site-header">
+        <div className="container">
+          <div className="header-inner">
+            <a href="#" className="site-logo" onClick={(e) => e.preventDefault()}>
+              <span className="logo-icon">👁️</span>
+              <span className="logo-text">Vision of Hope</span>
+            </a>
+
+            <nav className="main-nav" aria-label="Main navigation">
+              <button
+                className="nav-toggle"
+                type="button"
+                aria-label="Toggle menu"
+                onClick={() => setMobileOpen(!mobileOpen)}
+              >
+                <span className="hamburger-icon">{mobileOpen ? '✕' : '☰'}</span>
               </button>
-              <button className="landing-nav__cta" type="button" onClick={handlePledge}>
-                Pledge Your Eyes
-              </button>
-            </div>
-          </nav>
+
+              <ul className={`nav-list ${mobileOpen ? 'nav-list--open' : ''}`}>
+                <li><a href="#home" className="nav-link active">Home</a></li>
+                <li><a href="#about" className="nav-link">About Us</a></li>
+                <li><a href="#donation" className="nav-link">Eye Donation</a></li>
+                <li><a href="#banks" className="nav-link">Eye Banks</a></li>
+                <li><a href="#stories" className="nav-link">Stories</a></li>
+                <li><a href="#faq" className="nav-link">FAQ</a></li>
+                <li><a href="#contact" className="nav-link">Contact Us</a></li>
+                <li>
+                  <button className="btn-pledge-nav" onClick={handlePledge}>
+                    Pledge My Eyes
+                  </button>
+                </li>
+                <li>
+                  <button className="btn-admin" onClick={handleAdmin}>
+                    Admin
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       </header>
 
-      <main className="landing-main">
-        <section className="hero-section">
-          <div className="hero-section__inner">
-            <div className="hero-section__copy">
-              <div className="hero-badge">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  favorite
-                </span>
-                Your pledge can help restore vision to others.
-              </div>
-
-              <p className="hero-slogan">இருவிழி கொடுப்போம், இருளை விரட்டுவோம்!</p>
-
+      {/* Hero Section */}
+      <section className="hero-section" id="home">
+        <div className="container">
+          <div className="hero-content">
+            <div className="hero-text">
               <h1 className="hero-title">
-                Give the <br />
-                <span className="hero-title__gradient">Gift of Sight</span>
+                Give the <span className="highlight">Gift of Sight</span>
               </h1>
-
               <p className="hero-subtitle">
-                Your decision today can help someone see a brighter tomorrow. Pledge your eyes and
-                leave behind a legacy of vision.
+                Your eyes can light up someone's world.<br />
+                Pledge today. Inspire forever.
               </p>
-
-              <div className="hero-actions">
-                <button className="hero-cta" type="button" onClick={handlePledge}>
-                  Pledge Your Eyes
-                </button>
-                <a className="hero-cta hero-cta--outline" href="#how-it-works">
-                  Learn How It Works
-                </a>
-              </div>
-
-              <div className="hero-steps">
-                <div className="hero-step">
-                  <span className="hero-step__number">1</span>
-                  <span className="hero-step__label">Pledge</span>
-                </div>
-                <div className="hero-step__divider" />
-                <div className="hero-step">
-                  <span className="hero-step__number">2</span>
-                  <span className="hero-step__label">Eyes</span>
-                </div>
-                <div className="hero-step__divider" />
-                <div className="hero-step">
-                  <span className="hero-step__number">3</span>
-                  <span className="hero-step__label">Lifetime Of Impact</span>
-                </div>
-              </div>
+              <button className="btn-hero" onClick={handlePledge}>
+                Pledge My Eyes
+              </button>
             </div>
 
-            <div className="hero-illustration" aria-label="Eye donation illustration">
-              <img className="hero-illustration__img" alt="Eye representing the gift of sight" src={eyeHero} />
-              <div className="hero-illustration__overlay" aria-hidden="true" />
-              <div className="hero-illustration__note">
-                <div className="hero-illustration__icon">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    visibility
-                  </span>
-                </div>
-                <div className="hero-illustration__kicker">
-                  <p className="hero-illustration__kicker-label">See the Difference</p>
-                  <p className="hero-illustration__kicker-sub">Join thousands of donors</p>
-                </div>
+            <div className="hero-stats">
+              <div className="stat-card">
+                <span className="stat-number">1</span>
+                <span className="stat-label">Donor can restore sight to <strong>2 People</strong></span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">75,432+</span>
+                <span className="stat-label">Pledges and counting</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">48,921+</span>
+                <span className="stat-label">Successful Corneal Transplants</span>
+              </div>
+              <div className="stat-card">
+                <span className="stat-number">20+</span>
+                <span className="stat-label">Partner Eye Banks Across India</span>
               </div>
             </div>
-          </div>
-
-          <div className="hero-bg" aria-hidden="true" />
-        </section>
-
-        <section id="why" className="why-section">
-          <div className="why-section__inner">
-            <div className="section-head">
-              <h2 className="section-title">One Decision Can Change Someone's World</h2>
-              <p className="section-subtitle">
-                Understand the profound impact of your simple decision to pledge.
-              </p>
-            </div>
-
-            <div className="feature-grid">
-              <div className="feature-card">
-                <div className="feature-card__icon">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    visibility
-                  </span>
-                </div>
-                <h3 className="feature-card__title">Restore Vision</h3>
-                <p className="feature-card__text">
-                  Donated corneal tissue helps restore sight to those suffering from corneal blindness.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <div className="feature-card__icon">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    diversity_1
-                  </span>
-                </div>
-                <h3 className="feature-card__title">Leave a Legacy</h3>
-                <p className="feature-card__text">
-                  Your generosity continues long after, offering the ultimate gift to someone in need.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <div className="feature-card__icon">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    verified
-                  </span>
-                </div>
-                <h3 className="feature-card__title">Simple &amp; Free</h3>
-                <p className="feature-card__text">
-                  The pledging process is entirely free and only takes a few minutes to complete.
-                </p>
-              </div>
-
-              <div className="feature-card">
-                <div className="feature-card__icon">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    campaign
-                  </span>
-                </div>
-                <h3 className="feature-card__title">Spread Awareness</h3>
-                <p className="feature-card__text">
-                  Inform your family about your decision to ensure your wishes are honored.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="impact-section">
-          <div className="impact-section__inner">
-            <div className="impact-grid">
-              <div className="impact-item">
-                <span className="impact-value">25K+</span>
-                <span className="impact-label">People Reached</span>
-              </div>
-              <div className="impact-item">
-                <span className="impact-value">12K</span>
-                <span className="impact-label">Donors Pledged</span>
-              </div>
-              <div className="impact-item">
-                <span className="impact-value">8,500</span>
-                <span className="impact-label">Vision Restored</span>
-              </div>
-              <div className="impact-item">
-                <span className="impact-value">10K+</span>
-                <span className="impact-label">Families Inspired</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="how-it-works" className="how-section">
-          <div className="how-section__inner">
-            <div className="section-head">
-              <h2 className="section-title">How Pledging Works</h2>
-              <p className="section-subtitle">
-                A simple, transparent process to leave a lasting legacy.
-              </p>
-            </div>
-
-            <div className="steps-grid">
-              <div className="step-card">
-                <div className="step-card__number">01</div>
-                <h3 className="step-card__title">Pledge</h3>
-                <p className="step-card__text">
-                  Fill out the online form with your basic details to register your intent.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-card__number">02</div>
-                <h3 className="step-card__title">Inform Family</h3>
-                <p className="step-card__text">
-                  Discuss your decision with next of kin, as their consent is needed at the time.
-                </p>
-              </div>
-              <div className="step-card">
-                <div className="step-card__number">03</div>
-                <h3 className="step-card__title">At Time of Need</h3>
-                <p className="step-card__text">Family contacts the eye bank within 6-8 hours of passing.</p>
-              </div>
-              <div className="step-card">
-                <div className="step-card__number">04</div>
-                <h3 className="step-card__title">Restore Sight</h3>
-                <p className="step-card__text">
-                  The retrieved tissue is evaluated and used to help someone see again.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="cta-section">
-          <div className="cta-section__inner">
-            <h2 className="cta-title">Ready to leave a legacy?</h2>
-            <p className="cta-subtitle">
-              It only takes two minutes to register as a donor. Join us in our mission to eliminate
-              corneal blindness.
-            </p>
-            <button className="cta-cta" type="button" onClick={handlePledge}>
-              Pledge Your Eyes Now
-            </button>
-          </div>
-        </section>
-      </main>
-
-      <footer className="landing-footer">
-        <div className="landing-footer__inner">
-          <div className="footer-brand">
-            <div className="footer-brand__logo">
-              <img alt="VisionGift eye donation logo" src={eyeLogo} />
-            </div>
-            <p className="footer-brand__text">
-              Dedicated to facilitating eye donations and restoring vision through compassion and
-              transparency.
-            </p>
-          </div>
-
-          <div className="footer-links">
-            <h4 className="footer-links__title">Quick Links</h4>
-            <a href="#" onClick={(e) => e.preventDefault()}>Medical Advisory Board</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Partner Hospitals</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Contact Us</a>
-          </div>
-
-          <div className="footer-legal">
-            <h4 className="footer-legal__title">Legal</h4>
-            <a href="#" onClick={(e) => e.preventDefault()}>Privacy Policy</a>
-            <a href="#" onClick={(e) => e.preventDefault()}>Terms of Service</a>
           </div>
         </div>
+      </section>
 
-        <div className="landing-footer__base">
-          <p>© 2024 LegacyEye Foundation. Honoring the gift of sight.</p>
-          <a
-            className="landing-footer__powered"
-            href="https://www.technovahub.in"
-            rel="noreferrer"
-            target="_blank"
-          >
-            Powered by TechnovaHub
-          </a>
+      {/* How It Works */}
+      <section className="how-section" id="donation">
+        <div className="container">
+          <h2 className="section-title">How Eye Donation Works</h2>
+          <div className="steps-grid">
+            <div className="step-card">
+              <div className="step-number">1</div>
+              <h3>Pledge</h3>
+              <p>Pledge your eyes online in just 2 minutes.</p>
+            </div>
+            <div className="step-card">
+              <div className="step-number">2</div>
+              <h3>Inform Your Family</h3>
+              <p>Let your family know about your decision.</p>
+            </div>
+            <div className="step-card">
+              <div className="step-number">3</div>
+              <h3>Donation After Death</h3>
+              <p>Your family informs the eye bank.</p>
+            </div>
+            <div className="step-card">
+              <div className="step-number">4</div>
+              <h3>Sight Restored</h3>
+              <p>Your eyes bring new light to 2 lives.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Who Can Donate */}
+      <section className="eligibility-section">
+        <div className="container">
+          <div className="eligibility-content">
+            <div className="eligibility-text">
+              <h2>Who Can Donate?</h2>
+              <ul>
+                <li>✅ Anyone above 18 years can pledge.</li>
+                <li>✅ No upper age limit.</li>
+                <li>✅ People with spectacles, diabetes, or cataract can donate.</li>
+                <li>✅ Almost everyone can donate eyes.</li>
+              </ul>
+            </div>
+            <div className="emergency-contact">
+              <h3>📞 Report an Eye Donor (24x7)</h3>
+              <p>In case of a sad demise, please contact the nearest eye bank immediately.</p>
+              <div className="emergency-phone">1800 123 4567</div>
+              <p className="emergency-note">Available 24x7 • Toll Free</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Find Eye Banks */}
+      <section className="banks-section" id="banks">
+        <div className="container">
+          <h2>Find an Eye Bank Near You</h2>
+          <div className="bank-search">
+            <input type="text" placeholder="Enter your city or location" />
+            <button className="btn-search">Find Eye Banks</button>
+          </div>
+          <div className="bank-stats">
+            <span>20+ Eye Banks</span>
+            <span>100+ Cities</span>
+            <span>24x7 Availability</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Stories */}
+      <section className="stories-section" id="stories">
+        <div className="container">
+          <h2>Stories of Light</h2>
+          <div className="stories-grid">
+            <div className="story-card">
+              <blockquote>
+                "Thanks to my donor, I can see my grandchildren today. I will be forever grateful."
+              </blockquote>
+              <cite>— Ramesh, Chennai<br /><span>Cornea Recipient</span></cite>
+            </div>
+            <div className="story-card">
+              <blockquote>
+                "My father believed in giving. His eyes are now giving someone else a new life."
+              </blockquote>
+              <cite>— Meena, Madurai<br /><span>Donor's Daughter</span></cite>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="faq-section" id="faq">
+        <div className="container">
+          <h2>Frequently Asked Questions</h2>
+          <div className="faq-grid">
+            <div className="faq-item">
+              <h4>Is there any age limit for eye donation?</h4>
+            </div>
+            <div className="faq-item">
+              <h4>Can people with spectacles donate eyes?</h4>
+            </div>
+            <div className="faq-item">
+              <h4>Can eyes be donated if we have cataract?</h4>
+            </div>
+            <div className="faq-item">
+              <h4>Can diabetic patients donate eyes?</h4>
+            </div>
+            <div className="faq-item">
+              <h4>Does religion allow eye donation?</h4>
+            </div>
+            <div className="faq-item">
+              <h4>How long should we wait to contact eye bank?</h4>
+            </div>
+          </div>
+          <div className="faq-cta">
+            <button className="btn-faq">View All FAQs</button>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="cta-banner">
+        <div className="container">
+          <h2>Be the Reason Someone Sees Tomorrow</h2>
+          <p>Pledge your eyes today and leave a legacy of light.</p>
+          <button className="btn-cta" onClick={handlePledge}>Pledge My Eyes</button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div className="container">
+          <div className="footer-grid">
+            <div className="footer-col">
+              <h3>Vision of Hope</h3>
+              <p>Let's build a society where no one suffers from corneal blindness.</p>
+            </div>
+
+            <div className="footer-col">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#donation">Eye Donation</a></li>
+                <li><a href="#banks">Eye Banks</a></li>
+                <li><a href="#stories">Stories</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Contact Us</a></li>
+              </ul>
+            </div>
+
+            <div className="footer-col">
+              <h4>Information</h4>
+              <ul>
+                <li><a href="#">How It Works</a></li>
+                <li><a href="#">Myths &amp; Facts</a></li>
+                <li><a href="#">Pledge Your Eyes</a></li>
+                <li><a href="#">Become a Volunteer</a></li>
+                <li><a href="#">News &amp; Events</a></li>
+              </ul>
+            </div>
+
+            <div className="footer-col">
+              <h4>Contact Us</h4>
+              <p className="contact-phone">📞 1800 123 4567</p>
+              <p className="contact-info">(Toll Free 24x7)</p>
+              <p className="contact-email">✉️ info@visionofhope.org</p>
+              <p className="contact-address">📍 123, Main Street, Chennai – 600 001.</p>
+            </div>
+
+            <div className="footer-col">
+              <h4>Our Partners</h4>
+              <div className="partners">
+                <span className="partner">ARAVIND</span>
+                <span className="partner">SANKARA</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="footer-bottom">
+            <p>© 2024 Vision of Hope. All rights reserved.</p>
+            <div className="footer-legal-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms &amp; Conditions</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
 
-export default RoleSelectPage;
+export default EyeDonationLanding;
