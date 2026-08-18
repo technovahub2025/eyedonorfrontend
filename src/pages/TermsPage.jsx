@@ -161,6 +161,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         (!person.fullName || !person.age || !person.gender || !person.phone || !person.address)
     );
 
+    if (people.length < 3) {
+      setTermsError('Please add at least 3 people before submitting the pledge.');
+      setSavingTerm(false);
+      return;
+    }
+
     if (incomplete) {
       setTermsError('Please fill in all five fields for each person you added.');
       setSavingTerm(false);
