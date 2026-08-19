@@ -160,7 +160,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         (!person.fullName || !person.age || !person.gender || !person.phone || !person.address)
     );
 
-    if (people.length < 3) {
+    if (people.length >= 3) {
       setTermsError('Please add at least 3 people before submitting the pledge.');
       setSavingTerm(false);
       return;
