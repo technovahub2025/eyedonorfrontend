@@ -713,7 +713,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               </div>
                               <div className="terms-card__row-content">
                                 <div className="terms-card__row-heading">
-                                  <h3>Pledge point {index + 1}</h3>
+                                  <h3>Pledge  {index + 1}</h3>
                                 </div>
                                 <p>{point}</p>
                               </div>

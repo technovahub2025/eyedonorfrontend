@@ -22,6 +22,7 @@ function App() {
   const [activeRole, setActiveRole] = useState(null);
   const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
+  const [thankYouRows, setThankYouRows] = useState([]);
   const PageComponent = pages[activePage] || RoleSelectPage;
 
   function navigate(nextPage) {
@@ -43,7 +44,8 @@ function App() {
     }
   }
 
-  function handleTermsAccept() {
+  function handleTermsAccept(savedRows = []) {
+    setThankYouRows(Array.isArray(savedRows) ? savedRows : []);
     setActiveRole('user');
     setActivePage('thank-you');
   }
@@ -85,6 +87,7 @@ function App() {
       ) : null}
       <main className="app-shell__content">
         <PageComponent
+          submittedRows={thankYouRows}
           userToken={userToken}
           onRoleSelect={handleRoleSelect}
           onAccept={handleTermsAccept}
