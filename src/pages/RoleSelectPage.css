@@ -846,6 +846,10 @@
     grid-template-columns: 1fr;
   }
 
+  .role-hero__visual {
+    min-height: 420px;
+  }
+
   .role-strip__inner,
   .role-steps,
   .role-cards__inner,
