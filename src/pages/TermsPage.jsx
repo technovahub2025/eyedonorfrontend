@@ -304,9 +304,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <td>${person.gender.trim() || 'N/A'}</td>
                       <td>${person.phone.trim() || 'N/A'}</td>
                       <td>${person.address.trim() || 'N/A'}</td>
-                      <td>
-                        <span class="status-badge status-complete">✓ Complete</span>
-                      </td>
+                      
                     </tr>
                   `).join('')}
                 </tbody>
