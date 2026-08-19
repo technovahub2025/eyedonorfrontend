@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import eyeHero from '../asset/eyehero.png';
 import eyeLogo from '../asset/logo.png';
 import './RoleSelectPage.css';
+import { FileText, Users, HeartHandshake, Eye } from 'lucide-react';
+
 import rameshImage from '../asset/profile1.png';
 import meenaImage from '../asset/profile2.png';
 function RoleSelectPage({ onRoleSelect }) {
@@ -152,38 +154,52 @@ function RoleSelectPage({ onRoleSelect }) {
           </div>
         </section>
 
-        <section id="process" className="role-section">
-          <div className="role-section__inner">
-            <div className="role-section__head">
-              <p className="role-section__eyebrow">How eye donation works</p>
-              <h2>Simple steps that create lasting impact</h2>
-            </div>
+      <section id="process" className="role-section">
+      <div className="role-section__inner">
+        <div className="role-section__head">
+          <p className="role-section__eyebrow">How eye donation works</p>
+          <h2>Simple steps that create lasting impact</h2>
+        </div>
 
-            <div className="role-steps">
-              <article className="role-step">
-                <span className="role-step__number">1</span>
-                <h3>Pledge</h3>
-                <p>Register your intent online in just a few minutes.</p>
-              </article>
-              <article className="role-step">
-                <span className="role-step__number">2</span>
-                <h3>Inform family</h3>
-                <p>Share your decision so your loved ones can support your wish.</p>
-              </article>
-              <article className="role-step">
-                <span className="role-step__number">3</span>
-                <h3>Donation support</h3>
-                <p>When the time comes, the family contacts the eye bank promptly.</p>
-              </article>
-              <article className="role-step">
-                <span className="role-step__number">4</span>
-                <h3>Sight restored</h3>
-                <p>Donated tissue can help another person see a brighter world.</p>
-              </article>
+        <div className="role-steps">
+          <article className="role-step">
+            <div className="role-step__icon-wrapper">
+              <span className="role-step__number">1</span>
+              <FileText className="role-step__icon" size={22} strokeWidth={1.5} />
             </div>
-          </div>
-        </section>
+            <h3>Pledge</h3>
+            <p>Register your intent online in just a few minutes.</p>
+          </article>
 
+          <article className="role-step">
+            <div className="role-step__icon-wrapper">
+              <span className="role-step__number">2</span>
+              <Users className="role-step__icon" size={22} strokeWidth={1.5} />
+            </div>
+            <h3>Inform family</h3>
+            <p>Share your decision so your loved ones can support your wish.</p>
+          </article>
+
+          <article className="role-step">
+            <div className="role-step__icon-wrapper">
+              <span className="role-step__number">3</span>
+              <HeartHandshake className="role-step__icon" size={22} strokeWidth={1.5} />
+            </div>
+            <h3>Donation support</h3>
+            <p>When the time comes, the family contacts the eye bank promptly.</p>
+          </article>
+
+          <article className="role-step">
+            <div className="role-step__icon-wrapper">
+              <span className="role-step__number">4</span>
+              <Eye className="role-step__icon" size={22} strokeWidth={1.5} />
+            </div>
+            <h3>Sight restored</h3>
+            <p>Donated tissue can help another person see a brighter world.</p>
+          </article>
+        </div>
+      </div>
+    </section>
         <section id="about" className="role-cards">
           <div className="role-cards__inner">
             <article className="role-panel role-panel--soft">
