@@ -5,8 +5,8 @@ import eyeLogo from '../asset/logo.png';
 import './RoleSelectPage.css';
 import { FileText, Users, HeartHandshake, Eye } from 'lucide-react';
 
-import rameshImage from '../asset/profile1.png';
-import meenaImage from '../asset/profile2.png';
+import rameshImage from '../asset/profile2.png';
+import meenaImage from '../asset/profile1.png';
 function RoleSelectPage({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -277,7 +277,7 @@ function RoleSelectPage({ onRoleSelect }) {
       Thanks to my donor, I can see my grandchildren today. I will be forever grateful.
     </p>
 
-    <strong>- Meena, Chennai</strong>
+    <strong>- Ramesh, Madurai</strong>
     <span>Cornea recipient</span>
   </article>
 
@@ -290,7 +290,7 @@ function RoleSelectPage({ onRoleSelect }) {
       My father believed in giving. His eyes are now helping someone else see a new life.
     </p>
 
-    <strong>- Ramesh, Madurai</strong>
+    <strong>- Meena, Chennai</strong>
     <span>Donor's daughter</span>
   </article>
 </div>
