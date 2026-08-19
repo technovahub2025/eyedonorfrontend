@@ -140,7 +140,7 @@ function App() {
               <p>Eye donation is a gift that can keep giving long after the choice is made.</p>
               <a
                 className="app-footer__powered"
-                href="https://www.technovahub.in"
+                  href="https://www.technovaub.in"
                 target="_blank"
                 rel="noreferrer"
               >
