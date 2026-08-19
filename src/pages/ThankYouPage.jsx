@@ -121,23 +121,23 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
         </html>
       `;
 
-      // Create a Blob with the HTML content
-      const blob = new Blob([htmlContent], { type: 'application/pdf' });
-      
-      // Create a download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.pdf`;
-      
-      // Trigger the download
-      document.body.appendChild(link);
-      link.click();
-      
-      // Clean up
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      // Open print window with the HTML content
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        throw new Error('Please allow popups for this site to export PDF.');
+      }
 
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+
+    } catch (err) {
+      console.error('Export error:', err);
     } finally {
       setExportingPdf(false);
     }
