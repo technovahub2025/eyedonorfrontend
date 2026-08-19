@@ -157,6 +157,17 @@
   border: 1px solid rgba(31, 76, 201, 0.16);
 }
 
+.thank-you-page__button--ghost {
+  background: rgba(23, 63, 144, 0.08);
+  color: #173f90;
+  border: 1px solid rgba(23, 63, 144, 0.14);
+}
+
+.thank-you-page__button--ghost:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .thank-you-page__button svg {
   width: 18px;
   height: 18px;

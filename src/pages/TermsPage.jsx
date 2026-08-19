@@ -12,7 +12,6 @@ import {
   Stethoscope,
   Trash2,
   UserRound,
-  FileText,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import eyeImage from '../asset/eyehero.png';
@@ -56,7 +55,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [downloadingPdf, setDownloadingPdf] = useState(false);
-  const [exportingPdf, setExportingPdf] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -142,213 +140,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     });
   }
 
-  // Function to check if all people have complete data
-  function areAllPeopleComplete() {
-    return people.every(
-      (person) =>
-        person.fullName.trim() !== '' &&
-        person.age !== '' &&
-        person.gender.trim() !== '' &&
-        person.phone.trim() !== '' &&
-        person.address.trim() !== ''
-    );
-  }
-
-  // Function to check if there are at least 3 people with complete data
-  function canExportPdf() {
-    return people.length >= 3 && areAllPeopleComplete();
-  }
-
-  // Function to generate and export PDF with table data
-  function handleExportPdf() {
-    if (!canExportPdf()) {
-      setTermsError('Please add at least 3 people with complete details to export PDF.');
-      return;
-    }
-
-    setExportingPdf(true);
-    setTermsError('');
-    setTermsMessage('');
-
-    try {
-      // Create a printable version
-      const printWindow = window.open('', '_blank', 'width=800,height=600');
-      
-      if (!printWindow) {
-        setTermsError('Please allow popups to export PDF.');
-        setExportingPdf(false);
-        return;
-      }
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Terms Data Export</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                padding: 40px;
-                background: white;
-              }
-              .header {
-                text-align: center;
-                margin-bottom: 30px;
-                border-bottom: 2px solid #333;
-                padding-bottom: 20px;
-              }
-              .header h1 {
-                color: #1a1a1a;
-                margin: 0;
-                font-size: 24px;
-              }
-              .header p {
-                color: #666;
-                margin: 5px 0 0;
-                font-size: 14px;
-              }
-              .table-container {
-                margin: 20px 0;
-                overflow-x: auto;
-              }
-              table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 14px;
-              }
-              table thead {
-                background: #f0f4ff;
-              }
-              table th {
-                padding: 12px 15px;
-                text-align: left;
-                border: 1px solid #ddd;
-                font-weight: 600;
-                color: #333;
-              }
-              table td {
-                padding: 10px 15px;
-                border: 1px solid #ddd;
-                color: #444;
-              }
-              table tbody tr:nth-child(even) {
-                background: #f9f9f9;
-              }
-              table tbody tr:hover {
-                background: #f0f4ff;
-              }
-              .footer {
-                margin-top: 30px;
-                padding-top: 20px;
-                border-top: 1px solid #ddd;
-                text-align: center;
-                color: #666;
-                font-size: 12px;
-              }
-              .status-badge {
-                display: inline-block;
-                padding: 2px 10px;
-                border-radius: 12px;
-                font-size: 12px;
-                font-weight: 600;
-              }
-              .status-complete {
-                background: #4caf50;
-                color: white;
-              }
-              @media print {
-                body {
-                  padding: 20px;
-                }
-                table th {
-                  background: #f0f4ff !important;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-                table tbody tr:nth-child(even) {
-                  background: #f9f9f9 !important;
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <h1>🏥 Eye Donation Pledge - Terms Data</h1>
-              <p>Generated on ${new Date().toLocaleString()}</p>
-              <p style="margin-top: 5px; font-size: 13px; color: #888;">
-                Total People: ${people.length} | Status: Ready for Submission
-              </p>
-            </div>
-
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Full Name</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Phone Number</th>
-                    <th>Address</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${people.map((person, index) => `
-                    <tr>
-                      <td>${index + 1}</td>
-                      <td><strong>${person.fullName.trim() || 'N/A'}</strong></td>
-                      <td>${person.age || 'N/A'}</td>
-                      <td>${person.gender.trim() || 'N/A'}</td>
-                      <td>${person.phone.trim() || 'N/A'}</td>
-                      <td>${person.address.trim() || 'N/A'}</td>
-                      
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-
-            <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #4caf50;">
-              <h3 style="margin: 0 0 10px; color: #333; font-size: 16px;">📋 Pledge Summary</h3>
-              <ul style="margin: 0; padding-left: 20px; color: #555; font-size: 14px;">
-                ${pledgePoints.map(point => `<li>${point}</li>`).join('')}
-              </ul>
-            </div>
-
-            <div class="footer">
-              <p>This document contains the pledge data for eye donation registration.</p>
-              <p>Document ID: ${Date.now().toString(36).toUpperCase()}</p>
-            </div>
-
-            <script>
-              // Auto-print after loading
-              window.onload = function() {
-                setTimeout(function() {
-                  window.print();
-                  setTimeout(function() {
-                    window.close();
-                  }, 1000);
-                }, 500);
-              };
-            </script>
-          </body>
-        </html>
-      `);
-
-      printWindow.document.close();
-
-      setTermsMessage('PDF export initiated. Please check your print dialog.');
-    } catch (err) {
-      setTermsError('Failed to export PDF. Please try again.');
-      console.error('PDF Export Error:', err);
-    } finally {
-      setExportingPdf(false);
-    }
-  }
-
   async function handleCreateTerm(event) {
     event.preventDefault();
     setSavingTerm(true);
@@ -399,7 +190,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setPledgeAccepted(false);
 
       if (!isAdminView) {
-        onAccept?.();
+        onAccept?.(saved);
       }
     } catch (err) {
       setTermsError(err.message);
@@ -504,19 +295,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <Download aria-hidden="true" />
                       <span>{downloadingPdf ? 'Preparing PDF...' : 'Download PDF'}</span>
                     </button>
-                  ) : (
-                    // Export PDF button for non-admin users
-                    <button
-                      type="button"
-                      className="terms-card__download"
-                      onClick={handleExportPdf}
-                      disabled={exportingPdf || !canExportPdf()}
-                      title={canExportPdf() ? 'Export data as PDF' : 'Add at least 3 people with complete details to export'}
-                    >
-                      <FileText aria-hidden="true" />
-                      <span>{exportingPdf ? 'Exporting...' : 'Export PDF'}</span>
-                    </button>
-                  )}
+                  ) : null}
                   <span className="terms-card__admin-badge">
                     {isAdminView ? 'Read only' : 'Saved automatically'}
                   </span>
@@ -805,3 +584,4 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 }
 
 export default TermsPage;
+

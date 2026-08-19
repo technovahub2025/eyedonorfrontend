@@ -1,8 +1,156 @@
-import { ArrowLeft, CheckCircle2, Eye, HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Download,
+  Eye,
+  HeartHandshake,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
 import './ThankYouPage.css';
 
-function ThankYouPage({ onRestart, onRoleSelect }) {
+function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const exportRows = Array.isArray(submittedRows) ? submittedRows : [];
+
+  function handleExportPdf() {
+    if (exportRows.length === 0) {
+      return;
+    }
+
+    setExportingPdf(true);
+
+    try {
+      const printWindow = window.open('', '_blank', 'width=900,height=700');
+
+      if (!printWindow) {
+        return;
+      }
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Eye Donation Pledge - Submission Summary</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 40px;
+                background: #ffffff;
+                color: #1a1a1a;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 28px;
+                border-bottom: 2px solid #dbe4f0;
+                padding-bottom: 18px;
+              }
+              .header h1 {
+                margin: 0;
+                font-size: 24px;
+                color: #173f90;
+              }
+              .header p {
+                margin: 6px 0 0;
+                color: #64748b;
+                font-size: 14px;
+              }
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 14px;
+              }
+              th, td {
+                border: 1px solid #d7deea;
+                padding: 10px 12px;
+                text-align: left;
+                vertical-align: top;
+              }
+              th {
+                background: #f0f6ff;
+                color: #173f90;
+              }
+              tbody tr:nth-child(even) {
+                background: #f8fbff;
+              }
+              .footer {
+                margin-top: 24px;
+                font-size: 12px;
+                color: #64748b;
+                text-align: center;
+              }
+              @media print {
+                body {
+                  padding: 20px;
+                }
+                th {
+                  -webkit-print-color-adjust: exact;
+                  print-color-adjust: exact;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>Eye Donation Pledge - Submission Summary</h1>
+              <p>Generated on ${new Date().toLocaleString()}</p>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Phone</th>
+                  <th>Address</th>
+                  <th>Submitted</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${exportRows
+                  .map(
+                    (row, index) => `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${row.fullName || row.name || 'N/A'}</td>
+                    <td>${row.age ?? 'N/A'}</td>
+                    <td>${row.gender || 'N/A'}</td>
+                    <td>${row.phone || 'N/A'}</td>
+                    <td>${row.address || 'N/A'}</td>
+                    <td>${row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A'}</td>
+                  </tr>
+                `
+                  )
+                  .join('')}
+              </tbody>
+            </table>
+            <div class="footer">
+              <p>This PDF was generated from the thank you page after submission.</p>
+            </div>
+            <script>
+              window.onload = function() {
+                setTimeout(function() {
+                  window.print();
+                  setTimeout(function() {
+                    window.close();
+                  }, 1000);
+                }, 500);
+              };
+            </script>
+          </body>
+        </html>
+      `);
+
+      printWindow.document.close();
+    } finally {
+      setExportingPdf(false);
+    }
+  }
+
   return (
     <div className="thank-you-page">
       <main className="thank-you-page__shell">
@@ -36,6 +184,17 @@ function ThankYouPage({ onRestart, onRoleSelect }) {
             >
               <ArrowLeft aria-hidden="true" />
               <span>Restart</span>
+            </button>
+
+            <button
+              className="thank-you-page__button thank-you-page__button--ghost"
+              type="button"
+              onClick={handleExportPdf}
+              disabled={exportingPdf || exportRows.length === 0}
+              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Export PDF'}
+            >
+              <Download aria-hidden="true" />
+              <span>{exportingPdf ? 'Exporting...' : 'Export PDF'}</span>
             </button>
           </div>
 

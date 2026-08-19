@@ -234,7 +234,7 @@ function RoleSelectPage({ onRoleSelect }) {
     </div>
 
     <div>
-      <strong>∞</strong>
+      <strong>3</strong>
       <span>Lives can be inspired</span>
     </div>
   </div>
