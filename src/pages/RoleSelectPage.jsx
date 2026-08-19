@@ -258,7 +258,7 @@ function RoleSelectPage({ onRoleSelect }) {
     </div>
 
     <p>
-      "Thanks to my donor, I can see my grandchildren today. I will be forever grateful."
+      Thanks to my donor, I can see my grandchildren today. I will be forever grateful.
     </p>
 
     <strong>- Meena, Chennai</strong>
@@ -271,7 +271,7 @@ function RoleSelectPage({ onRoleSelect }) {
     </div>
 
     <p>
-      "My father believed in giving. His eyes are now helping someone else see a new life."
+      My father believed in giving. His eyes are now helping someone else see a new life.
     </p>
 
     <strong>- Ramesh, Madurai</strong>
