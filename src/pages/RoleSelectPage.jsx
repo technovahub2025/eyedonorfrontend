@@ -251,9 +251,6 @@ function RoleSelectPage({ onRoleSelect }) {
               <h2>People whose lives changed after a pledge</h2>
             </div>
 
-           import rameshImage from "../assets/ramesh.jpg";
-import meenaImage from "../assets/meena.jpg";
-
 <div className="role-story-grid">
   <article className="role-story">
     <div className="role-story__avatar role-story__avatar--one">
@@ -284,41 +281,80 @@ import meenaImage from "../assets/meena.jpg";
           </div>
         </section>
 
-        <section id="faq" className="role-faq">
-          <div className="role-section__inner">
-            <div className="role-section__head">
-              <p className="role-section__eyebrow">Frequently asked questions</p>
-              <h2>Quick answers before you pledge</h2>
-            </div>
+       <section id="faq" className="role-faq">
+  <div className="role-section__inner">
+    <div className="role-section__head">
+      <p className="role-section__eyebrow">Frequently asked questions</p>
+      <h2>Quick answers before you pledge</h2>
+    </div>
 
-            <div className="role-faq__grid">
-              <details className="role-faq__item">
-                <summary>Is there any age limit for eye donation?</summary>
-                <p>No upper age limit. Most healthy adults can pledge, and evaluation happens at the time of need.</p>
-              </details>
-              <details className="role-faq__item">
-                <summary>Can people with spectacles donate eyes?</summary>
-                <p>Yes, wearing spectacles does not prevent a person from pledging their eyes.</p>
-              </details>
-              <details className="role-faq__item">
-                <summary>Does religion allow eye donation?</summary>
-                <p>Many faiths support donation as an act of generosity and service.</p>
-              </details>
-              <details className="role-faq__item">
-                <summary>Can eyes be donated after cataract surgery?</summary>
-                <p>Often yes. Medical suitability is checked by the eye bank team.</p>
-              </details>
-              <details className="role-faq__item">
-                <summary>Can diabetic patients donate eyes?</summary>
-                <p>In many cases, yes. The eye bank determines suitability after review.</p>
-              </details>
-              <details className="role-faq__item">
-                <summary>How long should we wait to contact the eye bank?</summary>
-                <p>Contact them as soon as possible, ideally within a few hours.</p>
-              </details>
-            </div>
-          </div>
-        </section>
+    <div className="role-faq__list">
+
+      <details className="role-faq__item">
+        <summary>
+          <span>Is there any age limit for eye donation?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          No upper age limit. Most healthy adults can pledge, and evaluation
+          happens at the time of need.
+        </p>
+      </details>
+
+      <details className="role-faq__item">
+        <summary>
+          <span>Can people with spectacles donate eyes?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          Yes, wearing spectacles does not prevent a person from pledging
+          their eyes.
+        </p>
+      </details>
+
+      <details className="role-faq__item">
+        <summary>
+          <span>Does religion allow eye donation?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          Many faiths support donation as an act of generosity and service.
+        </p>
+      </details>
+
+      <details className="role-faq__item">
+        <summary>
+          <span>Can eyes be donated after cataract surgery?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          Often yes. Medical suitability is checked by the eye bank team.
+        </p>
+      </details>
+
+      <details className="role-faq__item">
+        <summary>
+          <span>Can diabetic patients donate eyes?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          In many cases, yes. The eye bank determines suitability after review.
+        </p>
+      </details>
+
+      <details className="role-faq__item">
+        <summary>
+          <span>How long should we wait to contact the eye bank?</span>
+          <span className="faq-icon">+</span>
+        </summary>
+        <p>
+          Contact the eye bank as soon as possible, ideally within a few hours.
+        </p>
+      </details>
+
+    </div>
+  </div>
+</section>
 
         <section className="role-cta">
           <div className="role-cta__inner">
