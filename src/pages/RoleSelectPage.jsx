@@ -212,26 +212,34 @@ function RoleSelectPage({ onRoleSelect }) {
             </article>
 
             <article id="support" className="role-panel role-panel--light">
-              <p className="role-section__eyebrow">Find an eye bank near you</p>
-              <div className="role-search">
-                <input type="text" placeholder="Enter your city or location" aria-label="City or location" />
-                <button type="button">Find Eye Banks</button>
-              </div>
-              <div className="role-panel__stats">
-                <div>
-                  <strong>20+</strong>
-                  <span>Eye banks</span>
-                </div>
-                <div>
-                  <strong>100+</strong>
-                  <span>Cities</span>
-                </div>
-                <div>
-                  <strong>24x7</strong>
-                  <span>Availability</span>
-                </div>
-              </div>
-            </article>
+  <p className="role-section__eyebrow">Make a difference</p>
+
+  <h2>Leave Behind the Gift of Vision</h2>
+
+  <p className="role-panel__description">
+    By pledging your eyes, you can help restore sight and bring hope
+    into someone's life.
+  </p>
+
+  <div className="role-panel__stats">
+    <div>
+      <strong>1</strong>
+      <span>Donor can help restore vision</span>
+    </div>
+
+    <div>
+      <strong>2</strong>
+      <span>Corneas can be donated</span>
+    </div>
+
+    <div>
+      <strong>∞</strong>
+      <span>Lives can be inspired</span>
+    </div>
+  </div>
+
+  <button type="button">Pledge Your Eyes</button>
+</article>
           </div>
         </section>
 
