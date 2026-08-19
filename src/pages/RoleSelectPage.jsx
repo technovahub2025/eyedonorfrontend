@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
-import eyeHero from '../asset/eye.png';
+import eyeHero from '../asset/eye.jpg';
 import eyeLogo from '../asset/eyes.jpg';
 import './RoleSelectPage.css';
 
@@ -77,22 +77,6 @@ function RoleSelectPage({ onRoleSelect }) {
 
       <main className="role-main" id="home">
         <section className="role-hero">
-          <div className="role-hero__visual">
-            <img
-              className="role-hero__image"
-              alt="Eye donation themed illustration"
-              src={eyeHero}
-            />
-            <div className="role-hero__badge">
-              <span className="material-symbols-outlined" aria-hidden="true">
-                visibility
-              </span>
-              <div>
-                <strong>Be the reason</strong>
-                <span>someone sees tomorrow</span>
-              </div>
-            </div>
-          </div>
           <div className="role-hero__inner">
             <div className="role-hero__content">
               <p className="role-kicker">A small decision. A lifetime of sight.</p>
@@ -127,6 +111,23 @@ function RoleSelectPage({ onRoleSelect }) {
                 <div className="role-mini-stats__item">
                   <strong>48,921+</strong>
                   <span>successful transplants</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="role-hero__visual">
+              <img
+                className="role-hero__image"
+                alt="Eye donation themed illustration"
+                src={eyeHero}
+              />
+              <div className="role-hero__badge">
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  visibility
+                </span>
+                <div>
+                  <strong>Be the reason</strong>
+                  <span>someone sees tomorrow</span>
                 </div>
               </div>
             </div>
