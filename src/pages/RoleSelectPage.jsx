@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 import eyeHero from '../asset/eyehero.png';
 import eyeLogo from '../asset/eyes.jpg';
 import './RoleSelectPage.css';
-
+import rameshImage from '../asset/profile1.png';
+import meenaImage from '../asset/profile2.png';
 function RoleSelectPage({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -250,30 +251,36 @@ function RoleSelectPage({ onRoleSelect }) {
               <h2>People whose lives changed after a pledge</h2>
             </div>
 
-            <div className="role-story-grid">
-              <article className="role-story">
-                <div className="role-story__avatar role-story__avatar--one" aria-hidden="true">
-                  <span className="material-symbols-outlined role-story__avatar-icon">person</span>
-                </div>
-                <p>
-                  "Thanks to my donor, I can see my grandchildren today. I will be forever grateful."
-                </p>
-                <strong>- Ramesh, Chennai</strong>
-                <span>Cornea recipient</span>
-              </article>
+           import rameshImage from "../assets/ramesh.jpg";
+import meenaImage from "../assets/meena.jpg";
 
-              <article className="role-story">
-                <div className="role-story__avatar role-story__avatar--two" aria-hidden="true">
-                  <span className="material-symbols-outlined role-story__avatar-icon">person</span>
-                </div>
-                <p>
-                  "My father believed in giving. His eyes are now helping someone else see a new
-                  life."
-                </p>
-                <strong>- Meena, Madurai</strong>
-                <span>Donor's daughter</span>
-              </article>
-            </div>
+<div className="role-story-grid">
+  <article className="role-story">
+    <div className="role-story__avatar role-story__avatar--one">
+      <img src={rameshImage} alt="Ramesh" />
+    </div>
+
+    <p>
+      "Thanks to my donor, I can see my grandchildren today. I will be forever grateful."
+    </p>
+
+    <strong>- Ramesh, Chennai</strong>
+    <span>Cornea recipient</span>
+  </article>
+
+  <article className="role-story">
+    <div className="role-story__avatar role-story__avatar--two">
+      <img src={meenaImage} alt="Meena" />
+    </div>
+
+    <p>
+      "My father believed in giving. His eyes are now helping someone else see a new life."
+    </p>
+
+    <strong>- Meena, Madurai</strong>
+    <span>Donor's daughter</span>
+  </article>
+</div>
           </div>
         </section>
 
