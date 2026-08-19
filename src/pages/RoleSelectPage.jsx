@@ -238,7 +238,7 @@ function RoleSelectPage({ onRoleSelect }) {
     </div>
   </div>
 
-  <button type="button">Pledge Your Eyes</button>
+ 
 </article>
           </div>
         </section>
