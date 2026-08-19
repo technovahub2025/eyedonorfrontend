@@ -7,16 +7,14 @@ import {
   Eye,
   Handshake,
   Heart,
-  ListChecks,
   Plus,
   ShieldCheck,
-  Sparkles,
   Stethoscope,
   Trash2,
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
-import eyeImage from '../asset/eye.jpg';
+import eyeImage from '../asset/eye.png';
 import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
@@ -258,41 +256,22 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
           <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
-              <div className="terms-card__header-copy">
-                <h1 id="terms-title">
-                  {isAdminView ? 'Terms page submissions' : 'Enter your details and confirm your pledge'}
-                </h1>
-                <p className="terms-card__intro">
-                  {isAdminView
-                    ? 'Admins can review only the records submitted through the terms page.'
-                    : 'Share the full details for each person. Then review and accept the pledge before submitting.'}
-                </p>
-              </div>
-
               <div className="terms-card__hero-visual" aria-hidden="true">
-                <div className="terms-card__eye-rings" />
-                <img src={eyeImage} alt="" className="terms-card__eye" aria-hidden="true" />
-                <div className="terms-card__leaf terms-card__leaf--left">
-                  <Sparkles />
-                </div>
-                <div className="terms-card__leaf terms-card__leaf--right">
-                  <Heart />
-                </div>
-                <div className="terms-card__leaf terms-card__leaf--bottom">
-                  <ShieldCheck />
-                </div>
-              </div>
-
-              <div className="terms-card__summary">
-                <ListChecks aria-hidden="true" />
-                <div>
-                  <strong>{isAdminView ? 'Admin review' : 'Two-part step'}</strong>
-                  <p>
+                <img src={eyeImage} alt="" className="terms-card__hero-image" aria-hidden="true" />
+                <div className="terms-card__hero-overlay">
+                  <p className="terms-card__hero-kicker">
+                    {isAdminView ? 'Admin review' : 'A small decision. A lifetime of sight.'}
+                  </p>
+                  <h1 id="terms-title">
+                    {isAdminView ? 'Terms page submissions' : 'Give the Gift of Sight'}
+                  </h1>
+                  <p className="terms-card__intro">
                     {isAdminView
-                      ? 'Review the records that came through the terms page.'
-                      : 'Fill in the details for each person, then confirm the pledge below.'}
+                      ? 'Admins can review only the records submitted through the terms page.'
+                      : 'Share the full details for each person. Then review and accept the pledge before submitting.'}
                   </p>
                 </div>
+               
               </div>
             </div>
 

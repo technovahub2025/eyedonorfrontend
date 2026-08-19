@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
-import eyeHero from '../asset/eye.jpg';
+import eyeHero from '../asset/eye.png';
 import eyeLogo from '../asset/eyes.jpg';
 import './RoleSelectPage.css';
 
