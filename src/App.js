@@ -6,6 +6,7 @@ import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
 import UserLoginPage from './pages/UserLoginPage';
 import UserDashboardPage from './pages/UserDashboardPage';
+import SharedFooter from './components/SharedFooter';
 import './App.css';
 
 const pages = {
@@ -80,6 +81,20 @@ function App() {
     setActivePage('terms');
   }
 
+  function handleFooterHome() {
+    setActivePage('role-select');
+  }
+
+  function handleFooterPledge() {
+    setActiveRole('user');
+    setActivePage('terms');
+  }
+
+  function handleFooterAdmin() {
+    setActiveRole('admin');
+    setActivePage('admin-login');
+  }
+
   return (
     <div className="app-shell">
       {activePage !== 'role-select' ? (
@@ -101,56 +116,13 @@ function App() {
           adminToken={adminToken}
           onAdminTokenChange={setAdminToken}
           onLoginSuccess={handleUserLoginSuccess}
-      />
+        />
       </main>
-      {activePage !== 'role-select' && (
-      <footer className="app-footer">
-        <div className="app-footer__inner">
-          <div className="app-footer__promo">
-            <p className="app-footer__eyebrow">Supporting sight</p>
-            <h2>Every registration begins with one thoughtful decision.</h2>
-            <p>
-              JOTHI EYE CARE CENTRE supports a clear, caring experience for eye donation and
-              registration.
-            </p>
-          </div>
-
-          <div className="app-footer__grid">
-            <div className="app-footer__card">
-              <p className="app-footer__title">JOTHI EYE CARE CENTRE</p>
-              <p>152 &amp; 154, Calve Subraya Chetty Street,</p>
-              <p>Puducherry - 605 001.</p>
-            </div>
-
-            <div className="app-footer__card">
-              <p className="app-footer__eyebrow">Contact</p>
-              <p>
-                <a href="tel:+914132224534">+91-413-2224534</a>
-              </p>
-              <p>
-                <a href="tel:+914132337659">+91-413-2337659</a>
-              </p>
-              <p>
-                <a href="mailto:jothieyecare@gmail.com">jothieyecare@gmail.com</a>
-              </p>
-            </div>
-
-            <div className="app-footer__card app-footer__card--accent">
-              <p className="app-footer__eyebrow">Quick note</p>
-              <p>Eye donation is a gift that can keep giving long after the choice is made.</p>
-              <a
-                className="app-footer__powered"
-                  href="https://www.technovaub.in"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Powered by TechnovaHub
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-      )}
+      <SharedFooter
+        onHome={handleFooterHome}
+        onPledge={handleFooterPledge}
+        onAdmin={handleFooterAdmin}
+      />
     </div>
   );
 }
