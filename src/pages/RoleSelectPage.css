@@ -206,19 +206,19 @@
 .role-hero__content {
   position: relative;
   z-index: 2;
-  max-width: 38rem;
+  max-width: 86rem;
   padding: 12px 0 18px;
 }
 
 .role-hero__image {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -4%;
+  width: 3000%;
+  height: 108%;
   object-fit: cover;
-  object-position: 58% center;
+  object-position: 70% center;
   opacity: 0.96;
-  transform: scale(1.04);
+  transform: scale(1.06);
   filter: saturate(1.04) contrast(1.02);
 }
 
@@ -321,7 +321,7 @@
 
 .role-hero__visual {
   position: relative;
-  min-height: 460px;
+  min-height: 500px;
   border-radius: 30px;
   overflow: hidden;
   background:
@@ -347,9 +347,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 58% center;
+  object-position: 54% center;
   opacity: 0.96;
-  transform: scale(1.04);
+  transform: scale(1.08);
   filter: saturate(1.04) contrast(1.02);
 }
 

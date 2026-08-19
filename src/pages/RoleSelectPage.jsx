@@ -114,11 +114,7 @@ function RoleSelectPage({ onRoleSelect }) {
               </div>
 
               <div className="role-hero__visual">
-                <img
-                  className="role-hero__image"
-                  alt="Eye donation themed illustration"
-                  src={eyeHero}
-                />
+                 <img src={eyeHero} alt="" className="terms-card__hero-image" aria-hidden="true" />
                 
               </div>
             </div>
