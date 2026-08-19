@@ -152,17 +152,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
+    // Check if there are at least 3 people
+    if (people.length < 3) {
+      setTermsError('Please add at least 3 people before submitting the pledge.');
+      setSavingTerm(false);
+      return;
+    }
+
     const incomplete = people.find(
       (person) =>
         (person.fullName || person.age || person.gender || person.phone || person.address) &&
         (!person.fullName || !person.age || !person.gender || !person.phone || !person.address)
     );
-
-    if (people.length >= 3) {
-      setTermsError('Please add at least 3 people before submitting the pledge.');
-      setSavingTerm(false);
-      return;
-    }
 
     if (incomplete) {
       setTermsError('Please fill in all five fields for each person you added.');
@@ -373,7 +374,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         <span className="terms-card__admin-badge">
                           {people.length < 3
                             ? `Add at least 3 people (${people.length}/3 added)`
-                            : `${people.length} people added`}
+                            : `✅ ${people.length} people added`}
                         </span>
                       </div>
 
@@ -523,7 +524,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <button
                         className="terms-card__button terms-card__button--primary"
                         type="submit"
-                        disabled={savingTerm || !pledgeAccepted}
+                        disabled={savingTerm || !pledgeAccepted || people.length < 3}
                       >
                         <Heart aria-hidden="true" />
                         <span>{savingTerm ? 'Submitting...' : 'Submit pledge'}</span>
