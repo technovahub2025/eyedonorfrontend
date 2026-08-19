@@ -118,11 +118,13 @@ function App() {
           onLoginSuccess={handleUserLoginSuccess}
         />
       </main>
-      <SharedFooter
-        onHome={handleFooterHome}
-        onPledge={handleFooterPledge}
-        onAdmin={handleFooterAdmin}
-      />
+      {activePage !== 'role-select' ? (
+        <SharedFooter
+          onHome={handleFooterHome}
+          onPledge={handleFooterPledge}
+          onAdmin={handleFooterAdmin}
+        />
+      ) : null}
     </div>
   );
 }

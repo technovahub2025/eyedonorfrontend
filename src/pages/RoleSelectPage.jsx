@@ -457,6 +457,15 @@ function RoleSelectPage({ onRoleSelect }) {
       >
         Admin Login
       </button>
+
+      <a
+        className="role-footer__admin-btn"
+        href="https://www.technovaub.in"
+        target="_blank"
+        rel="noreferrer"
+      >
+        Powered by TechnovaHub
+      </a>
     </div>
 
   </div>
