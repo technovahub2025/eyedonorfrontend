@@ -9,13 +9,14 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
+import { apiDownload } from '../lib/apiClient';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const exportRows = Array.isArray(submittedRows) ? submittedRows : [];
 
-  function handleExportPdf() {
+  async function handleExportPdf() {
     if (exportRows.length === 0) {
       return;
     }
@@ -23,8 +24,24 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      // Generate the HTML content for the PDF
-      const htmlContent = `
+      const firstRowId = exportRows[0]._id || exportRows[0].id;
+      if (firstRowId) {
+        try {
+          const blob = await apiDownload(`/api/terms/download/my/${firstRowId}`);
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+          return;
+        } catch (err) {
+          console.error('Backend PDF export failed, falling back to print:', err.message);
+        }
+      }
+
         <!DOCTYPE html>
         <html>
           <head>
