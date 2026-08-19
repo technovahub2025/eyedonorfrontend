@@ -23,13 +23,8 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const printWindow = window.open('', '_blank', 'width=900,height=700');
-
-      if (!printWindow) {
-        return;
-      }
-
-      printWindow.document.write(`
+      // Generate the HTML content
+      const htmlContent = `
         <!DOCTYPE html>
         <html>
           <head>
@@ -131,21 +126,27 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
             <div class="footer">
               <p>This PDF was generated from the thank you page after submission.</p>
             </div>
-            <script>
-              window.onload = function() {
-                setTimeout(function() {
-                  window.print();
-                  setTimeout(function() {
-                    window.close();
-                  }, 1000);
-                }, 500);
-              };
-            </script>
           </body>
         </html>
-      `);
+      `;
 
-      printWindow.document.close();
+      // Create a Blob with the HTML content
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      
+      // Create a download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.html`;
+      
+      // Trigger the download
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
     } finally {
       setExportingPdf(false);
     }
@@ -191,10 +192,10 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               type="button"
               onClick={handleExportPdf}
               disabled={exportingPdf || exportRows.length === 0}
-              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Export PDF'}
+              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Download HTML file'}
             >
               <Download aria-hidden="true" />
-              <span>{exportingPdf ? 'Exporting...' : 'Export PDF'}</span>
+              <span>{exportingPdf ? 'Downloading...' : 'Download HTML'}</span>
             </button>
           </div>
 
