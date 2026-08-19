@@ -82,7 +82,9 @@ function RoleSelectPage({ onRoleSelect }) {
       <main className="role-main" id="home">
         <section className="role-hero">
           <div className="role-hero__surface">
-            <div className="role-hero__inner">
+            <img src={eyeHero} alt="" className="role-hero__image" aria-hidden="true" />
+
+            <div className="role-hero__overlay">
               <div className="role-hero__content">
                 <p className="role-kicker">A small decision. A lifetime of sight.</p>
                 <h1 className="role-title">
@@ -111,11 +113,6 @@ function RoleSelectPage({ onRoleSelect }) {
                     Know More
                   </button>
                 </div>
-              </div>
-
-              <div className="role-hero__visual">
-                <img src={eyeHero} alt="" className="role-hero__image" aria-hidden="true" />
-                
               </div>
             </div>
 
