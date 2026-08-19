@@ -119,15 +119,7 @@ function RoleSelectPage({ onRoleSelect }) {
                   alt="Eye donation themed illustration"
                   src={eyeHero}
                 />
-                <div className="role-hero__badge">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    visibility
-                  </span>
-                  <div>
-                    <strong>Be the reason</strong>
-                    <span>someone sees tomorrow</span>
-                  </div>
-                </div>
+                
               </div>
             </div>
 
