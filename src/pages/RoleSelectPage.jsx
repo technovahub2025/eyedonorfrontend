@@ -261,7 +261,7 @@ function RoleSelectPage({ onRoleSelect }) {
       "Thanks to my donor, I can see my grandchildren today. I will be forever grateful."
     </p>
 
-    <strong>- Ramesh, Chennai</strong>
+    <strong>- Meena, Chennai</strong>
     <span>Cornea recipient</span>
   </article>
 
@@ -274,7 +274,7 @@ function RoleSelectPage({ onRoleSelect }) {
       "My father believed in giving. His eyes are now helping someone else see a new life."
     </p>
 
-    <strong>- Meena, Madurai</strong>
+    <strong>- Ramesh, Madurai</strong>
     <span>Donor's daughter</span>
   </article>
 </div>
