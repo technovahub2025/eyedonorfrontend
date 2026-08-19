@@ -460,7 +460,7 @@ function RoleSelectPage({ onRoleSelect }) {
 
       <a
         className="role-footer__admin-btn"
-        href="https://www.technovaub.in"
+        href="https://www.technovahub.in"
         target="_blank"
         rel="noreferrer"
       >

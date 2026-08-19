@@ -75,7 +75,7 @@ function SharedFooter({ onHome, onPledge, onAdmin }) {
 
           <a
             className="role-footer__powered-btn"
-            href="https://www.technovaub.in"
+            href="https://www.technovahub.in"
             target="_blank"
             rel="noreferrer"
           >
