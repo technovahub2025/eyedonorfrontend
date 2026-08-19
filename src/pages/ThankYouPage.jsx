@@ -42,6 +42,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
         }
       }
 
+      const htmlContent = `
         <!DOCTYPE html>
         <html>
           <head>
