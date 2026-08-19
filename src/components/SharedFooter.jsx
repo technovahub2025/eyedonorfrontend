@@ -1,4 +1,4 @@
-import eyeLogo from '../asset/eyes.jpg';
+import eyeLogo from '../asset/logo.png';
 import './SharedFooter.css';
 
 function SharedFooter({ onHome, onPledge, onAdmin }) {

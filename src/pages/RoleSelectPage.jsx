@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
 import eyeHero from '../asset/eyehero.png';
-import eyeLogo from '../asset/eyes.jpg';
+import eyeLogo from '../asset/logo.png';
 import './RoleSelectPage.css';
 import rameshImage from '../asset/profile1.png';
 import meenaImage from '../asset/profile2.png';
