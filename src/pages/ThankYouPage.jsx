@@ -1,4 +1,5 @@
 import { ArrowLeft, CheckCircle2, Eye, HeartHandshake, ShieldCheck, Sparkles } from 'lucide-react';
+import eyeHero from '../asset/eyehero.png';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect }) {
@@ -58,6 +59,7 @@ function ThankYouPage({ onRestart, onRoleSelect }) {
 
         <aside className="thank-you-page__visual" aria-label="Celebration illustration">
           <div className="thank-you-page__halo" aria-hidden="true">
+            <img className="thank-you-page__hero-image" src={eyeHero} alt="" aria-hidden="true" />
             <div className="thank-you-page__eye-rings" />
             <div className="thank-you-page__eye">
               <div className="thank-you-page__eyelid thank-you-page__eyelid--top" />

@@ -197,10 +197,10 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+  grid-template-columns: minmax(0, 0.88fr) minmax(480px, 1.12fr);
   gap: 28px;
   align-items: center;
-  min-height: 460px;
+  min-height: 560px;
 }
 
 .role-hero__content {
@@ -208,18 +208,6 @@
   z-index: 2;
   max-width: 86rem;
   padding: 12px 0 18px;
-}
-
-.role-hero__image {
-  position: absolute;
-  inset: -4%;
-  width: 3000%;
-  height: 108%;
-  object-fit: cover;
-  object-position: 70% center;
-  opacity: 0.96;
-  transform: scale(1.06);
-  filter: saturate(1.04) contrast(1.02);
 }
 
 .role-kicker {
@@ -321,7 +309,7 @@
 
 .role-hero__visual {
   position: relative;
-  min-height: 500px;
+  min-height: 560px;
   border-radius: 30px;
   overflow: hidden;
   background:
@@ -347,9 +335,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 54% center;
+  object-position: 50% center;
   opacity: 0.96;
-  transform: scale(1.08);
+  transform: scale(1.14);
   filter: saturate(1.04) contrast(1.02);
 }
 
@@ -868,7 +856,7 @@
   }
 
   .role-hero__visual {
-    min-height: 380px;
+    min-height: 460px;
   }
 
   .role-strip__inner {
@@ -922,7 +910,7 @@
   }
 
   .role-hero__visual {
-    min-height: 320px;
+    min-height: 360px;
   }
 
   .role-strip__inner,
@@ -982,7 +970,7 @@
   }
 
   .role-hero__visual {
-    min-height: 280px;
+    min-height: 320px;
   }
 
   .role-hero__badge {

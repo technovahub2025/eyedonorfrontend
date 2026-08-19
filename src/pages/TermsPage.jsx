@@ -15,7 +15,7 @@ import {
   FileText,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
-import eyeImage from '../asset/eye.png';
+import eyeImage from '../asset/eyehero.png';
 import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 

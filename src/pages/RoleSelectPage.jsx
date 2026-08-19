@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
-import eyeHero from '../asset/eye.png';
+import eyeHero from '../asset/eyehero.png';
 import eyeLogo from '../asset/eyes.jpg';
 import './RoleSelectPage.css';
 
@@ -114,7 +114,7 @@ function RoleSelectPage({ onRoleSelect }) {
               </div>
 
               <div className="role-hero__visual">
-                 <img src={eyeHero} alt="" className="terms-card__hero-image" aria-hidden="true" />
+                <img src={eyeHero} alt="" className="role-hero__image" aria-hidden="true" />
                 
               </div>
             </div>
