@@ -23,7 +23,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      // Generate the HTML content
+      // Generate the HTML content for the PDF
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -77,15 +77,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
                 color: #64748b;
                 text-align: center;
               }
-              @media print {
-                body {
-                  padding: 20px;
-                }
-                th {
-                  -webkit-print-color-adjust: exact;
-                  print-color-adjust: exact;
-                }
-              }
             </style>
           </head>
           <body>
@@ -131,13 +122,13 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
       `;
 
       // Create a Blob with the HTML content
-      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const blob = new Blob([htmlContent], { type: 'application/pdf' });
       
       // Create a download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.html`;
+      link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.pdf`;
       
       // Trigger the download
       document.body.appendChild(link);
@@ -192,10 +183,10 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               type="button"
               onClick={handleExportPdf}
               disabled={exportingPdf || exportRows.length === 0}
-              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Download HTML file'}
+              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Download PDF'}
             >
               <Download aria-hidden="true" />
-              <span>{exportingPdf ? 'Downloading...' : 'Download HTML'}</span>
+              <span>{exportingPdf ? 'Generating...' : 'Export PDF'}</span>
             </button>
           </div>
 
