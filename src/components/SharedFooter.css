@@ -168,23 +168,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  margin-top: 2px;
-  padding: 12px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.06);
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: #ffffff;
   text-align: center;
-  font-weight: 800;
+  font-size: 0.88rem;
+  font-weight: 700;
   text-decoration: none;
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+  transition: color 160ms ease, opacity 160ms ease;
 }
 
 .role-footer__powered-btn:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.32);
+  opacity: 0.86;
 }
 
 @media (max-width: 820px) {
@@ -196,6 +193,10 @@
   .role-footer__bottom {
     flex-direction: column;
     text-align: center;
+  }
+
+  .role-footer__powered-btn {
+    margin-left: 0;
   }
 }
 

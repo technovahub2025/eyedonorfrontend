@@ -76,22 +76,22 @@ function SharedFooter({ onHome, onPledge, onAdmin }) {
           >
             Admin Login
           </button>
-
-          <a
-            className="role-footer__powered-btn"
-            href="https://www.technovahub.in"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Powered by TechnovaHub
-          </a>
         </div>
       </div>
 
       <div className="role-footer__bottom">
-        <p>© {currentYear} Vision of Hope. All rights reserved.</p>
+        <p>Â© {currentYear} Vision of Hope. All rights reserved.</p>
 
         <p>An initiative supporting the gift of sight.</p>
+
+        <a
+          className="role-footer__powered-btn"
+          href="https://www.technovahub.in"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Powered by TechnovaHub
+        </a>
       </div>
     </footer>
   );
