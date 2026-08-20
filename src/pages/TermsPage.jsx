@@ -220,30 +220,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     } finally {
       setDownloadingPdf(false);
     }
-  }
-
-  async function handleDownloadUserPdf(userId) {
-    setDownloadingPdf(true);
-
-    try {
-      const blob = await apiDownload(`/api/terms/download/pdf/${userId}`, {
-        token: adminToken,
-      });
-
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `terms-data-${userId}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-    } catch (err) {
-      setAdminError(err.message);
-    } finally {
-      setDownloadingPdf(false);
-    }
-  }
+   }
+  
 
   return (
     <div className="terms-page">
@@ -342,19 +320,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                              <span>
                                <strong>Gender:</strong> {row.gender || 'N/A'}
                              </span>
-                             <span className="terms-card__submitted-time">
-                               {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
-                             </span>
-                             <button
-                               type="button"
-                               className="terms-card__download-user"
-                               onClick={() => handleDownloadUserPdf(id)}
-                               disabled={downloadingPdf}
-                             >
-                               <Download aria-hidden="true" />
-                               <span>Download PDF</span>
-                             </button>
-                           </div>
+                              <span className="terms-card__submitted-time">
+                                {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
+                              </span>
+                            </div>
                          );
                        })}
                      </div>
