@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
+import pdfBadge from '../asset/pdf.jpeg';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
@@ -88,7 +89,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
           </head>
           <body>
             <div class="cover">
-              <img src="${window.location.origin}/src/asset/pdf.jpeg" alt="Jothi Eye Donor badge" />
+              <img src="${pdfBadge}" alt="Jothi Eye Donor badge" />
               <h1>Eye Donation Pledge - Submission Summary</h1>
               <p>Generated on ${new Date().toLocaleString()}</p>
             </div>

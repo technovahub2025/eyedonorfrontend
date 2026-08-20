@@ -333,7 +333,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   </h2>
                 </div>
                 <div className="terms-card__admin-actions">
-                  {null}
                 </div>
               </div>
 
