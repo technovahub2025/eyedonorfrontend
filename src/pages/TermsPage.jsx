@@ -10,7 +10,6 @@ import {
   Plus,
   ShieldCheck,
   Stethoscope,
-  Trash2,
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
@@ -58,7 +57,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 50;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     let active = true;
@@ -120,18 +119,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   function addPerson() {
     setUpdatingPeople(true);
     setPeople((current) => [...current, initialPerson()]);
-    setTimeout(() => setUpdatingPeople(false), 1500);
-  }
-
-  function removePerson(id) {
-    setUpdatingPeople(true);
-    setPeople((current) => {
-      if (current.length <= 1) {
-        return current;
-      }
-
-      return current.filter((person) => person.id !== id);
-    });
     setTimeout(() => setUpdatingPeople(false), 1500);
   }
 
@@ -468,25 +455,32 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             </label>
                           </div>
 
-                          {people.length > 1 ? (
-                            <button
-                              type="button"
-                              className="terms-card__remove-person"
-                              onClick={() => removePerson(person.id)}
-                              aria-label={`Remove person ${index + 1}`}
-                            >
-                              <Trash2 aria-hidden="true" />
-                            </button>
-                          ) : null}
                         </div>
                       ))}
 
                       <div className="terms-card__add-person-wrap">
-                        <button type="button" className="terms-card__add-row" onClick={addPerson}>
+                        <button
+                          type="button"
+                          className="terms-card__add-row"
+                          onClick={addPerson}
+                          disabled={updatingPeople}
+                        >
                           <Plus aria-hidden="true" />
                           <span>Add Another Person</span>
                         </button>
                       </div>
+
+                      {updatingPeople ? (
+                        <div className="terms-card__progress" aria-live="polite">
+                          <div className="terms-card__progress-label">
+                            <span>Adding person...</span>
+                            <span>Working</span>
+                          </div>
+                          <div className="terms-card__progress-track">
+                            <div className="terms-card__progress-fill" />
+                          </div>
+                        </div>
+                      ) : null}
                     </section>
 
                     <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
@@ -604,4 +598,3 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 }
 
 export default TermsPage;
-

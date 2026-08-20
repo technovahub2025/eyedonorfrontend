@@ -83,65 +83,65 @@ function RoleSelectPage({ onRoleSelect }) {
       <main className="role-main" id="home">
         <section className="role-hero">
           <div className="role-hero__surface">
-            <img src={eyeHero} alt="" className="role-hero__image" aria-hidden="true" />
+            <div className="role-hero__content">
+              <p className="role-kicker">A small decision. A lifetime of sight.</p>
+              <h1 className="role-title">
+                Give the Gift
+                <br />
+                of <span>Sight</span>
+              </h1>
+              <p className="role-copy">
+                Your pledge can help restore vision, comfort a family, and leave behind a
+                legacy of compassion. Start by choosing how you want to continue.
+              </p>
 
-            <div className="role-hero__overlay">
-              <div className="role-hero__content">
-                <p className="role-kicker">A small decision. A lifetime of sight.</p>
-                <h1 className="role-title">
-                  Give the Gift
-                  <br />
-                  of <span>Sight</span>
-                </h1>
-                <p className="role-copy">
-                  Your pledge can help restore vision, comfort a family, and leave behind a
-                  legacy of compassion. Start by choosing how you want to continue.
-                </p>
-
-                <div className="role-actions">
-                  <button
-                    className="role-button role-button--primary"
-                    type="button"
-                    onClick={handlePledge}
-                  >
-                    Pledge My Eyes
-                  </button>
-                 
-                </div>
+              <div className="role-actions">
+                <button
+                  className="role-button role-button--primary"
+                  type="button"
+                  onClick={handlePledge}
+                >
+                  Pledge My Eyes
+                </button>
+               
               </div>
             </div>
 
-            <div className="role-strip" aria-label="Quick impact">
-              <div className="role-strip__inner">
-                <div className="role-strip__card">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    groups
-                  </span>
-                  <strong>1 Donor</strong>
-                  <span>can restore sight to 2 people</span>
-                </div>
-                <div className="role-strip__card">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    favorite
-                  </span>
-                  <strong>75,432+</strong>
-                  <span>pledges and counting</span>
-                </div>
-                <div className="role-strip__card">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    visibility
-                  </span>
-                  <strong>48,921+</strong>
-                  <span>successful corneal transplants</span>
-                </div>
-                <div className="role-strip__card">
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    medical_services
-                  </span>
-                  <strong>20+</strong>
-                  <span>partner eye banks</span>
-                </div>
-              </div>
+            <div className="role-hero__visual" aria-hidden="true">
+              <img src={eyeHero} alt="" className="role-hero__image" />
+            </div>
+          </div>
+        </section>
+
+        <section className="role-impact" aria-label="Quick impact">
+          <div className="role-impact__inner">
+            <div className="role-impact__card">
+              <span className="material-symbols-outlined" aria-hidden="true">
+                groups
+              </span>
+              <strong>1 Donor</strong>
+              <span>can restore sight to 2 people</span>
+            </div>
+            <div className="role-impact__card">
+              <span className="material-symbols-outlined" aria-hidden="true">
+                favorite
+              </span>
+              <strong>75,432+</strong>
+              <span>pledges and counting</span>
+            </div>
+            <div className="role-impact__card">
+              <span className="material-symbols-outlined" aria-hidden="true">
+                visibility
+              </span>
+              <strong>48,921+</strong>
+              <span>successful corneal transplants</span>
+            </div>
+            <div className="role-impact__card">
+              <span className="material-symbols-outlined" aria-hidden="true">
+                medical_services
+              </span>
+              <strong>20+</strong>
+              <span>partner eye banks</span>
             </div>
           </div>
         </section>

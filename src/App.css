@@ -2,6 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top, rgba(64, 194, 253, 0.06), transparent 32%),
     radial-gradient(circle at bottom right, rgba(232, 79, 138, 0.04), transparent 22%),
@@ -10,6 +11,7 @@
 
 .app-shell__content {
   flex: 1 0 auto;
+  min-width: 0;
 }
 
 .app-footer {

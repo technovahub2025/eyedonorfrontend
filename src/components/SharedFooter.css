@@ -190,6 +190,7 @@
 @media (max-width: 820px) {
   .role-footer__inner {
     grid-template-columns: 1fr 1fr;
+    gap: 18px;
   }
 
   .role-footer__bottom {
@@ -201,7 +202,7 @@
 @media (max-width: 540px) {
   .role-footer__inner {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 20px;
     width: min(100% - 20px, 1200px);
   }
 
@@ -209,7 +210,34 @@
     max-width: 100%;
   }
 
+  .role-footer {
+    padding: 22px 0 18px;
+  }
+
+  .role-footer__brand-row {
+    align-items: flex-start;
+  }
+
+  .role-footer__brand-row img {
+    width: 44px;
+    height: 44px;
+  }
+
+  .role-footer__brand-row strong,
+  .role-footer__links strong {
+    font-size: 0.92rem;
+  }
+
+  .role-footer__brand-row span,
+  .role-footer__brand p,
+  .role-footer__links a,
+  .role-footer__links span,
+  .role-footer__actions p {
+    font-size: 0.88rem;
+  }
+
   .role-footer__bottom {
     width: min(100% - 20px, 1200px);
+    padding-top: 18px;
   }
 }
