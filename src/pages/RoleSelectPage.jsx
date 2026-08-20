@@ -198,7 +198,7 @@ function RoleSelectPage({ onRoleSelect }) {
                 <li>No age limit.</li>
               
                 <li>People with spectacles, diabetes, or cataract can donate.</li>
-                <li>Almost everyone can contribute to this cause.</li>
+                <li>Anyone from birth can contribute to this cause.</li>
               </ul>
               <button className="role-panel__button" type="button" onClick={handlePledge}>
                 Know More
