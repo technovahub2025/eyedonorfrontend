@@ -956,8 +956,10 @@
   .terms-card__hero-overlay {
     width: min(100% - 20px, 1120px);
     min-height: 220px;
-    padding: 18px 0 16px;
-    gap: 6px;
+    padding: 14px 0 12px;
+    gap: 4px;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 
   .terms-card__hero-progress {
@@ -1018,16 +1020,16 @@
   }
 
   .terms-card__hero-overlay h1 {
-    font-size: clamp(1.45rem, 7.2vw, 2rem);
-    line-height: 0.92;
-    letter-spacing: -0.05em;
-    max-width: 8ch;
+    font-size: clamp(1.05rem, 6vw, 1.55rem);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    max-width: 6.2ch;
   }
 
   .terms-card__hero-overlay .terms-card__intro {
     max-width: none;
-    font-size: 0.78rem;
-    line-height: 1.45;
+    font-size: 0.68rem;
+    line-height: 1.35;
   }
 
   .terms-card__field--with-action {
@@ -1125,8 +1127,8 @@
 
   .terms-card__hero-overlay {
     min-height: 190px;
-    padding: 14px 0 12px;
-    gap: 4px;
+    padding: 10px 0 10px;
+    gap: 3px;
   }
 
   .terms-card__hero-progress {
@@ -1142,12 +1144,14 @@
   }
 
   .terms-card__hero-overlay h1 {
-    font-size: clamp(1.25rem, 6.6vw, 1.7rem);
-    max-width: 7ch;
+    font-size: clamp(0.98rem, 5.5vw, 1.3rem);
+    line-height: 0.85;
+    max-width: 6ch;
   }
 
   .terms-card__hero-overlay .terms-card__intro {
-    font-size: 0.72rem;
+    font-size: 0.64rem;
+    line-height: 1.3;
   }
 
   .terms-card__row {
