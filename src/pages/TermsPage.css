@@ -781,6 +781,14 @@
     flex-direction: column;
   }
 
+  .terms-card__eyebrow {
+    font-size: 0.7rem;
+  }
+
+  .terms-card__admin-header h2 {
+    font-size: 1.05rem;
+  }
+
   .terms-card__admin-actions {
     width: 100%;
     justify-content: flex-start;
