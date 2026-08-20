@@ -1383,3 +1383,41 @@
   justify-content: center;
   row-gap: 6px;
 }
+
+@media (max-width: 640px) {
+  .terms-card__pagination {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center;
+    gap: 8px !important;
+    overflow-x: auto !important;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .terms-card__pagination::-webkit-scrollbar {
+    display: none;
+  }
+
+  .terms-card__pagination-btn {
+    flex: 0 0 auto;
+    min-width: 42px;
+    width: auto;
+    height: 42px;
+    padding: 0 10px;
+  }
+
+  .terms-card__pagination-info {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .terms-card__pagination-btn {
+    min-width: 38px;
+    height: 40px;
+    padding: 0 8px;
+  }
+}
