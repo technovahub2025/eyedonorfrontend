@@ -65,7 +65,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     month: '',
     year: '',
   });
-  const itemsPerPage = 10;
+  const itemsPerPage = 20;
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = [
     'January',
