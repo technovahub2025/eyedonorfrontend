@@ -117,7 +117,7 @@ function RoleSelectPage({ onRoleSelect }) {
               <span className="material-symbols-outlined" aria-hidden="true">
                 groups
               </span>
-              <strong>1 Donor</strong>
+              <strong>2000+ Donor</strong>
               <span>can restore sight to 2 people</span>
             </div>
             <div className="role-impact__card">
@@ -195,7 +195,7 @@ function RoleSelectPage({ onRoleSelect }) {
             <article className="role-panel role-panel--soft">
               <p className="role-section__eyebrow">Who can donate?</p>
               <ul className="role-list">
-                <li>Anyone above 18 years can pledge.</li>
+                <li>No age limit.</li>
                 <li>No upper age limit.</li>
                 <li>People with spectacles, diabetes, or cataract can donate.</li>
                 <li>Almost everyone can contribute to this cause.</li>
@@ -418,13 +418,10 @@ function RoleSelectPage({ onRoleSelect }) {
       <strong>Contact Us</strong>
 
       <span className="role-footer__hospital">
-        JOTHI EYE CARE CENTRE
+        JOTHI EYE CARE CENTRE AND POST GRADUATE AND RESEARCH INSTITUTE
       </span>
 
-      <span>
-        152 &amp; 154, Calve Subraya Chetty Street,
-        Puducherry – 605 001
-      </span>
+    
 
       <a href="tel:+914132224534">
         +91 413 222 4534

@@ -49,7 +49,7 @@ function SharedFooter({ onHome, onPledge, onAdmin }) {
         <div className="role-footer__links role-footer__contact">
           <strong>Contact Us</strong>
 
-          <span className="role-footer__hospital">JOTHI EYE CARE CENTRE</span>
+          <span className="role-footer__hospital">JOTHI EYE CARE POST GRADUATE AND RESEARCH INSTITUTE</span>
 
           <span>152 &amp; 154, Calve Subraya Chetty Street, Puducherry - 605 001</span>
 
