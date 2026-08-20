@@ -9,7 +9,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
-import { apiDownload } from '../lib/apiClient';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
@@ -24,65 +23,51 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const rowIds = exportRows
-        .map((row) => row._id || row.id)
-        .filter((id) => id && String(id).length > 0);
-
-      if (rowIds.length > 0) {
-        try {
-          const idsParam = encodeURIComponent(rowIds.join(','));
-          const blob = await apiDownload(`/api/terms/download/my?ids=${idsParam}`);
-          const url = window.URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = `eye-donation-submission-${new Date().toISOString().slice(0, 10)}.pdf`;
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-          return;
-        } catch (err) {
-          console.error('Backend PDF export failed, falling back to print:', err.message);
-        }
-      }
-
       const htmlContent = `
         <!DOCTYPE html>
         <html>
           <head>
             <title>Eye Donation Pledge - Submission Summary</title>
             <style>
+              @page {
+                size: A4;
+                margin: 24mm 18mm;
+              }
               body {
                 font-family: Arial, sans-serif;
                 margin: 0;
-                padding: 40px;
-                background: #ffffff;
                 color: #1a1a1a;
+                background: #ffffff;
               }
-              .header {
+              .cover {
                 text-align: center;
-                margin-bottom: 28px;
-                border-bottom: 2px solid #dbe4f0;
-                padding-bottom: 18px;
+                margin-bottom: 22px;
               }
-              .header h1 {
+              .cover img {
+                width: 140px;
+                height: 140px;
+                object-fit: contain;
+                display: block;
+                margin: 0 auto 14px;
+              }
+              .cover h1 {
                 margin: 0;
                 font-size: 24px;
                 color: #173f90;
               }
-              .header p {
+              .cover p {
                 margin: 6px 0 0;
                 color: #64748b;
-                font-size: 14px;
+                font-size: 13px;
               }
               table {
                 width: 100%;
                 border-collapse: collapse;
-                font-size: 14px;
+                font-size: 13px;
               }
               th, td {
                 border: 1px solid #d7deea;
-                padding: 10px 12px;
+                padding: 9px 10px;
                 text-align: left;
                 vertical-align: top;
               }
@@ -94,15 +79,16 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
                 background: #f8fbff;
               }
               .footer {
-                margin-top: 24px;
-                font-size: 12px;
+                margin-top: 18px;
+                font-size: 11px;
                 color: #64748b;
                 text-align: center;
               }
             </style>
           </head>
           <body>
-            <div class="header">
+            <div class="cover">
+              <img src="${window.location.origin}/src/asset/pdf.jpeg" alt="Jothi Eye Donor badge" />
               <h1>Eye Donation Pledge - Submission Summary</h1>
               <p>Generated on ${new Date().toLocaleString()}</p>
             </div>
@@ -143,7 +129,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
         </html>
       `;
 
-      // Open print window with the HTML content
       const printWindow = window.open('', '_blank');
       if (!printWindow) {
         throw new Error('Please allow popups for this site to export PDF.');
@@ -157,7 +142,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
         printWindow.print();
         printWindow.close();
       }, 500);
-
     } catch (err) {
       console.error('Export error:', err);
     } finally {
