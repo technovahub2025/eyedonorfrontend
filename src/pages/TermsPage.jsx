@@ -316,31 +316,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
           <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
-                <div className="terms-card__hero-visual" aria-hidden="true">
+              <div className="terms-card__hero-visual" aria-hidden="true">
                 <img src={eyeImage} alt="" className="terms-card__hero-image" aria-hidden="true" />
-                {!isAdminView ? (
-                  <div
-                    className={`terms-card__hero-progress${updatingPeople ? ' terms-card__hero-progress--active' : ''}`}
-                  >
-                    <div className="terms-card__hero-progress__top">
-                      <span>Registration progress</span>
-                      <strong>
-                        {Math.min(people.length, requiredPeopleCount)}/{requiredPeopleCount}
-                      </strong>
-                    </div>
-                    <div className="terms-card__hero-progress__track">
-                      <div
-                        className="terms-card__hero-progress__fill"
-                        style={{
-                          width: `${registrationProgress * 100}%`,
-                        }}
-                      />
-                    </div>
-                    {updatingPeople ? (
-                      <span className="terms-card__hero-progress__note">Adding another person...</span>
-                    ) : null}
-                  </div>
-                ) : null}
                 <div className="terms-card__hero-overlay">
                   <p className="terms-card__hero-kicker">
                     {isAdminView ? 'Admin review' : 'A small decision. A lifetime of sight.'}
