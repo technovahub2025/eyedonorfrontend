@@ -14,7 +14,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
-import eyeImage from '../asset/eyehero.png';
+import eyeImage from '../asset/eyehero-no-eye.png';
 import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
@@ -698,7 +698,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                           return (
                             <article key={point} className="terms-card__row">
-                             
+                              <div className="terms-card__row-index">
+                               
+                              </div>
                               <div className="terms-card__row-icon">
                                 <RowIcon aria-hidden="true" />
                               </div>

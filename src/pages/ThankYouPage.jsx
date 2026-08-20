@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from 'lucide-react';
-import eyeHero from '../asset/eyehero.png';
+import eyeHero from '../asset/eyehero-no-eye.png';
 import { apiDownload } from '../lib/apiClient';
 import './ThankYouPage.css';
 
