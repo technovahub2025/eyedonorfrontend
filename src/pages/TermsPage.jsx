@@ -122,6 +122,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     totalRecords > 0 && filteredAdminRows.length === 0
       ? 'No matching submissions found.'
       : 'No terms submissions found.';
+  const registrationProgress = Math.min(people.length, requiredPeopleCount) / requiredPeopleCount;
 
   useEffect(() => {
     let active = true;
@@ -315,7 +316,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
           <section className="terms-card" aria-labelledby="terms-title">
             <div className="terms-card__header">
-              <div className="terms-card__hero-visual" aria-hidden="true">
+                <div className="terms-card__hero-visual" aria-hidden="true">
                 <img src={eyeImage} alt="" className="terms-card__hero-image" aria-hidden="true" />
                 {!isAdminView ? (
                   <div
@@ -331,7 +332,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <div
                         className="terms-card__hero-progress__fill"
                         style={{
-                          width: `${Math.min((people.length / requiredPeopleCount) * 100, 100)}%`,
+                          width: `${registrationProgress * 100}%`,
                         }}
                       />
                     </div>
@@ -403,7 +404,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     <div className="terms-card__filters-head">
                       <div>
                         <p className="terms-card__filters-kicker">Filter results</p>
-                        <h3>Find entries by date or contact details</h3>
+                        <h3>Find entries by date</h3>
                       </div>
                       <button
                         type="button"
@@ -574,6 +575,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <span className="terms-card__updating-status">Updating in progress...</span>
                         )}
                       </div>
+
+                      {!isAdminView ? (
+                        <div
+                          className={`terms-card__form-progress${updatingPeople ? ' terms-card__form-progress--active' : ''}`}
+                          aria-label="Registration progress"
+                        >
+                          <div className="terms-card__form-progress__top">
+                            <span>Registration progress</span>
+                            <strong>
+                              {Math.min(people.length, requiredPeopleCount)}/{requiredPeopleCount}
+                            </strong>
+                          </div>
+                          <div className="terms-card__form-progress__track">
+                            <div
+                              className="terms-card__form-progress__fill"
+                              style={{ width: `${registrationProgress * 100}%` }}
+                            />
+                          </div>
+                          {updatingPeople ? (
+                            <span className="terms-card__form-progress__note">Adding another person...</span>
+                          ) : null}
+                        </div>
+                      ) : null}
 
                       {people.map((person, index) => (
                         <div key={person.id} className="terms-card__person">
