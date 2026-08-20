@@ -331,7 +331,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       : 'Share the full details for each person. Then review and accept the pledge before submitting.'}
                   </p>
                 </div>
-               
               </div>
             </div>
 
