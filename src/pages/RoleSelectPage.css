@@ -804,6 +804,10 @@
   border-radius: 999px;
 }
 
+#process .role-section__head h2 {
+  color: #0b1d39;
+}
+
 .role-steps {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
