@@ -46,6 +46,7 @@ const initialPerson = () => ({
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
+  const [updatingPeople, setUpdatingPeople] = useState(false);
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
@@ -117,10 +118,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   }
 
   function addPerson() {
+    setUpdatingPeople(true);
     setPeople((current) => [...current, initialPerson()]);
+    setTimeout(() => setUpdatingPeople(false), 1500);
   }
 
   function removePerson(id) {
+    setUpdatingPeople(true);
     setPeople((current) => {
       if (current.length <= 1) {
         return current;
@@ -128,6 +132,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
       return current.filter((person) => person.id !== id);
     });
+    setTimeout(() => setUpdatingPeople(false), 1500);
   }
 
   function resetPeople() {
@@ -388,11 +393,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <UserRound aria-hidden="true" />
                           <span>YOUR DETAILS</span>
                         </div>
-                        <span className="terms-card__admin-badge">
-                          {people.length < 3
-                            ? `Add at least 3 people (${people.length}/3 added)`
-                            : `✅ ${people.length} people added`}
-                        </span>
+                         <span className="terms-card__admin-badge">
+                           {updatingPeople
+                             ? 'Updating in progress...'
+                             : people.length < 3
+                               ? `Add at least 3 people (${people.length}/3 added)`
+                               : `✅ ${people.length} people added`}
+                         </span>
                       </div>
 
                       {people.map((person, index) => (

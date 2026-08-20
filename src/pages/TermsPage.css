@@ -811,6 +811,17 @@
     width: 100%;
     min-width: 0;
   }
+
+  .terms-card__pagination {
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .terms-card__pagination-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-width: 32px;
+  }
 }
 
 @keyframes eyeFloat {
