@@ -341,7 +341,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <p className="terms-card__empty">No terms submissions found.</p>
                     )}
 
-{totalPages > 1 && (
+                    {totalPages > 1 ? (
                       <div className="terms-card__pagination">
                         <button
                           type="button"
@@ -363,7 +363,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           Next
                         </button>
                       </div>
-                    )}
+                    ) : null}
                  </>
               ) : (
                 <>
