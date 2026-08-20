@@ -857,7 +857,42 @@
   .terms-card__hero-visual::after,
   .terms-card__eye,
   .terms-card__iris,
-  .terms-card__leaf {
+  .terms-card__leaf,
+  .terms-card__pagination-btn {
     animation: none !important;
   }
+}
+
+.terms-card__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px;
+}
+
+.terms-card__pagination-btn {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  color: #1f4ba8;
+  background: rgba(31, 76, 201, 0.08);
+  border: 1px solid rgba(31, 76, 201, 0.14);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.terms-card__pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.terms-card__pagination-btn:not(:disabled):hover {
+  background: rgba(31, 76, 201, 0.16);
+}
+
+.terms-card__pagination-info {
+  font-size: 0.85rem;
+  color: #666;
 }

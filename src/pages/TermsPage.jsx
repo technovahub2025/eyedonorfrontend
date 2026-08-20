@@ -55,6 +55,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [downloadingPdf, setDownloadingPdf] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     let active = true;
@@ -71,20 +74,27 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setAdminError('');
 
       try {
-        const response = await apiRequest('/api/terms/getall', {
-          token: adminToken,
-        });
+        const response = await apiRequest(
+          `/api/terms/getall/paginated?page=${currentPage}&limit=${itemsPerPage}`,
+          {
+            token: adminToken,
+          }
+        );
 
         if (!active) return;
 
-        const terms = Array.isArray(response)
-          ? response
-          : response?.data || response?.terms || response?.rows || [];
+        const terms = Array.isArray(response?.data?.data)
+          ? response.data.data
+          : Array.isArray(response?.data)
+          ? response.data
+          : [];
 
         setAdminRows(terms);
+        setTotalPages(response?.data?.pagination?.totalPages || 1);
       } catch (err) {
         if (!active) return;
         setAdminRows([]);
+        setTotalPages(1);
         setAdminError(err.message);
       } finally {
         if (active) {
@@ -98,7 +108,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     return () => {
       active = false;
     };
-  }, [adminToken, isAdminView]);
+  }, [adminToken, isAdminView, currentPage]);
 
   function updatePerson(id, field, value) {
     setPeople((current) =>
@@ -327,10 +337,34 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                          );
                        })}
                      </div>
-                   ) : (
-                     <p className="terms-card__empty">No terms submissions found.</p>
-                   )}
-                </>
+                    ) : (
+                      <p className="terms-card__empty">No terms submissions found.</p>
+                    )}
+
+{totalPages > 1 && (
+                      <div className="terms-card__pagination">
+                        <button
+                          type="button"
+                          className="terms-card__pagination-btn"
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          disabled={currentPage === 1 || adminLoading}
+                        >
+                          Previous
+                        </button>
+                        <span className="terms-card__pagination-info">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                          type="button"
+                          className="terms-card__pagination-btn"
+                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                          disabled={currentPage === totalPages || adminLoading}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+                 </>
               ) : (
                 <>
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm} noValidate>
