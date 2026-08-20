@@ -1121,9 +1121,11 @@
   }
 
   .terms-card__pagination {
-    gap: 6px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
     margin-top: 12px;
-    flex-wrap: wrap;
+    justify-items: stretch;
   }
 
   .terms-card__pagination-wrap {
@@ -1131,9 +1133,7 @@
   }
 
   .terms-card__pagination-info {
-    font-size: 0.82rem;
-    flex-direction: column;
-    align-items: flex-start;
+    display: none;
   }
 
   .terms-card__filters {
@@ -1141,10 +1141,15 @@
   }
 
   .terms-card__pagination-btn {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    min-width: 32px;
-    flex: 1 1 calc(33.333% - 6px);
+    width: 100%;
+    min-width: 0;
+    height: 42px;
+    padding: 0 8px;
+    font-size: 0.78rem;
+  }
+
+  .terms-card__pagination-btn--nav {
+    justify-content: center;
   }
 }
 
@@ -1198,7 +1203,11 @@
   }
 
   .terms-card__pagination-btn {
-    flex: 1 1 calc(50% - 6px);
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 8px;
+    font-size: 0.74rem;
   }
 
   .terms-card__add-row,

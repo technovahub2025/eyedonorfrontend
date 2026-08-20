@@ -69,7 +69,11 @@ function SharedFooter({ onHome, onPledge, onAdmin }) {
             Pledge My Eyes
           </button>
 
-          <button type="button" className="role-footer__admin-btn" onClick={onAdmin}>
+          <button
+            type="button"
+            className="role-footer__admin-btn"
+            onClick={() => onAdmin?.('admin-login')}
+          >
             Admin Login
           </button>
 

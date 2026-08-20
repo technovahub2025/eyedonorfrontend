@@ -515,7 +515,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <strong>{filteredAdminRows.length}</strong> shown of{' '}
                           <strong>{totalRecords}</strong> total records
                         </span>
-                        <span>10 per page</span>
+                        <span>{itemsPerPage} per page</span>
                       </div>
 
                       <div className="terms-card__pagination" aria-label="Admin pagination">

@@ -90,9 +90,9 @@ function App() {
     setActivePage('terms');
   }
 
-  function handleFooterAdmin() {
+  function handleFooterAdmin(targetPage = 'admin-login') {
     setActiveRole('admin');
-    setActivePage('admin-login');
+    setActivePage(targetPage);
   }
 
   return (
