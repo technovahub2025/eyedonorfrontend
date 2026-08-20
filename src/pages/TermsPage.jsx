@@ -322,7 +322,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
       setAdminRows((current) => current.filter((item) => (item._id || item.id) !== rowId));
       setTotalRecords((current) => Math.max(current - 1, 0));
-      setCurrentPage((page) => Math.max(1, Math.min(page, Math.ceil(Math.max(totalRecords - 1, 0) / itemsPerPage) || 1)));
+      setCurrentPage((page) =>
+        Math.max(1, Math.min(page, Math.ceil(Math.max(filteredAdminRows.length - 1, 0) / itemsPerPage) || 1))
+      );
     } catch (err) {
       setAdminError(err.message);
     }

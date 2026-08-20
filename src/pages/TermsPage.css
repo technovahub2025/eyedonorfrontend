@@ -858,17 +858,49 @@
 
 .terms-card__submitted-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
   gap: 10px;
   padding: 14px;
   border: 1px solid rgba(31, 76, 201, 0.12);
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.72);
   font-size: 0.95rem;
+  align-items: start;
 }
 
 .terms-card__submitted-row strong {
   color: #00668a;
+}
+
+.terms-card__row-delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  justify-self: end;
+  align-self: start;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid rgba(186, 26, 26, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #ba1a1a;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.terms-card__row-delete:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 239, 239, 0.96);
+  box-shadow: 0 8px 18px rgba(186, 26, 26, 0.12);
+}
+
+.terms-card__row-delete svg {
+  width: 16px;
+  height: 16px;
 }
 
 .terms-card__submitted-time {
@@ -1170,6 +1202,11 @@
 
   .terms-card__submitted-row {
     grid-template-columns: 1fr;
+  }
+
+  .terms-card__row-delete {
+    justify-self: start;
+    width: 100%;
   }
 
   .terms-card__pagination-btn {
