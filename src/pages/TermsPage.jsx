@@ -341,7 +341,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <p className="terms-card__empty">No terms submissions found.</p>
                     )}
 
-                    {totalPages > 1 ? (() => {
+                    {true ? (() => {
                       const pages = [];
                       const start = Math.max(1, currentPage - 2);
                       const end = Math.min(totalPages, currentPage + 2);
