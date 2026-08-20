@@ -57,12 +57,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminError, setAdminError] = useState('');
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [hasNextPage, setHasNextPage] = useState(false);
-  const [hasPrevPage, setHasPrevPage] = useState(false);
   const itemsPerPage = 10;
-  const safeTotalPages = Math.max(totalPages, 1);
+  const safeTotalPages = Math.max(Math.ceil(totalRecords / itemsPerPage), 1);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const displayedAdminRows = adminRows.slice(startIndex, endIndex);
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < safeTotalPages;
 
   useEffect(() => {
     let active = true;
@@ -79,16 +81,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setAdminError('');
 
       try {
-        const response = await apiRequest(
-          `/api/terms/getall/paginated?page=${currentPage}&limit=${itemsPerPage}`,
-          {
-            token: adminToken,
-          }
-        );
+        const response = await apiRequest('/api/terms/getall', {
+          token: adminToken,
+        });
 
         if (!active) return;
 
-        const pagination = response?.data?.pagination || {};
         const terms = Array.isArray(response?.data?.data)
           ? response.data.data
           : Array.isArray(response?.data)
@@ -96,18 +94,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
           : [];
 
         setAdminRows(terms);
-        setCurrentPage(pagination.page || currentPage);
-        setTotalPages(pagination.totalPages || 1);
-        setTotalRecords(pagination.total || terms.length || 0);
-        setHasNextPage(Boolean(pagination.hasNextPage));
-        setHasPrevPage(Boolean(pagination.hasPrevPage));
+        setTotalRecords(Number(response?.data?.count ?? terms.length ?? 0));
+        setCurrentPage(1);
       } catch (err) {
         if (!active) return;
         setAdminRows([]);
-        setTotalPages(1);
         setTotalRecords(0);
-        setHasNextPage(false);
-        setHasPrevPage(false);
+        setCurrentPage(1);
         setAdminError(err.message);
       } finally {
         if (active) {
@@ -121,7 +114,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     return () => {
       active = false;
     };
-  }, [adminToken, isAdminView, currentPage]);
+  }, [adminToken, isAdminView]);
 
   function updatePerson(id, field, value) {
     setPeople((current) =>
@@ -338,9 +331,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                      <p className="terms-card__empty">Loading terms data...</p>
                   ) : adminError ? (
                      <p className="terms-card__error">{adminError}</p>
-                   ) : adminRows.length > 0 ? (
+                  ) : displayedAdminRows.length > 0 ? (
                      <div className="terms-card__submitted-list terms-card__submitted-list--admin">
-                       {adminRows.map((row) => {
+                       {displayedAdminRows.map((row) => {
                          const id = row._id || row.id || `${row.name}-${row.createdAt}`;
                          return (
                            <div key={id} className="terms-card__submitted-row">
