@@ -118,20 +118,20 @@ function RoleSelectPage({ onRoleSelect }) {
                 groups
               </span>
               <strong>2000+ Donor</strong>
-              <span>can restore sight to 2 people</span>
+              <span>can restore sight to 4 people</span>
             </div>
             <div className="role-impact__card">
               <span className="material-symbols-outlined" aria-hidden="true">
                 favorite
               </span>
-              <strong>75,432+</strong>
+              <strong>50,000</strong>
               <span>pledges and counting</span>
             </div>
             <div className="role-impact__card">
               <span className="material-symbols-outlined" aria-hidden="true">
                 visibility
               </span>
-              <strong>48,921+</strong>
+              <strong>1000</strong>
               <span>successful corneal transplants</span>
             </div>
             <div className="role-impact__card">
@@ -196,7 +196,7 @@ function RoleSelectPage({ onRoleSelect }) {
               <p className="role-section__eyebrow">Who can donate?</p>
               <ul className="role-list">
                 <li>No age limit.</li>
-                <li>No upper age limit.</li>
+              
                 <li>People with spectacles, diabetes, or cataract can donate.</li>
                 <li>Almost everyone can contribute to this cause.</li>
               </ul>
