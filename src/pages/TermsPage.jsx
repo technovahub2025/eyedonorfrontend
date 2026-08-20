@@ -284,9 +284,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <span>{downloadingPdf ? 'Preparing PDF...' : 'Download PDF'}</span>
                     </button>
                   ) : null}
-                  <span className="terms-card__admin-badge">
-                    {isAdminView ? 'Read only' : 'Saved automatically'}
-                  </span>
+                 
                 </div>
               </div>
 
