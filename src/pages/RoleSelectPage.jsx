@@ -21,9 +21,7 @@ function RoleSelectPage({ onRoleSelect }) {
     onRoleSelect?.('terms');
   }
 
-  function handleKnowMore() {
-    document.getElementById('process')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+ 
 
   function handleAdmin() {
     onRoleSelect?.('admin');
@@ -108,13 +106,7 @@ function RoleSelectPage({ onRoleSelect }) {
                   >
                     Pledge My Eyes
                   </button>
-                  <button
-                    className="role-button role-button--secondary"
-                    type="button"
-                    onClick={handleKnowMore}
-                  >
-                    Know More
-                  </button>
+                 
                 </div>
               </div>
             </div>
