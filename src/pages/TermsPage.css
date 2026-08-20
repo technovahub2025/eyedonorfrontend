@@ -892,6 +892,12 @@
   background: rgba(31, 76, 201, 0.16);
 }
 
+.terms-card__pagination-btn--active {
+  background: rgba(31, 76, 201, 0.24);
+  color: #1f4ba8;
+  font-weight: 600;
+}
+
 .terms-card__pagination-info {
   font-size: 0.85rem;
   color: #666;

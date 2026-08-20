@@ -341,29 +341,45 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <p className="terms-card__empty">No terms submissions found.</p>
                     )}
 
-                    {totalPages > 1 ? (
-                      <div className="terms-card__pagination">
-                        <button
-                          type="button"
-                          className="terms-card__pagination-btn"
-                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                          disabled={currentPage === 1 || adminLoading}
-                        >
-                          Previous
-                        </button>
-                        <span className="terms-card__pagination-info">
-                          Page {currentPage} of {totalPages}
-                        </span>
-                        <button
-                          type="button"
-                          className="terms-card__pagination-btn"
-                          onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                          disabled={currentPage === totalPages || adminLoading}
-                        >
-                          Next
-                        </button>
-                      </div>
-                    ) : null}
+                    {totalPages > 1 ? (() => {
+                      const pages = [];
+                      const start = Math.max(1, currentPage - 2);
+                      const end = Math.min(totalPages, currentPage + 2);
+                      for (let i = start; i <= end; i++) {
+                        pages.push(i);
+                      }
+                      return (
+                        <div className="terms-card__pagination">
+                          <button
+                            type="button"
+                            className="terms-card__pagination-btn"
+                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                            disabled={currentPage === 1 || adminLoading}
+                          >
+                            Previous
+                          </button>
+                          {pages.map((pageNum) => (
+                            <button
+                              key={pageNum}
+                              type="button"
+                              className={`terms-card__pagination-btn${pageNum === currentPage ? ' terms-card__pagination-btn--active' : ''}`}
+                              onClick={() => setCurrentPage(pageNum)}
+                              disabled={adminLoading}
+                            >
+                              {pageNum}
+                            </button>
+                          ))}
+                          <button
+                            type="button"
+                            className="terms-card__pagination-btn"
+                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                            disabled={currentPage === totalPages || adminLoading}
+                          >
+                            Next
+                          </button>
+                        </div>
+                      );
+                    })() : null}
                  </>
               ) : (
                 <>
