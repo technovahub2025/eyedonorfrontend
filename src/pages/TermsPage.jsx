@@ -8,7 +8,6 @@ import {
   Handshake,
   Heart,
   Plus,
-  Trash2,
   ShieldCheck,
   Stethoscope,
   UserRound,
@@ -304,31 +303,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     }
    }
 
-  async function handleDeleteTerm(row) {
-    const rowId = row._id || row.id;
-    if (!rowId) return;
-
-    const confirmDelete = window.confirm(
-      `Delete ${row.name || row.fullName || 'this record'}? This cannot be undone.`
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      await apiRequest(`/api/terms/${rowId}`, {
-        method: 'DELETE',
-        token: adminToken,
-      });
-
-      setAdminRows((current) => current.filter((item) => (item._id || item.id) !== rowId));
-      setTotalRecords((current) => Math.max(current - 1, 0));
-      setCurrentPage((page) =>
-        Math.max(1, Math.min(page, Math.ceil(Math.max(filteredAdminRows.length - 1, 0) / itemsPerPage) || 1))
-      );
-    } catch (err) {
-      setAdminError(err.message);
-    }
-  }
+ 
   
 
   return (
@@ -503,14 +478,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                            <span>
                              <strong>Gender:</strong> {row.gender || 'N/A'}
                            </span>
-                           <button
-                             type="button"
-                             className="terms-card__row-delete"
-                             onClick={() => handleDeleteTerm(row)}
-                           >
-                             <Trash2 aria-hidden="true" />
-                             <span>Delete</span>
-                           </button>
+                           
                               <span className="terms-card__submitted-time">
                                 {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
                               </span>
