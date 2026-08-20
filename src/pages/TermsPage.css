@@ -75,12 +75,13 @@
 .terms-card__hero-progress {
   position: absolute;
   top: 16px;
-  left: 16px;
-  right: 16px;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
   z-index: 3;
   display: grid;
   gap: 8px;
-  max-width: 320px;
+  width: min(360px, calc(100% - 32px));
   padding: 12px 14px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.78);
@@ -820,9 +821,9 @@
 
   .terms-card__hero-progress {
     top: 12px;
-    left: 12px;
-    right: 12px;
-    max-width: none;
+    left: 50%;
+    right: auto;
+    width: calc(100% - 24px);
     padding: 10px 12px;
     gap: 6px;
   }
@@ -907,6 +908,16 @@
     flex-wrap: wrap;
   }
 
+  .terms-card__pagination-wrap {
+    gap: 8px;
+  }
+
+  .terms-card__pagination-info {
+    font-size: 0.82rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .terms-card__pagination-btn {
     padding: 6px 12px;
     font-size: 0.75rem;
@@ -927,8 +938,9 @@
 
   .terms-card__hero-progress {
     top: 10px;
-    left: 10px;
-    right: 10px;
+    left: 50%;
+    right: auto;
+    width: calc(100% - 20px);
     padding: 9px 10px;
   }
 
@@ -1032,6 +1044,34 @@
   gap: 12px;
   margin-top: 16px;
   padding: 12px;
+  flex-wrap: wrap;
+}
+
+.terms-card__pagination-wrap {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(31, 76, 201, 0.1);
+  display: grid;
+  gap: 10px;
+}
+
+.terms-card__pagination-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #4e5666;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.terms-card__pagination-info strong {
+  color: #1f4ba8;
+}
+
+.terms-card__pagination-info span {
+  color: #64748b;
 }
 
 .terms-card__pagination-btn {
@@ -1061,6 +1101,9 @@
 }
 
 .terms-card__pagination-info {
-  font-size: 0.85rem;
   color: #666;
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  row-gap: 6px;
 }

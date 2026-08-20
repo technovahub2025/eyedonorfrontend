@@ -58,7 +58,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [hasPrevPage, setHasPrevPage] = useState(false);
   const itemsPerPage = 10;
+  const safeTotalPages = Math.max(totalPages, 1);
 
   useEffect(() => {
     let active = true;
@@ -84,6 +88,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
         if (!active) return;
 
+        const pagination = response?.data?.pagination || {};
         const terms = Array.isArray(response?.data?.data)
           ? response.data.data
           : Array.isArray(response?.data)
@@ -91,11 +96,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
           : [];
 
         setAdminRows(terms);
-        setTotalPages(response?.data?.pagination?.totalPages || 1);
+        setCurrentPage(pagination.page || currentPage);
+        setTotalPages(pagination.totalPages || 1);
+        setTotalRecords(pagination.total || terms.length || 0);
+        setHasNextPage(Boolean(pagination.hasNextPage));
+        setHasPrevPage(Boolean(pagination.hasPrevPage));
       } catch (err) {
         if (!active) return;
         setAdminRows([]);
         setTotalPages(1);
+        setTotalRecords(0);
+        setHasNextPage(false);
+        setHasPrevPage(false);
         setAdminError(err.message);
       } finally {
         if (active) {
@@ -324,7 +336,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
 {adminLoading ? (
                      <p className="terms-card__empty">Loading terms data...</p>
-                   ) : adminError ? (
+                  ) : adminError ? (
                      <p className="terms-card__error">{adminError}</p>
                    ) : adminRows.length > 0 ? (
                      <div className="terms-card__submitted-list terms-card__submitted-list--admin">
@@ -355,24 +367,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <p className="terms-card__empty">No terms submissions found.</p>
                     )}
 
-                    {true ? (() => {
-                      const pages = [];
-                      const start = Math.max(1, currentPage - 2);
-                      const end = Math.min(totalPages, currentPage + 2);
-                      for (let i = start; i <= end; i++) {
-                        pages.push(i);
-                      }
-                      return (
-                        <div className="terms-card__pagination">
-                          <button
-                            type="button"
-                            className="terms-card__pagination-btn"
-                            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                            disabled={currentPage === 1 || adminLoading}
-                          >
-                            Previous
-                          </button>
-                          {pages.map((pageNum) => (
+                    <div className="terms-card__pagination-wrap">
+                      <div className="terms-card__pagination-info">
+                        <span>
+                          Page <strong>{currentPage}</strong> of <strong>{safeTotalPages}</strong>
+                        </span>
+                        <span>
+                          <strong>{totalRecords}</strong> total records
+                        </span>
+                        <span>10 per page</span>
+                      </div>
+
+                      <div className="terms-card__pagination" aria-label="Admin pagination">
+                        <button
+                          type="button"
+                          className="terms-card__pagination-btn"
+                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                          disabled={adminLoading || !hasPrevPage}
+                        >
+                          Previous
+                        </button>
+                        {Array.from({ length: safeTotalPages }, (_, index) => index + 1)
+                          .slice(Math.max(0, currentPage - 3), Math.max(0, currentPage - 3) + 5)
+                          .map((pageNum) => (
                             <button
                               key={pageNum}
                               type="button"
@@ -383,17 +400,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               {pageNum}
                             </button>
                           ))}
-                          <button
-                            type="button"
-                            className="terms-card__pagination-btn"
-                            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                            disabled={currentPage === totalPages || adminLoading}
-                          >
-                            Next
-                          </button>
-                        </div>
-                      );
-                    })() : null}
+                        <button
+                          type="button"
+                          className="terms-card__pagination-btn"
+                          onClick={() => setCurrentPage((p) => Math.min(safeTotalPages, p + 1))}
+                          disabled={adminLoading || !hasNextPage}
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
                  </>
               ) : (
                 <>
