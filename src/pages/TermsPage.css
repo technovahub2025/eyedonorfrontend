@@ -986,13 +986,7 @@
   }
 
   .terms-card__hero-overlay {
-    width: min(100% - 20px, 1120px);
-    min-height: 220px;
-    padding: 16px 4px 12px 2px;
-    gap: 6px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
+    display: none;
   }
 
   .terms-card__hero-progress {
@@ -1160,12 +1154,6 @@
   }
 
   .terms-card__hero-overlay {
-    min-height: 190px;
-    padding: 12px 4px 10px 2px;
-    gap: 4px;
-  }
-
-  .terms-card__hero-progress {
     display: none;
   }
 
