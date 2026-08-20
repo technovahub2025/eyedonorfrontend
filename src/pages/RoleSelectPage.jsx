@@ -2,8 +2,11 @@
 import { useEffect, useState } from 'react';
 import eyeHero from '../asset/eyehero.png';
 import eyeLogo from '../asset/logo.png';
+import meenaImage from '../asset/profile1.png';
+import rameshImage from '../asset/profile2.png';
 import './RoleSelectPage.css';
 import { FileText, Users, HeartHandshake, Eye } from 'lucide-react';
+
 function RoleSelectPage({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -256,9 +259,7 @@ function RoleSelectPage({ onRoleSelect }) {
             <div className="role-story-grid">
               <article className="role-story">
                 <div className="role-story__avatar role-story__avatar--one">
-                  <div className="role-story__avatar-icon" aria-hidden="true">
-                    R
-                  </div>
+                  <img src={rameshImage} alt="Ramesh" />
                 </div>
 
                 <p>
@@ -271,9 +272,7 @@ function RoleSelectPage({ onRoleSelect }) {
 
               <article className="role-story">
                 <div className="role-story__avatar role-story__avatar--two">
-                  <div className="role-story__avatar-icon" aria-hidden="true">
-                    M
-                  </div>
+                  <img src={meenaImage} alt="Meena" />
                 </div>
 
                 <p>
