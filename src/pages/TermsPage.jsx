@@ -59,11 +59,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const [adminFilters, setAdminFilters] = useState({
+    date: '',
     weekday: '',
     month: '',
     year: '',
-    name: '',
-    phone: '',
   });
   const itemsPerPage = 10;
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -90,19 +89,19 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
   const filteredAdminRows = adminRows.filter((row) => {
     const date = getRowDate(row);
+    const rowDate = date
+      ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      : '';
     const rowWeekday = date ? weekdays[date.getDay()] : '';
     const rowMonth = date ? months[date.getMonth()] : '';
     const rowYear = date ? String(date.getFullYear()) : '';
-    const rowName = String(row?.name || row?.fullName || '').toLowerCase();
-    const rowPhone = String(row?.phone || '').toLowerCase();
 
-    const nameMatch = !adminFilters.name || rowName.includes(adminFilters.name.toLowerCase());
-    const phoneMatch = !adminFilters.phone || rowPhone.includes(adminFilters.phone.toLowerCase());
+    const dateMatch = !adminFilters.date || rowDate === adminFilters.date;
     const weekdayMatch = !adminFilters.weekday || rowWeekday === adminFilters.weekday;
     const monthMatch = !adminFilters.month || rowMonth === adminFilters.month;
     const yearMatch = !adminFilters.year || rowYear === adminFilters.year;
 
-    return nameMatch && phoneMatch && weekdayMatch && monthMatch && yearMatch;
+    return dateMatch && weekdayMatch && monthMatch && yearMatch;
   });
 
   const safeTotalPages = Math.max(Math.ceil(filteredAdminRows.length / itemsPerPage), 1);
@@ -187,11 +186,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
   function clearAdminFilters() {
     setAdminFilters({
+      date: '',
       weekday: '',
       month: '',
       year: '',
-      name: '',
-      phone: '',
     });
     setCurrentPage(1);
   }
@@ -412,11 +410,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         className="terms-card__filters-clear"
                         onClick={clearAdminFilters}
                         disabled={
+                          !adminFilters.date &&
                           !adminFilters.weekday &&
                           !adminFilters.month &&
-                          !adminFilters.year &&
-                          !adminFilters.name &&
-                          !adminFilters.phone
+                          !adminFilters.year
                         }
                       >
                         Clear filters
@@ -424,6 +421,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
 
                     <div className="terms-card__filters-grid">
+                      <label className="terms-card__filter">
+                        <span>Date</span>
+                        <input
+                          type="date"
+                          value={adminFilters.date}
+                          onChange={(event) => updateAdminFilter('date', event.target.value)}
+                        />
+                      </label>
+
                       <label className="terms-card__filter">
                         <span>Week day</span>
                         <select
@@ -467,26 +473,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             </option>
                           ))}
                         </select>
-                      </label>
-
-                      <label className="terms-card__filter">
-                        <span>Name</span>
-                        <input
-                          type="text"
-                          placeholder="Search by name"
-                          value={adminFilters.name}
-                          onChange={(event) => updateAdminFilter('name', event.target.value)}
-                        />
-                      </label>
-
-                      <label className="terms-card__filter">
-                        <span>Phone number</span>
-                        <input
-                          type="text"
-                          placeholder="Search by phone"
-                          value={adminFilters.phone}
-                          onChange={(event) => updateAdminFilter('phone', event.target.value)}
-                        />
                       </label>
                     </div>
                   </div>
