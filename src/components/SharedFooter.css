@@ -78,6 +78,13 @@
   gap: 12px;
 }
 
+.role-footer__bottom-copy {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+}
+
 .role-footer__bottom p {
   margin: 0;
   font-size: 0.88rem;
@@ -178,6 +185,7 @@
   font-weight: 700;
   text-decoration: none;
   transition: color 160ms ease, opacity 160ms ease;
+  white-space: nowrap;
 }
 
 .role-footer__powered-btn:hover {
@@ -193,6 +201,10 @@
   .role-footer__bottom {
     flex-direction: column;
     text-align: center;
+  }
+
+  .role-footer__bottom-copy {
+    justify-content: center;
   }
 
   .role-footer__powered-btn {
@@ -240,5 +252,10 @@
   .role-footer__bottom {
     width: min(100% - 20px, 1200px);
     padding-top: 18px;
+  }
+
+  .role-footer__bottom-copy {
+    flex-direction: column;
+    gap: 4px;
   }
 }
