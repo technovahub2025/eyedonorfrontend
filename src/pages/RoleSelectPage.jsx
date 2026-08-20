@@ -4,9 +4,6 @@ import eyeHero from '../asset/eyehero.png';
 import eyeLogo from '../asset/logo.png';
 import './RoleSelectPage.css';
 import { FileText, Users, HeartHandshake, Eye } from 'lucide-react';
-
-import rameshImage from '../asset/profile2.png';
-import meenaImage from '../asset/profile1.png';
 function RoleSelectPage({ onRoleSelect }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -103,7 +100,6 @@ function RoleSelectPage({ onRoleSelect }) {
                 >
                   Pledge My Eyes
                 </button>
-               
               </div>
             </div>
 
@@ -258,34 +254,37 @@ function RoleSelectPage({ onRoleSelect }) {
               <p className="role-section__eyebrow">Stories of light</p>
               <h2>People whose lives changed after a pledge</h2>
             </div>
+            <div className="role-story-grid">
+              <article className="role-story">
+                <div className="role-story__avatar role-story__avatar--one">
+                  <div className="role-story__avatar-icon" aria-hidden="true">
+                    R
+                  </div>
+                </div>
 
-<div className="role-story-grid">
-  <article className="role-story">
-    <div className="role-story__avatar role-story__avatar--one">
-      <img src={rameshImage} alt="Ramesh" />
-    </div>
+                <p>
+                  Thanks to my donor, I can see my grandchildren today. I will be forever grateful.
+                </p>
 
-    <p>
-      Thanks to my donor, I can see my grandchildren today. I will be forever grateful.
-    </p>
+                <strong>- Ramesh, Madurai</strong>
+                <span>Cornea recipient</span>
+              </article>
 
-    <strong>- Ramesh, Madurai</strong>
-    <span>Cornea recipient</span>
-  </article>
+              <article className="role-story">
+                <div className="role-story__avatar role-story__avatar--two">
+                  <div className="role-story__avatar-icon" aria-hidden="true">
+                    M
+                  </div>
+                </div>
 
-  <article className="role-story">
-    <div className="role-story__avatar role-story__avatar--two">
-      <img src={meenaImage} alt="Meena" />
-    </div>
+                <p>
+                  My father believed in giving. His eyes are now helping someone else see a new life.
+                </p>
 
-    <p>
-      My father believed in giving. His eyes are now helping someone else see a new life.
-    </p>
-
-    <strong>- Meena, Chennai</strong>
-    <span>Donor's daughter</span>
-  </article>
-</div>
+                <strong>- Meena, Chennai</strong>
+                <span>Donor's daughter</span>
+              </article>
+            </div>
           </div>
         </section>
 
