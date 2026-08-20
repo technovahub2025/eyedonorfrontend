@@ -698,9 +698,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                           return (
                             <article key={point} className="terms-card__row">
-                              <div className="terms-card__row-index">
-                                {String(index + 1).padStart(2, '0')}
-                              </div>
+                             
                               <div className="terms-card__row-icon">
                                 <RowIcon aria-hidden="true" />
                               </div>
