@@ -57,7 +57,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 50;
 
   useEffect(() => {
     let active = true;
