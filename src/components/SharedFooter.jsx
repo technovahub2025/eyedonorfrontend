@@ -80,9 +80,10 @@ function SharedFooter({ onHome, onPledge, onAdmin }) {
       </div>
 
       <div className="role-footer__bottom">
-        <p>Â© {currentYear} Vision of Hope. All rights reserved.</p>
-
-        <p>An initiative supporting the gift of sight.</p>
+        <div className="role-footer__bottom-copy">
+          <p>© {currentYear} Vision of Hope. All rights reserved.</p>
+          <p>An initiative supporting the gift of sight.</p>
+        </div>
 
         <a
           className="role-footer__powered-btn"
