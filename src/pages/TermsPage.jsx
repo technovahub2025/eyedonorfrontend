@@ -393,13 +393,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <UserRound aria-hidden="true" />
                           <span>YOUR DETAILS</span>
                         </div>
-                         <span className="terms-card__admin-badge">
-                           {updatingPeople
-                             ? 'Updating in progress...'
-                             : people.length < 3
-                               ? `Add at least 3 people (${people.length}/3 added)`
-                               : `✅ ${people.length} people added`}
-                         </span>
+                        {updatingPeople && (
+                          <span className="terms-card__updating-status">Updating in progress...</span>
+                        )}
                       </div>
 
                       {people.map((person, index) => (

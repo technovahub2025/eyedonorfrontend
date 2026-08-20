@@ -286,14 +286,11 @@
   line-height: 1.6;
 }
 
-.terms-card__admin-badge {
-  padding: 8px 10px;
-  border-radius: 999px;
-  background: rgba(31, 76, 201, 0.12);
-  color: #00668a;
-  font-size: 0.75rem;
-  font-weight: 800;
-  white-space: nowrap;
+.terms-card__updating-status {
+   font-size: 0.75rem;
+   color: #00668a;
+   font-weight: 600;
+   white-space: nowrap;
 }
 
 .terms-card__download {
