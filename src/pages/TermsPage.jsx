@@ -5,6 +5,7 @@ import {
   ClipboardList,
   Download,
   Eye,
+  ChevronRight,
   Handshake,
   Heart,
   Plus,
@@ -111,6 +112,21 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const displayedAdminRows = filteredAdminRows.slice(startIndex, endIndex);
   const hasPrevPage = currentSafePage > 1;
   const hasNextPage = currentSafePage < safeTotalPages;
+  const paginationItems = (() => {
+    if (safeTotalPages <= 6) {
+      return Array.from({ length: safeTotalPages }, (_, index) => index + 1);
+    }
+
+    if (currentSafePage <= 3) {
+      return [1, 2, 3, 4, 'ellipsis', safeTotalPages];
+    }
+
+    if (currentSafePage >= safeTotalPages - 2) {
+      return [1, 'ellipsis', safeTotalPages - 3, safeTotalPages - 2, safeTotalPages - 1, safeTotalPages];
+    }
+
+    return [1, 'ellipsis', currentSafePage - 1, currentSafePage, currentSafePage + 1, 'ellipsis', safeTotalPages];
+  })();
   const availableYears = Array.from(
     new Set(
       adminRows
@@ -505,38 +521,40 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <div className="terms-card__pagination" aria-label="Admin pagination">
                         <button
                           type="button"
-                          className="terms-card__pagination-btn"
+                          className="terms-card__pagination-btn terms-card__pagination-btn--nav"
                           onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                           disabled={adminLoading || !hasPrevPage}
                         >
-                          Previous
+                          <ArrowLeft aria-hidden="true" />
+                          <span>Prev</span>
                         </button>
+                        {paginationItems.map((item, index) =>
+                          item === 'ellipsis' ? (
+                            <span key={`ellipsis-${index}`} className="terms-card__pagination-ellipsis">
+                              ...
+                            </span>
+                          ) : (
+                            <button
+                              key={item}
+                              type="button"
+                              className={`terms-card__pagination-btn${
+                                currentSafePage === item ? ' terms-card__pagination-btn--active' : ''
+                              }`}
+                              onClick={() => setCurrentPage(item)}
+                              disabled={adminLoading || currentSafePage === item}
+                            >
+                              {item}
+                            </button>
+                          )
+                        )}
                         <button
                           type="button"
-                          className={`terms-card__pagination-btn${currentSafePage === 1 ? ' terms-card__pagination-btn--active' : ''}`}
-                          onClick={() => setCurrentPage(1)}
-                          disabled={adminLoading || currentSafePage === 1}
-                        >
-                          1
-                        </button>
-                        {safeTotalPages > 2 ? <span className="terms-card__pagination-ellipsis">...</span> : null}
-                        {safeTotalPages > 1 ? (
-                          <button
-                            type="button"
-                            className={`terms-card__pagination-btn${currentSafePage === safeTotalPages ? ' terms-card__pagination-btn--active' : ''}`}
-                            onClick={() => setCurrentPage(safeTotalPages)}
-                            disabled={adminLoading || currentSafePage === safeTotalPages}
-                          >
-                            {safeTotalPages}
-                          </button>
-                        ) : null}
-                        <button
-                          type="button"
-                          className="terms-card__pagination-btn"
+                          className="terms-card__pagination-btn terms-card__pagination-btn--nav"
                           onClick={() => setCurrentPage((p) => Math.min(safeTotalPages, p + 1))}
                           disabled={adminLoading || !hasNextPage}
                         >
-                          Next
+                          <span>Next</span>
+                          <ChevronRight aria-hidden="true" />
                         </button>
                       </div>
                     </div>
