@@ -64,10 +64,10 @@
 .terms-card__hero-image {
   position: absolute;
   inset: 0;
-  width: 100%;
+  width: 112%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
   opacity: 0.88;
   transform: scale(1.04);
 }
