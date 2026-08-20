@@ -24,6 +24,7 @@ const steps = [
 ];
 
 const createTermsEndpoint = '/api/terms/createterms';
+const requiredPeopleCount = 3;
 
 const pledgePoints = [
   'I understand this is a voluntary pledge.',
@@ -155,8 +156,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     }
 
     // Check if there are at least 3 people
-    if (people.length < 3) {
-      setTermsError('Please add at least 3 people before submitting the pledge.');
+    if (people.length < requiredPeopleCount) {
+      setTermsError(`Please add at least ${requiredPeopleCount} people before submitting the pledge.`);
       setSavingTerm(false);
       return;
     }
@@ -239,6 +240,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
             <div className="terms-card__header">
               <div className="terms-card__hero-visual" aria-hidden="true">
                 <img src={eyeImage} alt="" className="terms-card__hero-image" aria-hidden="true" />
+                {!isAdminView ? (
+                  <div
+                    className={`terms-card__hero-progress${updatingPeople ? ' terms-card__hero-progress--active' : ''}`}
+                  >
+                    <div className="terms-card__hero-progress__top">
+                      <span>Registration progress</span>
+                      <strong>
+                        {Math.min(people.length, requiredPeopleCount)}/{requiredPeopleCount}
+                      </strong>
+                    </div>
+                    <div className="terms-card__hero-progress__track">
+                      <div
+                        className="terms-card__hero-progress__fill"
+                        style={{
+                          width: `${Math.min((people.length / requiredPeopleCount) * 100, 100)}%`,
+                        }}
+                      />
+                    </div>
+                    {updatingPeople ? (
+                      <span className="terms-card__hero-progress__note">Adding another person...</span>
+                    ) : null}
+                  </div>
+                ) : null}
                 <div className="terms-card__hero-overlay">
                   <p className="terms-card__hero-kicker">
                     {isAdminView ? 'Admin review' : 'A small decision. A lifetime of sight.'}
@@ -470,17 +494,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         </button>
                       </div>
 
-                      {updatingPeople ? (
-                        <div className="terms-card__progress" aria-live="polite">
-                          <div className="terms-card__progress-label">
-                            <span>Adding person...</span>
-                            <span>Working</span>
-                          </div>
-                          <div className="terms-card__progress-track">
-                            <div className="terms-card__progress-fill" />
-                          </div>
-                        </div>
-                      ) : null}
                     </section>
 
                     <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
