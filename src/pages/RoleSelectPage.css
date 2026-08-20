@@ -1708,11 +1708,13 @@
     margin: 14px 10px 0;
     padding: 16px;
     text-align: center;
+    display: grid;
     justify-items: center;
   }
 
   .role-actions {
     flex-direction: column;
+    width: 100%;
   }
 
   .role-button {

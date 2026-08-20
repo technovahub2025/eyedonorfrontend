@@ -490,6 +490,59 @@
   }
 }
 
+@media (max-width: 480px) {
+  .thank-you-page {
+    padding: 12px;
+  }
+
+  .thank-you-page__card {
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .thank-you-page__badge {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+
+  .thank-you-page__card h1 {
+    font-size: clamp(2.1rem, 11vw, 3rem);
+    max-width: 10ch;
+  }
+
+  .thank-you-page__lead {
+    font-size: 0.96rem;
+    line-height: 1.6;
+  }
+
+  .thank-you-page__visual {
+    padding: 14px;
+  }
+
+  .thank-you-page__halo {
+    min-height: 220px;
+    border-radius: 22px;
+  }
+
+  .thank-you-page__stats {
+    gap: 10px;
+  }
+
+  .thank-you-page__stat {
+    padding: 12px 14px;
+  }
+
+  .thank-you-page__footer-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .thank-you-page__footer-pulse {
+    width: 48px;
+    height: 48px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .thank-you-page::before,
   .thank-you-page::after,
