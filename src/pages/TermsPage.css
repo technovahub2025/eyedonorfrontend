@@ -349,6 +349,92 @@
   line-height: 1.6;
 }
 
+.terms-card__filters {
+  margin: 18px 0 16px;
+  padding: 16px;
+  border: 1px solid rgba(31, 76, 201, 0.1);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(244, 248, 255, 0.92), rgba(255, 255, 255, 0.98));
+}
+
+.terms-card__filters-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.terms-card__filters-kicker {
+  margin: 0 0 4px;
+  color: #e84f8a;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.terms-card__filters h3 {
+  margin: 0;
+  color: #17316f;
+  font-size: 1.05rem;
+  font-family: 'Atkinson Hyperlegible Next', 'Inter', sans-serif;
+}
+
+.terms-card__filters-clear {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid rgba(31, 76, 201, 0.14);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #17316f;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.terms-card__filters-clear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.terms-card__filters-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.terms-card__filter {
+  display: grid;
+  gap: 6px;
+}
+
+.terms-card__filter span {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.terms-card__filter input,
+.terms-card__filter select {
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(31, 76, 201, 0.14);
+  border-radius: 12px;
+  background: #ffffff;
+  color: #191c1e;
+  font: inherit;
+  outline: none;
+}
+
+.terms-card__filter input:focus,
+.terms-card__filter select:focus {
+  border-color: #1f4ba8;
+  box-shadow: 0 0 0 4px rgba(31, 76, 201, 0.1);
+}
+
 .terms-card__updating-status {
    font-size: 0.75rem;
    color: #00668a;
@@ -862,6 +948,14 @@
     flex-direction: column;
   }
 
+  .terms-card__filters-head {
+    flex-direction: column;
+  }
+
+  .terms-card__filters-grid {
+    grid-template-columns: 1fr;
+  }
+
   .terms-card__eyebrow {
     font-size: 0.7rem;
   }
@@ -916,6 +1010,10 @@
     font-size: 0.82rem;
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .terms-card__filters {
+    padding: 14px;
   }
 
   .terms-card__pagination-btn {
@@ -1098,6 +1196,15 @@
   background: rgba(31, 76, 201, 0.24);
   color: #1f4ba8;
   font-weight: 600;
+}
+
+.terms-card__pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  color: #64748b;
+  font-weight: 700;
 }
 
 .terms-card__pagination-info {

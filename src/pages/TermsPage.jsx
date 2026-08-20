@@ -58,13 +58,71 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [downloadingPdf, setDownloadingPdf] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [adminFilters, setAdminFilters] = useState({
+    weekday: '',
+    month: '',
+    year: '',
+    name: '',
+    phone: '',
+  });
   const itemsPerPage = 10;
-  const safeTotalPages = Math.max(Math.ceil(totalRecords / itemsPerPage), 1);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+
+  const getRowDate = (row) => {
+    if (!row?.createdAt) return null;
+    const date = new Date(row.createdAt);
+    return Number.isNaN(date.getTime()) ? null : date;
+  };
+
+  const filteredAdminRows = adminRows.filter((row) => {
+    const date = getRowDate(row);
+    const rowWeekday = date ? weekdays[date.getDay()] : '';
+    const rowMonth = date ? months[date.getMonth()] : '';
+    const rowYear = date ? String(date.getFullYear()) : '';
+    const rowName = String(row?.name || row?.fullName || '').toLowerCase();
+    const rowPhone = String(row?.phone || '').toLowerCase();
+
+    const nameMatch = !adminFilters.name || rowName.includes(adminFilters.name.toLowerCase());
+    const phoneMatch = !adminFilters.phone || rowPhone.includes(adminFilters.phone.toLowerCase());
+    const weekdayMatch = !adminFilters.weekday || rowWeekday === adminFilters.weekday;
+    const monthMatch = !adminFilters.month || rowMonth === adminFilters.month;
+    const yearMatch = !adminFilters.year || rowYear === adminFilters.year;
+
+    return nameMatch && phoneMatch && weekdayMatch && monthMatch && yearMatch;
+  });
+
+  const safeTotalPages = Math.max(Math.ceil(filteredAdminRows.length / itemsPerPage), 1);
+  const currentSafePage = Math.min(currentPage, safeTotalPages);
+  const startIndex = (currentSafePage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const displayedAdminRows = adminRows.slice(startIndex, endIndex);
-  const hasPrevPage = currentPage > 1;
-  const hasNextPage = currentPage < safeTotalPages;
+  const displayedAdminRows = filteredAdminRows.slice(startIndex, endIndex);
+  const hasPrevPage = currentSafePage > 1;
+  const hasNextPage = currentSafePage < safeTotalPages;
+  const availableYears = Array.from(
+    new Set(
+      adminRows
+        .map((row) => getRowDate(row)?.getFullYear())
+        .filter((year) => Number.isFinite(year))
+    )
+  ).sort((a, b) => b - a);
+  const adminEmptyMessage =
+    totalRecords > 0 && filteredAdminRows.length === 0
+      ? 'No matching submissions found.'
+      : 'No terms submissions found.';
 
   useEffect(() => {
     let active = true;
@@ -120,6 +178,22 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setPeople((current) =>
       current.map((person) => (person.id === id ? { ...person, [field]: value } : person))
     );
+  }
+
+  function updateAdminFilter(field, value) {
+    setAdminFilters((current) => ({ ...current, [field]: value }));
+    setCurrentPage(1);
+  }
+
+  function clearAdminFilters() {
+    setAdminFilters({
+      weekday: '',
+      month: '',
+      year: '',
+      name: '',
+      phone: '',
+    });
+    setCurrentPage(1);
   }
 
   function addPerson() {
@@ -327,6 +401,96 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
                   </div>
 
+                  <div className="terms-card__filters">
+                    <div className="terms-card__filters-head">
+                      <div>
+                        <p className="terms-card__filters-kicker">Filter results</p>
+                        <h3>Find entries by date or contact details</h3>
+                      </div>
+                      <button
+                        type="button"
+                        className="terms-card__filters-clear"
+                        onClick={clearAdminFilters}
+                        disabled={
+                          !adminFilters.weekday &&
+                          !adminFilters.month &&
+                          !adminFilters.year &&
+                          !adminFilters.name &&
+                          !adminFilters.phone
+                        }
+                      >
+                        Clear filters
+                      </button>
+                    </div>
+
+                    <div className="terms-card__filters-grid">
+                      <label className="terms-card__filter">
+                        <span>Week day</span>
+                        <select
+                          value={adminFilters.weekday}
+                          onChange={(event) => updateAdminFilter('weekday', event.target.value)}
+                        >
+                          <option value="">All days</option>
+                          {weekdays.map((day) => (
+                            <option key={day} value={day}>
+                              {day}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="terms-card__filter">
+                        <span>Month</span>
+                        <select
+                          value={adminFilters.month}
+                          onChange={(event) => updateAdminFilter('month', event.target.value)}
+                        >
+                          <option value="">All months</option>
+                          {months.map((month) => (
+                            <option key={month} value={month}>
+                              {month}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="terms-card__filter">
+                        <span>Year</span>
+                        <select
+                          value={adminFilters.year}
+                          onChange={(event) => updateAdminFilter('year', event.target.value)}
+                        >
+                          <option value="">All years</option>
+                          {availableYears.map((year) => (
+                            <option key={year} value={String(year)}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+
+                      <label className="terms-card__filter">
+                        <span>Name</span>
+                        <input
+                          type="text"
+                          placeholder="Search by name"
+                          value={adminFilters.name}
+                          onChange={(event) => updateAdminFilter('name', event.target.value)}
+                        />
+                      </label>
+
+                      <label className="terms-card__filter">
+                        <span>Phone number</span>
+                        <input
+                          type="text"
+                          placeholder="Search by phone"
+                          value={adminFilters.phone}
+                          onChange={(event) => updateAdminFilter('phone', event.target.value)}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
 {adminLoading ? (
                      <p className="terms-card__empty">Loading terms data...</p>
                   ) : adminError ? (
@@ -357,15 +521,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                        })}
                      </div>
                     ) : (
-                      <p className="terms-card__empty">No terms submissions found.</p>
+                      <p className="terms-card__empty">{adminEmptyMessage}</p>
                     )}
 
                     <div className="terms-card__pagination-wrap">
                       <div className="terms-card__pagination-info">
                         <span>
-                          Page <strong>{currentPage}</strong> of <strong>{safeTotalPages}</strong>
+                          Page <strong>{currentSafePage}</strong> of <strong>{safeTotalPages}</strong>
                         </span>
                         <span>
+                          <strong>{filteredAdminRows.length}</strong> shown of{' '}
                           <strong>{totalRecords}</strong> total records
                         </span>
                         <span>10 per page</span>
@@ -380,19 +545,25 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         >
                           Previous
                         </button>
-                        {Array.from({ length: safeTotalPages }, (_, index) => index + 1)
-                          .slice(Math.max(0, currentPage - 3), Math.max(0, currentPage - 3) + 5)
-                          .map((pageNum) => (
-                            <button
-                              key={pageNum}
-                              type="button"
-                              className={`terms-card__pagination-btn${pageNum === currentPage ? ' terms-card__pagination-btn--active' : ''}`}
-                              onClick={() => setCurrentPage(pageNum)}
-                              disabled={adminLoading}
-                            >
-                              {pageNum}
-                            </button>
-                          ))}
+                        <button
+                          type="button"
+                          className={`terms-card__pagination-btn${currentSafePage === 1 ? ' terms-card__pagination-btn--active' : ''}`}
+                          onClick={() => setCurrentPage(1)}
+                          disabled={adminLoading || currentSafePage === 1}
+                        >
+                          1
+                        </button>
+                        {safeTotalPages > 2 ? <span className="terms-card__pagination-ellipsis">...</span> : null}
+                        {safeTotalPages > 1 ? (
+                          <button
+                            type="button"
+                            className={`terms-card__pagination-btn${currentSafePage === safeTotalPages ? ' terms-card__pagination-btn--active' : ''}`}
+                            onClick={() => setCurrentPage(safeTotalPages)}
+                            disabled={adminLoading || currentSafePage === safeTotalPages}
+                          >
+                            {safeTotalPages}
+                          </button>
+                        ) : null}
                         <button
                           type="button"
                           className="terms-card__pagination-btn"
