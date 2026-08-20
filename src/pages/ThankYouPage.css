@@ -278,60 +278,6 @@
   animation: ringPulse 9s ease-in-out infinite;
 }
 
-.thank-you-page__eye {
-  position: relative;
-  width: min(72%, 340px);
-  aspect-ratio: 1.45;
-  border-radius: 50% / 44%;
-  background:
-    radial-gradient(circle at 52% 50%, #08111a 0 7%, #1b4e78 7% 13%, #63a8db 13% 22%, #90d1f3 22% 31%, #f1dfd8 31% 47%, #f5ebe8 47% 100%);
-  box-shadow:
-    inset 0 0 0 10px rgba(255, 255, 255, 0.45),
-    inset 0 -28px 44px rgba(232, 79, 138, 0.12),
-    0 18px 38px rgba(31, 76, 201, 0.14);
-  overflow: hidden;
-  animation: eyeFloat 8s ease-in-out infinite;
-}
-
-.thank-you-page__eyelid {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(180deg, rgba(236, 209, 200, 0.96), rgba(248, 229, 222, 0.5));
-}
-
-.thank-you-page__eyelid--top {
-  top: 0;
-  height: 18%;
-  clip-path: ellipse(50% 100% at 50% 0%);
-}
-
-.thank-you-page__eyelid--bottom {
-  bottom: 0;
-  height: 20%;
-  clip-path: ellipse(50% 100% at 50% 100%);
-}
-
-.thank-you-page__iris {
-  position: absolute;
-  inset: 22% 25%;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 50%, #08111a 0 17%, #1a4669 17% 31%, #2a6fa0 31% 46%, #7dbde7 46% 62%, #184261 62% 76%, #0d2336 76% 100%);
-  box-shadow:
-    inset 0 0 0 10px rgba(255, 255, 255, 0.12),
-    inset 0 0 26px rgba(255, 255, 255, 0.16);
-  animation: irisTwirl 18s linear infinite;
-}
-
-.thank-you-page__pupil {
-  position: absolute;
-  inset: 32%;
-  border-radius: 50%;
-  background: #040404;
-  box-shadow: 0 0 0 14px rgba(0, 0, 0, 0.08);
-}
-
 .thank-you-page__floating {
   position: absolute;
   width: 46px;
@@ -469,25 +415,6 @@
   }
 }
 
-@keyframes eyeFloat {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-
-@keyframes irisTwirl {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes floatBubble {
   0%,
   100% {
@@ -568,8 +495,6 @@
   .thank-you-page::after,
   .thank-you-page__card::before,
   .thank-you-page__button--primary::before,
-  .thank-you-page__eye,
-  .thank-you-page__iris,
   .thank-you-page__eye-rings,
   .thank-you-page__floating,
   .thank-you-page__footer-pulse {

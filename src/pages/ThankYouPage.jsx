@@ -24,10 +24,14 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const firstRowId = exportRows[0]._id || exportRows[0].id;
-      if (firstRowId) {
+      const rowIds = exportRows
+        .map((row) => row._id || row.id)
+        .filter((id) => id && String(id).length > 0);
+
+      if (rowIds.length > 0) {
         try {
-          const blob = await apiDownload(`/api/terms/download/my/${firstRowId}`);
+          const idsParam = encodeURIComponent(rowIds.join(','));
+          const blob = await apiDownload(`/api/terms/download/my?ids=${idsParam}`);
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
@@ -230,13 +234,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
           <div className="thank-you-page__halo" aria-hidden="true">
             <img className="thank-you-page__hero-image" src={eyeHero} alt="" aria-hidden="true" />
             <div className="thank-you-page__eye-rings" />
-            <div className="thank-you-page__eye">
-              <div className="thank-you-page__eyelid thank-you-page__eyelid--top" />
-              <div className="thank-you-page__eyelid thank-you-page__eyelid--bottom" />
-              <div className="thank-you-page__iris">
-                <div className="thank-you-page__pupil" />
-              </div>
-            </div>
             <div className="thank-you-page__floating thank-you-page__floating--heart">
               <HeartHandshake aria-hidden="true" />
             </div>
