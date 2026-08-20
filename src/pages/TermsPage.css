@@ -64,7 +64,7 @@
 .terms-card__hero-image {
   position: absolute;
   inset: 0;
-  width: 112%;
+  width: 90%;
   height: 100%;
   object-fit: cover;
   object-position: center center;
