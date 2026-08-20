@@ -81,15 +81,14 @@ function RoleSelectPage({ onRoleSelect }) {
         <section className="role-hero">
           <div className="role-hero__surface">
             <div className="role-hero__content">
-              <p className="role-kicker">A small decision. A lifetime of sight.</p>
+              <p className="role-kicker">A small decision, a lasting gift.</p>
               <h1 className="role-title">
                 Give the Gift
                 <br />
                 of <span>Sight</span>
               </h1>
               <p className="role-copy">
-                Your pledge can help restore vision, comfort a family, and leave behind a
-                legacy of compassion. Start by choosing how you want to continue.
+                Pledge your eyes today and help restore sight for someone in need.
               </p>
 
               <div className="role-actions">
