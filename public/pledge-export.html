@@ -6,6 +6,8 @@
   <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100..900&family=Public+Sans:wght@100..900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -505,6 +507,194 @@
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
+    /* ----- print layout ----- */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 6mm;
+      }
+
+      html, body {
+        background: #ffffff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      header,
+      main {
+        padding-top: 0;
+        min-height: auto;
+      }
+
+      .form-wrapper {
+        padding: 0;
+      }
+
+      .pledge-card {
+        max-width: none;
+        width: 100%;
+        aspect-ratio: auto;
+        border: 0;
+        box-shadow: none;
+        overflow: visible;
+        transform: scale(0.86);
+        transform-origin: top center;
+      }
+
+      .card-content {
+        padding: 1.2rem 1.35rem 1rem;
+      }
+
+      .top-row {
+        margin-bottom: 0.8rem;
+      }
+
+      .logo-title-group {
+        gap: 1rem;
+      }
+
+      .logo-title-group img {
+        height: 82px;
+      }
+
+      .title-block h1 {
+        font-size: 18px;
+        line-height: 22px;
+      }
+
+      .title-block .subtitle {
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .date-block {
+        width: 10rem;
+      }
+
+      .bank-row {
+        margin-bottom: 1rem;
+        padding: 0.55rem 0;
+      }
+
+      .bank-name .name {
+        font-size: 17px;
+        line-height: 22px;
+      }
+
+      .bank-name .detail {
+        font-size: 11px;
+        line-height: 15px;
+      }
+
+      .bank-right {
+        min-width: 140px;
+        padding-left: 1rem;
+      }
+
+      .bank-right .label {
+        font-size: 10px;
+      }
+
+      .bank-right .call {
+        font-size: 15px;
+        line-height: 20px;
+      }
+
+      .bank-right .hint {
+        font-size: 10px;
+        line-height: 13px;
+      }
+
+      .address-section {
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+      }
+
+      .address-row,
+      .address-grid {
+        gap: 0.9rem;
+      }
+
+      .address-row .field .underline,
+      .address-row .field .double-underline,
+      .address-grid .field .underline,
+      .place-row .field .underline {
+        height: 1.3rem;
+      }
+
+      .desc-text {
+        margin-bottom: 0.7rem;
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .table-wrap {
+        margin-bottom: 1rem;
+      }
+
+      .pledge-table {
+        font-size: 10px;
+        line-height: 13px;
+      }
+
+      .pledge-table th {
+        padding: 0.35rem 0.25rem;
+        font-size: 9px;
+        line-height: 11px;
+      }
+
+      .pledge-table td {
+        padding: 0.28rem 0.22rem;
+      }
+
+      .pledge-table tbody tr {
+        height: 24px;
+      }
+
+      .pledge-table th.col-sn { width: 5%; }
+      .pledge-table th.col-title { width: 8%; }
+      .pledge-table th.col-name { width: 28%; }
+      .pledge-table th.col-age { width: 8%; }
+      .pledge-table th.col-gender { width: 10%; }
+      .pledge-table th.col-phone { width: 12%; }
+      .pledge-table th.col-address { width: 21%; }
+      .pledge-table th.col-sig { width: 8%; }
+
+      .place-row {
+        margin-bottom: 0.75rem;
+      }
+
+      .witness-label {
+        margin-bottom: 0.6rem;
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .witness-grid {
+        gap: 1rem;
+      }
+
+      .witness-box {
+        padding: 0.7rem;
+        gap: 0.45rem;
+      }
+
+      .witness-box .witness-title {
+        margin-bottom: 0.2rem;
+        font-size: 10px;
+      }
+
+      .witness-row .label {
+        width: 6.5rem;
+        font-size: 11px;
+        line-height: 14px;
+      }
+
+      .witness-row .dash-underline {
+        height: 1rem;
+      }
+    }
+
     /* ----- responsive adjustments ----- */
     @media (max-width: 820px) {
       .title-block h1 { font-size: 18px; line-height: 24px; white-space: normal; }
@@ -556,9 +746,7 @@
 </head>
 <body>
   <header>
-    <div class="header-inner">
-      <button type="button" id="downloadBtn" style="display:none;">Download PDF</button>
-    </div>
+    <div class="header-inner"></div>
   </header>
 
   <main>
@@ -763,6 +951,16 @@
       return [];
     }
 
+    function waitForImageLoad(image) {
+      if (!image) return Promise.resolve();
+      if (image.complete && image.naturalWidth > 0) return Promise.resolve();
+
+      return new Promise((resolve) => {
+        image.onload = () => resolve();
+        image.onerror = () => resolve();
+      });
+    }
+
     // ----- UPDATE TABLE WITH ALL FIELDS -----
     function updateTable(rows) {
       const tbody = document.getElementById('pledgeTableBody');
@@ -800,18 +998,46 @@
       tbody.innerHTML = html;
     }
 
+    async function downloadPdf() {
+      const card = document.querySelector('.pledge-card');
+      if (!card || !window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+        throw new Error('PDF tools are still loading.');
+      }
+
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      await Promise.all(Array.from(card.querySelectorAll('img')).map(waitForImageLoad));
+
+      const canvas = await window.html2canvas(card, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+      });
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgProps = pdf.getImageProperties(imgData);
+      const fitRatio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
+      const finalWidth = imgProps.width * fitRatio;
+      const finalHeight = imgProps.height * fitRatio;
+      const offsetX = (pageWidth - finalWidth) / 2;
+      const offsetY = (pageHeight - finalHeight) / 2;
+
+      pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
+      pdf.save('jothi-eye-care-centre-pledge.pdf');
+    }
+
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
-      const downloadBtn = document.getElementById('downloadBtn');
-
       try {
         const rows = readFrontendRows();
         updateTable(rows);
-
-        if (downloadBtn) {
-          downloadBtn.style.display = 'inline-flex';
-          downloadBtn.onclick = () => window.print();
-        }
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        await downloadPdf();
       } catch (error) {
         console.error('Error:', error);
         updateTable([]);
