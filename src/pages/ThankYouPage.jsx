@@ -113,15 +113,15 @@ function buildExportHtml(rows) {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 2rem;
+      justify-content: flex-start;
+      padding: 0;
       background: #ffffff;
     }
 
     .pledge-card {
       width: 100%;
       max-width: 896px;
-      aspect-ratio: 1 / 1.414;
+      aspect-ratio: auto;
       background: #ffffff;
       border: 1px solid #c6c6cd;
       box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
@@ -129,6 +129,7 @@ function buildExportHtml(rows) {
       overflow: hidden;
       display: flex;
       flex-direction: column;
+      margin: 0 auto;
     }
 
     .card-bg-overlay {
@@ -142,7 +143,7 @@ function buildExportHtml(rows) {
     }
 
     .card-content {
-      padding: 2.5rem 3rem;
+      padding: 1.75rem 2rem 1.5rem;
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -151,12 +152,11 @@ function buildExportHtml(rows) {
     }
 
     .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      gap: 1rem;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 9rem;
+      align-items: start;
+      column-gap: 1rem;
+      margin-bottom: 1.15rem;
     }
 
     .logo-title-group {
@@ -184,13 +184,12 @@ function buildExportHtml(rows) {
 
     .title-block h1 {
       font-family: 'Manrope', sans-serif;
-      font-size: 22px;
+      font-size: 20px;
       line-height: 30px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.02em;
       color: #000;
-      white-space: nowrap;
     }
 
     .title-block .subtitle {
@@ -199,14 +198,16 @@ function buildExportHtml(rows) {
       line-height: 18px;
       color: #006398;
       font-style: italic;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .date-block {
-      width: 12rem;
+      width: 100%;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      align-items: flex-end;
+      justify-content: flex-start;
     }
 
     .date-block label {
@@ -217,54 +218,56 @@ function buildExportHtml(rows) {
       height: 2rem;
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
+      max-width: 9rem;
     }
 
     .bank-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 12rem;
+      align-items: stretch;
+      column-gap: 1rem;
       border-top: 1px solid #c6c6cd;
       border-bottom: 1px solid #c6c6cd;
       padding: 1rem 0;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       background: rgba(242, 244, 246, 0.3);
     }
 
     .bank-left {
       display: flex;
-      align-items: center;
-      gap: 1rem;
+      align-items: flex-start;
+      gap: 0.75rem;
     }
 
     .bank-name {
       display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.75rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.25rem;
       flex-wrap: wrap;
     }
 
     .bank-name .name {
       font-family: 'Manrope', sans-serif;
-      font-size: 20px;
+      font-size: 18px;
       line-height: 28px;
       font-weight: 600;
       color: #000;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .bank-name .detail {
       font-size: 14px;
       line-height: 20px;
       color: #45464d;
-      white-space: nowrap;
+      white-space: normal;
     }
 
     .bank-right {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       border-left: 1px solid #c6c6cd;
       padding-left: 1.5rem;
       min-width: 160px;
@@ -306,12 +309,13 @@ function buildExportHtml(rows) {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.4rem;
     }
 
     .address-row {
       display: flex;
       gap: 1rem;
+      align-items: flex-start;
     }
 
     .address-row .field {
@@ -326,7 +330,7 @@ function buildExportHtml(rows) {
 
     .address-row .field .double-underline,
     .address-grid .field .underline {
-      height: 2rem;
+      height: 1.6rem;
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
     }
@@ -337,7 +341,7 @@ function buildExportHtml(rows) {
 
     .address-grid {
       display: flex;
-      gap: 2rem;
+      gap: 1rem;
     }
 
     .address-grid .field {
@@ -351,7 +355,7 @@ function buildExportHtml(rows) {
     }
 
     .desc-text {
-      margin-bottom: 1rem;
+      margin-bottom: 0.85rem;
       color: #45464d;
     }
 
@@ -360,11 +364,12 @@ function buildExportHtml(rows) {
       border: 1px solid #c6c6cd;
       border-radius: 2px;
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1.25rem;
     }
 
     .pledge-table {
       width: 100%;
+      table-layout: fixed;
       border-collapse: collapse;
       font-family: 'Public Sans', sans-serif;
       font-size: 14px;
@@ -378,7 +383,7 @@ function buildExportHtml(rows) {
     }
 
     .pledge-table th {
-      padding: 0.75rem;
+      padding: 0.55rem 0.5rem;
       font-family: 'Public Sans', sans-serif;
       font-size: 12px;
       line-height: 16px;
@@ -388,21 +393,22 @@ function buildExportHtml(rows) {
       color: #191c1e;
       border-right: 1px solid #c6c6cd;
       text-align: left;
+      vertical-align: middle;
     }
 
     .pledge-table th:last-child {
       border-right: none;
     }
 
-    .pledge-table th.col-sn { width: 3rem; text-align: center; }
-    .pledge-table th.col-title { width: 6rem; }
-    .pledge-table th.col-name { }
-    .pledge-table th.col-age { width: 5rem; text-align: center; }
-    .pledge-table th.col-sex { width: 5rem; text-align: center; }
-    .pledge-table th.col-sig { width: 12rem; text-align: center; }
+    .pledge-table th.col-sn { width: 3.25rem; text-align: center; }
+    .pledge-table th.col-title { width: 5.75rem; }
+    .pledge-table th.col-name { width: auto; }
+    .pledge-table th.col-age { width: 4.75rem; text-align: center; }
+    .pledge-table th.col-sex { width: 5.5rem; text-align: center; }
+    .pledge-table th.col-sig { width: 11rem; text-align: center; }
 
     .pledge-table td {
-      padding: 0.5rem;
+      padding: 0.45rem 0.5rem;
       border-right: 1px solid #c6c6cd;
       vertical-align: middle;
     }
@@ -413,7 +419,7 @@ function buildExportHtml(rows) {
 
     .pledge-table tbody tr {
       border-bottom: 1px solid #c6c6cd;
-      height: 56px;
+      height: 48px;
     }
 
     .pledge-table .text-center { text-align: center; }
@@ -422,7 +428,7 @@ function buildExportHtml(rows) {
     .place-row {
       display: flex;
       gap: 2rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .place-row .field {
@@ -436,21 +442,22 @@ function buildExportHtml(rows) {
     }
 
     .place-row .field .underline {
-      height: 2rem;
+      height: 1.6rem;
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
     }
 
     .witness-row {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.9rem;
+      margin-bottom: 0.65rem;
     }
 
     .witness-row .label {
-      width: 7rem;
+      width: 12.5rem;
       font-weight: 700;
+      flex: none;
     }
 
     .witness-row .colon {
@@ -461,7 +468,7 @@ function buildExportHtml(rows) {
     .witness-row .dash-underline {
       flex: 1;
       border-bottom: 1px solid #c6c6cd;
-      height: 1rem;
+      height: 1.1rem;
     }
 
     .witness-row .empty-placeholder {
@@ -479,9 +486,33 @@ function buildExportHtml(rows) {
       body {
         background: #ffffff;
       }
+      .form-wrapper {
+        padding: 0;
+        display: block;
+      }
       .pledge-card {
         box-shadow: none;
         border: none;
+        max-width: none;
+        width: 100%;
+        margin: 0;
+        aspect-ratio: auto;
+      }
+      .card-content {
+        padding: 14px 18px 12px;
+      }
+      .top-row {
+        grid-template-columns: minmax(0, 1fr) 8.5rem;
+      }
+      .bank-row {
+        grid-template-columns: minmax(0, 1fr) 11rem;
+      }
+      .pledge-table th,
+      .pledge-table td {
+        padding: 0.35rem 0.45rem;
+      }
+      .witness-row .label {
+        width: 11.5rem;
       }
     }
 
