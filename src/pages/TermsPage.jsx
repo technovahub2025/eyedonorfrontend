@@ -477,9 +477,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 <strong>Address</strong>
                                 <span>{row.address || row.fullAddress || 'N/A'}</span>
                               </div>
+                              <div>
+                                <strong>Phone</strong>
+                                <span>{row.phone || row.mobile || row.telephone || 'N/A'}</span>
+                              </div>
                               <div className="terms-card__admin-card-span">
-                                <strong>Signature</strong>
-                                <span>{row.signature || 'N/A'}</span>
+                                <strong>Address</strong>
+                                <span>{row.address || row.fullAddress || 'N/A'}</span>
                               </div>
                             </div>
                           </article>
