@@ -466,7 +466,7 @@ function RoleSelectPage({ onRoleSelect }) {
 
    <div className="role-footer__bottom">
         <div className="role-footer__bottom-copy">
-          <p>© {currentYear} Vision of Hope. All rights reserved.</p>
+          <p>© 2026 Vision of Hope. All rights reserved.</p>
           <p>An initiative supporting the gift of sight.</p>
         </div>
 
