@@ -449,9 +449,12 @@
     }
   </style>
 </head>
-<body>
+  <body>
   <div class="page">
     <div class="sheet">
+      <div id="versionTag" class="loading" style="padding: 8px 0 0; text-align: left; font-size: 10px; color: #6b7280;">
+        Export version: v1.1
+      </div>
       <div id="status" class="loading">Loading pledge data...</div>
       <div id="content" hidden>
         <div class="top-row">
@@ -812,7 +815,8 @@
         }
 
         const pdfBlob = buildPdfBlob(rows);
-        downloadBlob(pdfBlob, 'jothi-eye-care-centre-pledge.pdf');
+        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+        downloadBlob(pdfBlob, `jothi-eye-care-centre-pledge-${stamp}.pdf`);
 
         setTimeout(() => {
           window.close();
