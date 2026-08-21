@@ -9,6 +9,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
+import { apiRequest } from '../lib/apiClient';
 import './ThankYouPage.css';
 
 function escapeHtml(value) {
@@ -979,92 +980,91 @@ function buildPdfPageContent(rows, { PAGE_WIDTH, PAGE_HEIGHT, LEFT, TOP, USABLE_
   drawRect(LEFT, headerBottom, USABLE_WIDTH, 130, '1 1 1 rg', border);
   drawRect(LEFT, headerBottom + 63, USABLE_WIDTH, 67, '0.95 0.97 1 rg', '0.90 0.92 0.96 RG');
 
-  writeText('JOTHI EYE BANK', LEFT + 12, headerTop - 28, 21, { font: bold, color: darkBlue });
-  writeText('Family Eye Donation Pledge Form', LEFT + 12, headerTop - 55, 15.5, { font: bold, color: teal });
-  writeText('Eye donation - a noble gift that lives on.', LEFT + 12, headerTop - 75, 10.2, { color: '0.28 0.38 0.49 rg' });
-  writeText('Let it be our family tradition.', LEFT + 12, headerTop - 88, 10.2, { color: '0.28 0.38 0.49 rg' });
+  writeText('FAMILY EYE DONATION PLEDGE FORM', LEFT + 12, headerTop - 30, 17.5, { font: bold, color: darkBlue });
+  writeText('"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"', LEFT + 12, headerTop - 50, 8.4, {
+    color: '0.25 0.42 0.65 rg',
+  });
 
-  drawRect(PAGE_WIDTH - LEFT - 120, headerTop - 68, 108, 46, '0.11 0.31 0.66 rg', null);
-  writeText('Date', PAGE_WIDTH - LEFT - 66, headerTop - 41, 12, { font: bold, color: '1 1 1 rg', align: 'center' });
-  line(PAGE_WIDTH - LEFT - 108, headerTop - 57, PAGE_WIDTH - LEFT - 12, headerTop - 57, '1 1 1 RG');
+  writeText('DATE:', PAGE_WIDTH - LEFT - 62, headerTop - 32, 8.2, { font: bold, color: darkBlue });
+  line(PAGE_WIDTH - LEFT - 62, headerTop - 44, PAGE_WIDTH - LEFT - 12, headerTop - 44, '0.55 0.60 0.68 RG');
 
   const bandTop = headerBottom - 16;
   drawRect(LEFT, bandTop - 60, USABLE_WIDTH, 60, darkBlue, null);
-  writeText('JOTHI EYE CARE CENTRE', LEFT + 12, bandTop - 26, 19, { font: bold, color: '1 1 1 rg' });
-  writeText('152 & 154, Calve Subraya Chetty Street, Puducherry - 605 001.', LEFT + 12, bandTop - 47, 11.4, { font: bold, color: '1 1 1 rg' });
+  writeText('JOTHI EYE BANK', LEFT + 12, bandTop - 26, 18, { font: bold, color: '1 1 1 rg' });
+  writeText('Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE', LEFT + 12, bandTop - 44, 8.8, {
+    color: '1 1 1 rg',
+  });
 
   drawRect(PAGE_WIDTH - LEFT - 205, bandTop - 54, 195, 48, '0.98 0.94 0.76 rg', null);
   writeText('FOR EYE DONATION', PAGE_WIDTH - LEFT - 107.5, bandTop - 18, 10, { font: bold, align: 'center' });
   writeText('Toll No. 1919', PAGE_WIDTH - LEFT - 107.5, bandTop - 34, 14, { font: bold, align: 'center' });
-  writeText('Free (BSNL) Service', PAGE_WIDTH - LEFT - 107.5, bandTop - 47, 9.2, { align: 'center' });
+  writeText('[Free (BSNL) Service]', PAGE_WIDTH - LEFT - 107.5, bandTop - 47, 8.2, { align: 'center' });
 
   const addressTop = bandTop - 78;
   drawRect(LEFT, addressTop - 122, USABLE_WIDTH, 122, '1 1 1 rg', border);
-  drawRect(LEFT + 12, addressTop - 20, 112, 20, '0.00 0.42 0.55 rg', null);
-  writeText('ADDRESS DETAILS', LEFT + 68, addressTop - 5, 10.2, { font: bold, color: '1 1 1 rg', align: 'center' });
 
-  writeText('Address', LEFT + 10, addressTop - 40, 11.2, { font: bold });
+  writeText('ADDRESS:', LEFT + 10, addressTop - 40, 9.4, { font: bold });
   line(LEFT + 70, addressTop - 43, PAGE_WIDTH - LEFT - 12, addressTop - 43);
   line(LEFT + 10, addressTop - 60, PAGE_WIDTH - LEFT - 12, addressTop - 60);
   line(LEFT + 10, addressTop - 80, PAGE_WIDTH - LEFT - 12, addressTop - 80);
 
-  writeText('Pin', LEFT + 10, addressTop - 101, 11, { font: bold });
+  writeText('PIN', LEFT + 10, addressTop - 101, 8.8, { font: bold });
   line(LEFT + 46, addressTop - 104, LEFT + 140, addressTop - 104);
-  writeText('Dist', LEFT + 160, addressTop - 101, 11, { font: bold });
+  writeText('DIST', LEFT + 160, addressTop - 101, 8.8, { font: bold });
   line(LEFT + 202, addressTop - 104, LEFT + 296, addressTop - 104);
-  writeText('State', LEFT + 316, addressTop - 101, 11, { font: bold });
+  writeText('STATE', LEFT + 316, addressTop - 101, 8.8, { font: bold });
   line(LEFT + 366, addressTop - 104, LEFT + 460, addressTop - 104);
-  writeText('Telephone', LEFT + 10, addressTop - 120, 11, { font: bold });
+  writeText('TELEPHONE', LEFT + 10, addressTop - 120, 8.8, { font: bold });
   line(LEFT + 84, addressTop - 123, PAGE_WIDTH - LEFT - 12, addressTop - 123);
 
   writeText(
-    'We, the undersigned adult members of the family, pledge to donate our eyes after our death for the benefit of the needy.',
+    'Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:',
     PAGE_WIDTH / 2,
     addressTop - 144,
-    10.1,
-    { font: bold, align: 'center', color: '0.10 0.20 0.42 rg' }
+    8.2,
+    { align: 'center', color: '0.28 0.38 0.49 rg' }
   );
 
   const tableTop = addressTop - 162;
-  const tableHeight = 118;
+  const tableHeight = 126;
   drawRect(LEFT, tableTop - tableHeight, USABLE_WIDTH, tableHeight, '1 1 1 rg', border);
-  drawRect(LEFT, tableTop - 22, USABLE_WIDTH, 22, '0.04 0.45 0.57 rg', null);
-  const colXs = [LEFT, LEFT + 52, LEFT + 122, LEFT + 312, LEFT + 382, LEFT + 452];
-  const colWidths = [52, 70, 190, 70, 70, 126];
-  ['S.No', 'Title', 'Name (Block Letters)', 'Age', 'Gender', 'Signature'].forEach((label, idx) => {
-    writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 9.2, {
+  drawRect(LEFT, tableTop - 22, USABLE_WIDTH, 22, '0.95 0.97 1 rg', null);
+  const colXs = [LEFT, LEFT + 46, LEFT + 98, LEFT + 282, LEFT + 320, LEFT + 366];
+  const colWidths = [46, 52, 184, 38, 46, 176];
+  ['S.NO', 'TITLE', 'NAME (BLOCK LETTERS)', 'AGE', 'GENDER', 'SIGNATURE'].forEach((label, idx) => {
+    writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 8.4, {
       font: bold,
       align: 'center',
-      color: '1 1 1 rg',
+      color: '0.16 0.20 0.28 rg',
     });
     if (idx > 0) line(colXs[idx], tableTop - 22, colXs[idx], tableTop - tableHeight);
   });
 
-  const rowHeight = 32;
+  const rowHeight = 34;
   rows.forEach((row, index) => {
     const rowTop = tableTop - 22 - rowHeight * (index + 1);
     line(LEFT, rowTop, LEFT + USABLE_WIDTH, rowTop);
-    writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 11, 10, { align: 'center' });
-    writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 11, 9.6, {
+    writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 11, 9.4, { align: 'center' });
+    writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 11, 9.0, {
       align: 'center',
       color: '0.28 0.28 0.30 rg',
     });
-    writeText(getRowDisplayName(row), colXs[2] + 6, rowTop + 11, 9.6, {
+    writeText(getRowDisplayName(row), colXs[2] + 6, rowTop + 11, 9.0, {
       maxWidth: colWidths[2] - 12,
     });
-    writeText(String(row.age ?? 'N/A'), colXs[3] + colWidths[3] / 2, rowTop + 11, 9.6, { align: 'center' });
-    writeText(row.gender || 'N/A', colXs[4] + colWidths[4] / 2, rowTop + 11, 9.6, { align: 'center' });
+    writeText(String(row.age ?? 'N/A'), colXs[3] + colWidths[3] / 2, rowTop + 11, 9.0, { align: 'center' });
+    writeText(row.gender || 'N/A', colXs[4] + colWidths[4] / 2, rowTop + 11, 9.0, { align: 'center' });
     line(colXs[5] + 10, rowTop + 8, colXs[5] + colWidths[5] - 10, rowTop + 8, '0.45 0.52 0.60 RG');
   });
 
   const footerTop = tableTop - tableHeight - 18;
-  writeText('Place', LEFT + 2, footerTop, 11.2, { font: bold });
+  writeText('PLACE:', LEFT + 2, footerTop, 8.8, { font: bold });
   line(LEFT + 46, footerTop - 3, LEFT + 200, footerTop - 3);
   writeText(
     'To be filled in by two witnesses (Relatives, neighbours or friends)',
     PAGE_WIDTH / 2,
     footerTop - 20,
-    9.4,
+    8.0,
     { align: 'center', color: '0.30 0.38 0.48 rg' }
   );
 
@@ -1072,25 +1072,19 @@ function buildPdfPageContent(rows, { PAGE_WIDTH, PAGE_HEIGHT, LEFT, TOP, USABLE_
   const witnessWidth = (USABLE_WIDTH - 12) / 2;
   drawRect(LEFT, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
   drawRect(LEFT + witnessWidth + 12, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
-  writeText('1. Witness (Next of kin)', LEFT + witnessWidth / 2, witnessTop + 86, 10.1, {
-    font: bold,
-    align: 'center',
-  });
-  writeText('2. Witness (Next of kin)', LEFT + witnessWidth + 12 + witnessWidth / 2, witnessTop + 86, 10.1, {
-    font: bold,
-    align: 'center',
-  });
+  writeText('1. WITNESS (NEXT OF KIN):', LEFT + 10, witnessTop + 86, 7.6, { font: bold });
+  writeText('2. WITNESS (NEXT OF KIN):', LEFT + witnessWidth + 12 + 10, witnessTop + 86, 7.6, { font: bold });
 
   ['Signature', 'Name and Relationship', 'Address', ''].forEach((label, idx) => {
-    const y = witnessTop + 64 - idx * 18;
-    writeText(label, LEFT + 10, y, 9.1);
-    writeText(':', LEFT + 72, y, 9.1);
-    line(LEFT + 84, y - 3, LEFT + witnessWidth - 10, y - 3, '0.62 0.65 0.70 RG');
+    const y = witnessTop + 62 - idx * 18;
+    writeText(label, LEFT + 10, y, 8.1);
+    writeText(':', LEFT + 88, y, 8.1);
+    line(LEFT + 100, y - 3, LEFT + witnessWidth - 10, y - 3, '0.62 0.65 0.70 RG');
 
-    writeText(label, LEFT + witnessWidth + 12 + 10, y, 9.1);
-    writeText(':', LEFT + witnessWidth + 12 + 72, y, 9.1);
+    writeText(label, LEFT + witnessWidth + 12 + 10, y, 8.1);
+    writeText(':', LEFT + witnessWidth + 12 + 88, y, 8.1);
     line(
-      LEFT + witnessWidth + 12 + 84,
+      LEFT + witnessWidth + 12 + 100,
       y - 3,
       LEFT + witnessWidth + 12 + witnessWidth - 10,
       y - 3,
@@ -1098,7 +1092,7 @@ function buildPdfPageContent(rows, { PAGE_WIDTH, PAGE_HEIGHT, LEFT, TOP, USABLE_
     );
   });
 
-  writeText('JOTHI EYE CARE CENTRE', PAGE_WIDTH / 2, 34, 8.5, { font: bold, align: 'center', color: teal });
+  writeText('JOTHI EYE BANK', PAGE_WIDTH / 2, 34, 8.5, { font: bold, align: 'center', color: teal });
   return parts.join('\n');
 }
 
@@ -1132,7 +1126,8 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const rows = normalizeRows(null, exportRows);
+      const response = await apiRequest('/api/terms/getall');
+      const rows = normalizeRows(response, exportRows);
 
       if (rows.length === 0) {
         return;
