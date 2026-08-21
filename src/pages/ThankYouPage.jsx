@@ -9,7 +9,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
-import { API_BASE_URL } from '../lib/apiClient';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
@@ -23,7 +22,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
       window.__PLEDGE_EXPORT_ROWS__ = rows;
 
       const exportUrl = new URL('/pledge-export.html', window.location.origin);
-      exportUrl.searchParams.set('apiBase', API_BASE_URL);
 
       const popup = window.open(exportUrl.toString(), '_blank');
       if (!popup) {
