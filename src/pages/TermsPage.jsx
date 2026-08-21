@@ -423,8 +423,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                   <div className="terms-card__table-copy">
                     <p className="terms-card__admin-copy">
-                      Review the entries returned from the terms API in a table layout that matches
-                      the pledge form.
+                      Review the entries returned from the terms API in a clean card layout instead
+                      of a table.
                     </p>
                   </div>
 
@@ -433,35 +433,58 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   ) : adminError ? (
                     <p className="terms-card__error">{adminError}</p>
                   ) : displayedAdminRows.length > 0 ? (
-                    <div className="terms-card__table-wrap">
-                      <table className="terms-card__pledge-table">
-                        <thead>
-                          <tr>
-                            <th className="col-sn">S.No</th>
-                            <th className="col-title">Title</th>
-                            <th className="col-name">NAME (BLOCK LETTERS)</th>
-                            <th className="col-age">AGE</th>
-                            <th className="col-sex">GENDER</th>
-                            <th className="col-sig">SIGNATURE</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {displayedAdminRows.map((row, index) => {
-                            const id = row._id || row.id || `${row.name || row.fullName}-${row.createdAt}-${index}`;
+                    <div className="terms-card__admin-cards">
+                      {displayedAdminRows.map((row, index) => {
+                        const id =
+                          row._id ||
+                          row.id ||
+                          `${row.name || row.fullName || 'row'}-${row.createdAt || index}`;
+                        const createdLabel = row.createdAt
+                          ? new Date(row.createdAt).toLocaleString()
+                          : 'N/A';
 
-                            return (
-                              <tr key={id}>
-                                <td className="text-center">{startIndex + index + 1}</td>
-                                <td className="text-muted">{getRowTitle(row)}</td>
-                                <td>{getRowDisplayName(row)}</td>
-                                <td className="text-center">{row.age ?? 'N/A'}</td>
-                                <td className="text-center">{row.gender || 'N/A'}</td>
-                                <td className="text-center">{row.signature || ''}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                        return (
+                          <article key={id} className="terms-card__admin-card">
+                            <div className="terms-card__admin-card-head">
+                              <div>
+                                <p className="terms-card__admin-card-kicker">
+                                  Entry {startIndex + index + 1}
+                                </p>
+                                <h3 className="terms-card__admin-card-title">
+                                  {getRowDisplayName(row)}
+                                </h3>
+                                <p className="terms-card__admin-card-subtitle">
+                                  {getRowTitle(row)}
+                                </p>
+                              </div>
+                              <span className="terms-card__admin-card-time">{createdLabel}</span>
+                            </div>
+
+                            <div className="terms-card__admin-card-grid">
+                              <div>
+                                <strong>Age</strong>
+                                <span>{row.age ?? 'N/A'}</span>
+                              </div>
+                              <div>
+                                <strong>Gender</strong>
+                                <span>{row.gender || 'N/A'}</span>
+                              </div>
+                              <div>
+                                <strong>Phone</strong>
+                                <span>{row.phone || row.mobile || row.telephone || 'N/A'}</span>
+                              </div>
+                              <div className="terms-card__admin-card-span">
+                                <strong>Address</strong>
+                                <span>{row.address || row.fullAddress || 'N/A'}</span>
+                              </div>
+                              <div className="terms-card__admin-card-span">
+                                <strong>Signature</strong>
+                                <span>{row.signature || 'N/A'}</span>
+                              </div>
+                            </div>
+                          </article>
+                        );
+                      })}
                     </div>
                   ) : (
                     <p className="terms-card__empty">{adminEmptyMessage}</p>
