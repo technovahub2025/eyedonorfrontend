@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #eef5fb;
+      color: #1b1f23;
+      font-family: 'Public Sans', sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 12mm;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 18px;
+    }
+
+    .page {
+      width: min(100%, 794px);
+      background: #fff;
+      border: 1px solid #d3d7df;
+      box-shadow: 0 18px 45px rgba(10, 22, 44, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(0, 102, 138, 0.08), transparent 22%),
+        radial-gradient(circle at top right, rgba(31, 76, 201, 0.06), transparent 18%);
+      pointer-events: none;
+    }
+
+    .sheet {
+      position: relative;
+      z-index: 1;
+      padding: 18px 20px 16px;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+
+    .logo-title-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .logo-title-group img {
+      width: 82px;
+      height: 82px;
+      object-fit: cover;
+      flex: none;
+    }
+
+    .title-block {
+      min-width: 0;
+      padding-top: 3px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 27px;
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: #111;
+      text-transform: uppercase;
+    }
+
+    .title-block .subtitle {
+      margin-top: 8px;
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 14px;
+      font-style: italic;
+      color: #0f5d7e;
+    }
+
+    .date-box {
+      width: 178px;
+      flex: none;
+      padding-top: 8px;
+    }
+
+    .date-box .label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: #0c4d7b;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .date-line {
+      height: 20px;
+      border-bottom: 1px solid #bcc3ce;
+    }
+
+    .bank-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 12px;
+      border-top: 1px solid #cdd2d9;
+      border-bottom: 1px solid #cdd2d9;
+      padding: 14px 0;
+      margin: 2px 0 16px;
+    }
+
+    .bank-left {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .bank-name {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .bank-name .name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      line-height: 1.1;
+      font-weight: 800;
+      color: #111;
+    }
+
+    .bank-name .detail {
+      font-size: 11px;
+      color: #4a5665;
+    }
+
+    .bank-right {
+      width: 196px;
+      flex: none;
+      border-left: 1px solid #cdd2d9;
+      padding-left: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .bank-right .label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0c4d7b;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .bank-right .call {
+      font-family: 'Manrope', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.1;
+    }
+
+    .bank-right .hint {
+      font-size: 10px;
+      color: #4a5665;
+    }
+
+    .address-section {
+      margin: 4px 0 14px;
+    }
+
+    .address-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #20232a;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .line {
+      height: 20px;
+      border-bottom: 1px solid #bcc3ce;
+    }
+
+    .double-lines .line + .line {
+      margin-top: 10px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.1fr;
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .mini-field .caption {
+      font-size: 11px;
+      font-weight: 800;
+      color: #20232a;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-field .caption .material-symbols-outlined {
+      font-size: 16px;
+      color: #0c4d7b;
+      line-height: 1;
+    }
+
+    .intro {
+      margin: 10px 0 12px;
+      font-size: 11px;
+      color: #4a5665;
+      line-height: 1.45;
+    }
+
+    .table-wrap {
+      border: 1px solid #bfc5ce;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      border-right: 1px solid #bfc5ce;
+      border-bottom: 1px solid #bfc5ce;
+      padding: 10px 8px;
+      vertical-align: top;
+    }
+
+    th:last-child, td:last-child { border-right: none; }
+    tr:last-child td { border-bottom: none; }
+
+    thead th {
+      background: #eef4fb;
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #20232a;
+      text-align: left;
+    }
+
+    .sn { width: 52px; text-align: center; }
+    .title-col { width: 72px; }
+    .age-col { width: 42px; text-align: center; }
+    .gender-col { width: 52px; text-align: center; }
+    .signature-col { width: 140px; }
+    .center { text-align: center; }
+    .muted { color: #465363; }
+
+    .signature-line {
+      height: 18px;
+      border-bottom: 1px solid #97a0ab;
+    }
+
+    .place-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 16px 0 12px;
+    }
+
+    .place-row .label {
+      font-size: 11px;
+      font-weight: 800;
+      color: #20232a;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .place-row .line {
+      flex: 0 0 180px;
+    }
+
+    .witness-note {
+      text-align: center;
+      font-size: 11px;
+      font-style: italic;
+      color: #4a5665;
+      margin-bottom: 10px;
+    }
+
+    .witness-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .witness-box {
+      border: 1px solid #b9c1cb;
+      padding: 12px 12px 10px;
+      min-height: 188px;
+    }
+
+    .witness-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0c4d7b;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .witness-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #20232a;
+      margin-bottom: 10px;
+    }
+
+    .witness-row .label {
+      width: 112px;
+      flex: none;
+    }
+
+    .witness-row .colon {
+      flex: none;
+    }
+
+    .witness-row .fill {
+      flex: 1;
+      border-bottom: 1px dashed #b9c1cb;
+      height: 16px;
+    }
+
+    .footer-gap {
+      height: 10px;
+    }
+
+    .loading, .error {
+      padding: 24px;
+      text-align: center;
+      color: #4a5665;
+    }
+
+    .error { color: #b42318; }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        width: 100%;
+        box-shadow: none;
+        border: none;
+      }
+    }
+
+    @media (max-width: 800px) {
+      body { padding: 0; }
+      .page { width: 100%; }
+      .sheet { padding: 14px; }
+      .top-row, .bank-row, .witness-grid { flex-direction: column; display: flex; }
+      .date-box, .bank-right { width: 100%; border-left: none; padding-left: 0; text-align: left; }
+      .grid-4 { grid-template-columns: 1fr; }
+      .witness-grid { display: grid; grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="sheet">
+      <div id="status" class="loading">Loading pledge data...</div>
+      <div id="content" hidden>
+        <div class="top-row">
+          <div class="logo-title-group">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal" />
+            <div class="title-block">
+              <h1>Family Eye Donation Pledge Form</h1>
+              <div class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</div>
+            </div>
+          </div>
+          <div class="date-box">
+            <div class="label">Date:</div>
+            <div class="date-line"></div>
+          </div>
+        </div>
+
+        <div class="bank-row">
+          <div class="bank-left">
+            <div class="bank-name">
+              <div class="name">JOTHI EYE BANK</div>
+              <div class="detail">Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE</div>
+            </div>
+          </div>
+          <div class="bank-right">
+            <div class="label">FOR EYE DONATION</div>
+            <div class="call">Toll No. 1919</div>
+            <div class="hint">[Free (BSNL) Service]</div>
+          </div>
+        </div>
+
+        <div class="address-section">
+          <div class="address-label">ADDRESS:</div>
+          <div class="double-lines">
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+          <div class="grid-4">
+            <div class="mini-field">
+              <div class="caption">PIN</div>
+              <div class="line"></div>
+            </div>
+            <div class="mini-field">
+              <div class="caption">DIST</div>
+              <div class="line"></div>
+            </div>
+            <div class="mini-field">
+              <div class="caption">STATE</div>
+              <div class="line"></div>
+            </div>
+            <div class="mini-field">
+              <div class="caption"><span class="material-symbols-outlined" aria-hidden="true">phone</span> TELEPHONE</div>
+              <div class="line"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="intro">
+          Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="sn">S.No</th>
+                <th class="title-col">Title</th>
+                <th>Name (Block Letters)</th>
+                <th class="age-col">Age</th>
+                <th class="gender-col">Gender</th>
+                <th class="signature-col">Signature</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <div class="place-row">
+          <div class="label">PLACE:</div>
+          <div class="line"></div>
+        </div>
+
+        <div class="witness-note">To be filled in by two witnesses (Relatives, neighbours or friends)</div>
+
+        <div class="witness-grid">
+          <div class="witness-box">
+            <div class="witness-title">1. WITNESS (NEXT OF KIN):</div>
+            <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">&nbsp;</span><span class="colon">&nbsp;</span><span class="fill"></span></div>
+          </div>
+          <div class="witness-box">
+            <div class="witness-title">2. WITNESS (NEXT OF KIN):</div>
+            <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><span class="fill"></span></div>
+            <div class="witness-row"><span class="label">&nbsp;</span><span class="colon">&nbsp;</span><span class="fill"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function normalizeRows(response) {
+      const rows = Array.isArray(response?.data?.data)
+        ? response.data.data
+        : Array.isArray(response?.data)
+        ? response.data
+        : [];
+      return rows.slice(0, 3);
+    }
+
+    function getRowTitle(row) {
+      if (row?.title) return row.title;
+      if (row?.gender === 'Male') return 'Mr.';
+      if (row?.gender === 'Female') return 'Ms.';
+      return 'Mr./Ms.';
+    }
+
+    function getRowDisplayName(row) {
+      return row?.fullName || row?.name || '';
+    }
+
+    function readApiBase() {
+      const url = new URL(window.location.href);
+      return url.searchParams.get('apiBase') || window.location.origin;
+    }
+
+    function readOpenerRows() {
+      try {
+        const rows = window.opener && window.opener.__PLEDGE_EXPORT_ROWS__;
+        return Array.isArray(rows) ? rows.slice(0, 3) : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function buildRowHtml(rows) {
+      const body = document.getElementById('rows');
+      body.innerHTML = rows.map((row, index) => `
+        <tr>
+          <td class="center">${index + 1}</td>
+          <td class="muted center">${escapeHtml(getRowTitle(row))}</td>
+          <td>${escapeHtml(getRowDisplayName(row))}</td>
+          <td class="center">${escapeHtml(row.age ?? '')}</td>
+          <td class="center">${escapeHtml(row.gender || '')}</td>
+          <td><div class="signature-line"></div></td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadAndPrint() {
+      const status = document.getElementById('status');
+      const content = document.getElementById('content');
+      try {
+        let rows = readOpenerRows();
+
+        if (!rows.length) {
+          const apiBase = readApiBase().replace(/\/$/, '');
+          const response = await fetch(apiBase + '/api/terms/getall', {
+            headers: { Accept: 'application/json' },
+          });
+          const data = await response.json();
+          rows = normalizeRows(data);
+        }
+
+        if (!rows.length) {
+          status.textContent = 'No pledge data found.';
+          return;
+        }
+
+        buildRowHtml(rows);
+        status.hidden = true;
+        content.hidden = false;
+
+        try {
+          if (window.opener) {
+            window.opener.__PLEDGE_EXPORT_ROWS__ = [];
+          }
+        } catch (error) {
+          // Ignore cross-window cleanup issues.
+        }
+
+        setTimeout(() => {
+          window.print();
+        }, 300);
+      } catch (error) {
+        status.textContent = 'Failed to load pledge data.';
+        status.className = 'error';
+        console.error(error);
+      }
+    }
+
+    window.addEventListener('afterprint', () => window.close());
+    loadAndPrint();
+  </script>
+</body>
+</html>
