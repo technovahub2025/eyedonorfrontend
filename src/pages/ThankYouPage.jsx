@@ -29,11 +29,11 @@ function normalizeRows(response, fallbackRows) {
     ? fallbackRows
     : [];
 
-  return rows.slice(0, 4);
+  return rows.slice(0, 3);
 }
 
 function buildExportHtml(rows) {
-  const displayedRows = Array.from({ length: 4 }, (_, index) => rows[index] || {});
+  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
   return buildPrintablePdfHtml(displayedRows);
 
   /* eslint-disable-next-line no-unreachable */
@@ -526,7 +526,7 @@ function buildExportHtml(rows) {
 }
 
 function buildPrintablePdfHtml(rows) {
-  const displayedRows = Array.from({ length: 4 }, (_, index) => rows[index] || {});
+  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
 
   return `<!DOCTYPE html>
 <html lang="en">
