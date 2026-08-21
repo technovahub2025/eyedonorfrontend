@@ -309,17 +309,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
               <div className="terms-card__hero-visual" aria-hidden="true">
                 <img src={eyeImage} alt="" className="terms-card__hero-image" aria-hidden="true" />
                 <div className="terms-card__hero-overlay">
-                  <p className="terms-card__hero-kicker">
-                    {isAdminView ? 'Admin review' : 'A small decision. A lifetime of sight.'}
-                  </p>
-                  <h1 id="terms-title">
-                    {isAdminView ? 'Terms page submissions' : 'Give the Gift of Sight'}
-                  </h1>
-                  <p className="terms-card__intro">
-                    {isAdminView
-                      ? 'Admins can review only the records submitted through the terms page.'
-                      : 'Share the full details for each person. Then review and accept the pledge before submitting.'}
-                  </p>
+                 
+                
                 </div>
               </div>
             </div>
