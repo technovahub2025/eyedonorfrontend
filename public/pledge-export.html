@@ -20,7 +20,7 @@
 
     @page {
       size: A4 portrait;
-      margin: 12mm;
+      margin: 8mm;
     }
 
     body {
@@ -382,6 +382,203 @@
         width: 100%;
         box-shadow: none;
         border: none;
+        transform: scale(0.9);
+        transform-origin: top center;
+        width: 111.111%;
+      }
+
+      .sheet {
+        padding: 10px 12px 8px;
+      }
+
+      .top-row {
+        gap: 10px;
+        margin-bottom: 6px;
+      }
+
+      .logo-title-group {
+        gap: 10px;
+      }
+
+      .logo-title-group img {
+        width: 64px;
+        height: 64px;
+      }
+
+      .title-block {
+        padding-top: 0;
+      }
+
+      .title-block h1 {
+        font-size: 20px;
+        line-height: 1.05;
+      }
+
+      .title-block .subtitle {
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      .date-box {
+        width: 140px;
+        padding-top: 2px;
+      }
+
+      .date-box .label {
+        margin-bottom: 6px;
+      }
+
+      .bank-row {
+        padding: 8px 0;
+        margin: 0 0 8px;
+      }
+
+      .bank-name .name {
+        font-size: 16px;
+      }
+
+      .bank-name .detail {
+        font-size: 9px;
+      }
+
+      .bank-right {
+        width: 160px;
+        padding-left: 10px;
+      }
+
+      .bank-right .label {
+        font-size: 9px;
+      }
+
+      .bank-right .call {
+        font-size: 14px;
+      }
+
+      .bank-right .hint {
+        font-size: 9px;
+      }
+
+      .address-section {
+        margin: 0 0 8px;
+      }
+
+      .address-label {
+        font-size: 9px;
+        margin-bottom: 4px;
+      }
+
+      .line {
+        height: 14px;
+      }
+
+      .double-lines .line + .line {
+        margin-top: 6px;
+      }
+
+      .grid-4 {
+        gap: 10px;
+        margin-top: 8px;
+      }
+
+      .mini-field .caption {
+        font-size: 9px;
+        margin-bottom: 3px;
+      }
+
+      .mini-field .caption .material-symbols-outlined {
+        font-size: 13px;
+      }
+
+      .intro {
+        margin: 6px 0 8px;
+        font-size: 9px;
+        line-height: 1.25;
+      }
+
+      .table-wrap {
+        margin-bottom: 8px;
+      }
+
+      table {
+        font-size: 10px;
+      }
+
+      th, td {
+        padding: 6px 6px;
+      }
+
+      thead th {
+        font-size: 8.5px;
+      }
+
+      .sn {
+        width: 42px;
+      }
+
+      .title-col {
+        width: 58px;
+      }
+
+      .age-col {
+        width: 34px;
+      }
+
+      .gender-col {
+        width: 44px;
+      }
+
+      .signature-col {
+        width: 110px;
+      }
+
+      .signature-line {
+        height: 12px;
+      }
+
+      .place-row {
+        gap: 8px;
+        margin: 8px 0 6px;
+      }
+
+      .place-row .label {
+        font-size: 9px;
+      }
+
+      .place-row .line {
+        flex-basis: 150px;
+      }
+
+      .witness-note {
+        font-size: 9px;
+        margin-bottom: 6px;
+      }
+
+      .witness-grid {
+        gap: 8px;
+      }
+
+      .witness-box {
+        padding: 8px 8px 6px;
+        min-height: 132px;
+      }
+
+      .witness-title {
+        font-size: 8.5px;
+        margin-bottom: 6px;
+      }
+
+      .witness-row {
+        font-size: 8px;
+        margin-bottom: 5px;
+        gap: 6px;
+      }
+
+      .witness-row .label {
+        width: 88px;
+      }
+
+      .witness-row .fill {
+        height: 12px;
       }
     }
 
@@ -537,73 +734,247 @@
       return url.searchParams.get('apiBase') || window.location.origin;
     }
 
-    function readOpenerRows() {
-      try {
-        const rows = window.opener && window.opener.__PLEDGE_EXPORT_ROWS__;
-        return Array.isArray(rows) ? rows.slice(0, 3) : [];
-      } catch (error) {
-        return [];
+    function escapePdfText(value) {
+      return String(value ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)');
+    }
+
+    function textWidthEstimate(text, fontSize) {
+      return String(text).length * fontSize * 0.52;
+    }
+
+    function buildPdfBlob(rows) {
+      const PAGE_WIDTH = 595.28;
+      const PAGE_HEIGHT = 841.89;
+      const LEFT = 24;
+      const TOP = 22;
+      const USABLE_WIDTH = PAGE_WIDTH - LEFT * 2;
+      const regular = 1;
+      const bold = 2;
+      const border = '0.76 0.78 0.82 RG';
+      const blue = '0.07 0.22 0.45 rg';
+      const parts = [];
+      const offsets = [0];
+      const objects = [];
+      const byteLength = (value) => new TextEncoder().encode(value).length;
+
+      const drawRect = (x, y, w, h, fill = null, stroke = border) => {
+        if (fill) parts.push(fill);
+        if (stroke) parts.push(stroke);
+        parts.push(`${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re ${fill ? 'B' : 'S'}`);
+      };
+
+      const line = (x1, y1, x2, y2, stroke = border) => {
+        parts.push(stroke);
+        parts.push(`${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`);
+      };
+
+      const writeText = (text, x, y, size, options = {}) => {
+        const { align = 'left', color = '0 0 0 rg', font = regular, maxWidth = null } = options;
+        const estimated = maxWidth || textWidthEstimate(text, size);
+        let startX = x;
+        if (align === 'center') startX = x - estimated / 2;
+        if (align === 'right') startX = x - estimated;
+        parts.push('BT');
+        parts.push(color);
+        parts.push(`/F${font} ${size.toFixed(2)} Tf`);
+        parts.push(`1 0 0 1 ${startX.toFixed(2)} ${y.toFixed(2)} Tm`);
+        parts.push(`(${escapePdfText(text)}) Tj`);
+        parts.push('ET');
+      };
+
+      const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
+      const top = PAGE_HEIGHT - TOP;
+
+      drawRect(LEFT, 734, USABLE_WIDTH, 82, '1 1 1 rg', null);
+      drawRect(LEFT, 734, USABLE_WIDTH, 82, null, border);
+
+      drawRect(LEFT + 18, 746, 40, 40, '0.98 0.98 0.99 rg', border);
+      writeText('JOTHI', LEFT + 38, 770, 9.4, { font: bold, align: 'center', color: '0.09 0.09 0.10 rg' });
+      writeText('2000', LEFT + 38, 756, 9.4, { font: bold, align: 'center', color: '0.09 0.09 0.10 rg' });
+
+      writeText('FAMILY EYE DONATION PLEDGE', LEFT + 126, 774, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
+      writeText('FORM', LEFT + 126, 756, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
+      writeText('Eye Donation, let us make it our Family Tradition !! Let', LEFT + 126, 740, 7.9, {
+        color: '0.09 0.40 0.68 rg',
+      });
+      writeText('us light up lives !!!', LEFT + 126, 731, 7.9, {
+        color: '0.09 0.40 0.68 rg',
+      });
+      writeText('DATE:', PAGE_WIDTH - LEFT - 54, 777, 8.2, { font: bold, color: blue });
+      line(PAGE_WIDTH - LEFT - 54, 769, PAGE_WIDTH - LEFT - 8, 769);
+
+      drawRect(LEFT, 683, USABLE_WIDTH, 42, '1 1 1 rg', border);
+      writeText('JOTHI EYE BANK', LEFT + 10, 705, 14.8, { font: bold, color: '0.07 0.08 0.10 rg' });
+      writeText('Run by JOTHI EYE CARE FOUNDATION (Society)', LEFT + 10, 691, 8.0, {
+        color: '0.30 0.31 0.35 rg',
+      });
+      writeText('@ JOTHI EYE CARE CENTRE', LEFT + 10, 682, 8.0, {
+        color: '0.30 0.31 0.35 rg',
+      });
+      line(LEFT + 408, 691, LEFT + 408, 725, '0.78 0.80 0.84 RG');
+      writeText('FOR EYE DONATION', PAGE_WIDTH - LEFT - 70, 712, 8.6, { font: bold, align: 'center', color: blue });
+      writeText('Call  No. 1919', PAGE_WIDTH - LEFT - 70, 694, 16.0, { font: bold, align: 'center' });
+      writeText('[Free (BSNL) Service]', PAGE_WIDTH - LEFT - 70, 681, 7.2, { align: 'center', color: '0.33 0.34 0.38 rg' });
+
+      writeText('Address:', LEFT + 4, 649, 8.4, { font: bold, color: '0.26 0.27 0.31 rg' });
+      line(LEFT + 4, 625, PAGE_WIDTH - LEFT - 6, 625);
+      line(LEFT + 4, 607, PAGE_WIDTH - LEFT - 6, 607);
+
+      writeText('Pin', LEFT + 2, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
+      writeText('Dist', LEFT + 148, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
+      writeText('State', LEFT + 290, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
+      writeText('Telephone', LEFT + 428, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
+      line(LEFT + 4, 568, LEFT + 125, 568);
+      line(LEFT + 150, 568, LEFT + 270, 568);
+      line(LEFT + 292, 568, LEFT + 412, 568);
+      line(LEFT + 430, 568, PAGE_WIDTH - LEFT - 6, 568);
+
+      writeText(
+        'Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:',
+        LEFT + 2,
+        532,
+        7.0,
+        { color: '0.26 0.35 0.46 rg' }
+      );
+
+      const tableTop = 512;
+      const rowHeight = 31;
+      const headerHeight = 20;
+      const tableHeight = headerHeight + rowHeight * 3;
+      drawRect(LEFT, tableTop - tableHeight, USABLE_WIDTH, tableHeight, '1 1 1 rg', border);
+      drawRect(LEFT, tableTop - headerHeight, USABLE_WIDTH, headerHeight, '0.94 0.96 0.99 rg', null);
+
+      const colXs = [LEFT, LEFT + 40, LEFT + 86, LEFT + 308, LEFT + 360, LEFT + 420];
+      const colWidths = [40, 46, 222, 52, 60, 127];
+      ['S.No', 'Title', 'NAME (BLOCK LETTERS)', 'AGE', 'SEX', 'SIGNATURE'].forEach((label, idx) => {
+        writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 7.4, {
+          font: bold,
+          align: 'center',
+          color: '0.17 0.21 0.28 rg',
+        });
+        if (idx > 0) line(colXs[idx], tableTop - headerHeight, colXs[idx], tableTop - tableHeight);
+      });
+
+      displayedRows.forEach((row, index) => {
+        const rowTop = tableTop - headerHeight - rowHeight * (index + 1);
+        line(LEFT, rowTop, LEFT + USABLE_WIDTH, rowTop);
+        writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 10, 8.0, { align: 'center' });
+        writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 10, 7.6, { align: 'center', color: '0.30 0.30 0.33 rg' });
+        writeText(getRowDisplayName(row), colXs[2] + 4, rowTop + 10, 7.4, { maxWidth: colWidths[2] - 8 });
+        writeText(String(row.age ?? ''), colXs[3] + colWidths[3] / 2, rowTop + 10, 7.6, { align: 'center' });
+        writeText(row.gender || '', colXs[4] + colWidths[4] / 2, rowTop + 10, 7.6, { align: 'center' });
+        line(colXs[5] + 10, rowTop + 8, colXs[5] + colWidths[5] - 10, rowTop + 8, '0.55 0.60 0.67 RG');
+      });
+
+      writeText('Place:', LEFT + 2, 332, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
+      line(LEFT + 2, 308, LEFT + 180, 308);
+      writeText('To be filled in by two witnesses (Relatives, neighbours or friends)', PAGE_WIDTH / 2, 288, 7.4, {
+        align: 'center',
+        color: '0.30 0.38 0.48 rg',
+      });
+
+      const witnessY = 170;
+      const witnessWidth = (USABLE_WIDTH - 50) / 2;
+      drawRect(LEFT, witnessY, witnessWidth, 128, '0.97 0.98 1 rg', border);
+      drawRect(LEFT + witnessWidth + 50, witnessY, witnessWidth, 128, '0.97 0.98 1 rg', border);
+      writeText('1. Witness (Next of kin):', LEFT + 10, witnessY + 108, 8.0, { font: bold, color: '0.07 0.22 0.45 rg' });
+      writeText('2. Witness (Next of kin):', LEFT + witnessWidth + 60, witnessY + 108, 8.0, { font: bold, color: '0.07 0.22 0.45 rg' });
+
+      const witnessLines = [
+        ['Signature', 74],
+        ['Name and Relationship', 74],
+        ['Address', 74],
+        ['', 74],
+      ];
+
+      witnessLines.forEach((item, idx) => {
+        const y = witnessY + 82 - idx * 20;
+        writeText(item[0], LEFT + 8, y, 7.4, { color: '0.26 0.27 0.31 rg' });
+        writeText(':', LEFT + 82, y, 7.4, { color: '0.26 0.27 0.31 rg' });
+        line(LEFT + 92, y - 3, LEFT + witnessWidth - 10, y - 3, '0.65 0.68 0.72 RG');
+
+        writeText(item[0], LEFT + witnessWidth + 60, y, 7.4, { color: '0.26 0.27 0.31 rg' });
+        writeText(':', LEFT + witnessWidth + 134, y, 7.4, { color: '0.26 0.27 0.31 rg' });
+        line(LEFT + witnessWidth + 144, y - 3, LEFT + witnessWidth + 50 + witnessWidth - 10, y - 3, '0.65 0.68 0.72 RG');
+      });
+
+      objects.push({ number: 3, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>' });
+      objects.push({ number: 4, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>' });
+      objects.push({ number: 5, body: `<< /Length ${byteLength(parts.join('\n'))} >>\nstream\n${parts.join('\n')}\nendstream` });
+      objects.push({
+        number: 6,
+        body:
+          `<< /Type /Page /Parent 2 0 R ` +
+          `/MediaBox [0 0 ${PAGE_WIDTH.toFixed(2)} ${PAGE_HEIGHT.toFixed(2)}] ` +
+          `/Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> ` +
+          `/Contents 5 0 R >>`,
+      });
+      objects.push({ number: 2, body: `<< /Type /Pages /Kids [6 0 R] /Count 1 >>` });
+      objects.push({ number: 1, body: `<< /Type /Catalog /Pages 2 0 R >>` });
+      objects.sort((a, b) => a.number - b.number);
+
+      let pdf = '%PDF-1.4\n';
+      for (const object of objects) {
+        offsets[object.number] = byteLength(pdf);
+        pdf += `${object.number} 0 obj\n${object.body}\nendobj\n`;
       }
+
+      const xrefOffset = byteLength(pdf);
+      pdf += 'xref\n0 7\n';
+      pdf += '0000000000 65535 f \n';
+      for (let number = 1; number <= 6; number += 1) {
+        pdf += `${String(offsets[number] ?? 0).padStart(10, '0')} 00000 n \n`;
+      }
+      pdf += 'trailer\n<< /Size 7 /Root 1 0 R >>\n';
+      pdf += `startxref\n${xrefOffset}\n%%EOF\n`;
+
+      return new Blob([pdf], { type: 'application/pdf' });
     }
 
-    function buildRowHtml(rows) {
-      const body = document.getElementById('rows');
-      body.innerHTML = rows.map((row, index) => `
-        <tr>
-          <td class="center">${index + 1}</td>
-          <td class="muted center">${escapeHtml(getRowTitle(row))}</td>
-          <td>${escapeHtml(getRowDisplayName(row))}</td>
-          <td class="center">${escapeHtml(row.age ?? '')}</td>
-          <td class="center">${escapeHtml(row.gender || '')}</td>
-          <td><div class="signature-line"></div></td>
-        </tr>
-      `).join('');
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
     }
 
-    async function loadAndPrint() {
+    async function loadAndDownload() {
       const status = document.getElementById('status');
-      const content = document.getElementById('content');
       try {
-        let rows = readOpenerRows();
-
-        if (!rows.length) {
-          const apiBase = readApiBase().replace(/\/$/, '');
-          const response = await fetch(apiBase + '/api/terms/getall', {
-            headers: { Accept: 'application/json' },
-          });
-          const data = await response.json();
-          rows = normalizeRows(data);
-        }
+        status.textContent = 'Preparing download...';
+        const apiBase = readApiBase().replace(/\/$/, '');
+        const response = await fetch(apiBase + '/api/terms/getall', {
+          headers: { Accept: 'application/json' },
+        });
+        const data = await response.json();
+        const rows = normalizeRows(data);
 
         if (!rows.length) {
           status.textContent = 'No pledge data found.';
           return;
         }
 
-        buildRowHtml(rows);
-        status.hidden = true;
-        content.hidden = false;
-
-        try {
-          if (window.opener) {
-            window.opener.__PLEDGE_EXPORT_ROWS__ = [];
-          }
-        } catch (error) {
-          // Ignore cross-window cleanup issues.
-        }
+        const pdfBlob = buildPdfBlob(rows);
+        downloadBlob(pdfBlob, 'jothi-eye-care-centre-pledge.pdf');
 
         setTimeout(() => {
-          window.print();
-        }, 300);
+          window.close();
+        }, 1000);
       } catch (error) {
-        status.textContent = 'Failed to load pledge data.';
+        status.textContent = 'Failed to download pledge PDF.';
         status.className = 'error';
         console.error(error);
       }
     }
 
-    window.addEventListener('afterprint', () => window.close());
-    loadAndPrint();
+    loadAndDownload();
   </script>
 </body>
 </html>
