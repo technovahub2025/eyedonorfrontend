@@ -579,7 +579,9 @@
 </head>
 <body>
   <header>
-    <div class="header-inner"></div>
+    <div class="header-inner">
+      <button type="button" id="downloadBtn" style="display:none;">Download PDF</button>
+    </div>
   </header>
 
   <main>
@@ -771,9 +773,19 @@
       return row?.fullName || row?.name || '';
     }
 
-    function readApiBase() {
-      const url = new URL(window.location.href);
-      return url.searchParams.get('apiBase') || window.location.origin;
+    function readFrontendRows() {
+      try {
+        const openerRows = window.opener && window.opener.__PLEDGE_EXPORT_ROWS__;
+        if (Array.isArray(openerRows)) return openerRows;
+      } catch (error) {
+        console.warn('Could not read rows from opener:', error);
+      }
+
+      if (Array.isArray(window.__PLEDGE_EXPORT_ROWS__)) {
+        return window.__PLEDGE_EXPORT_ROWS__;
+      }
+
+      return [];
     }
 
     // ----- UPDATE TABLE WITH ALL FIELDS -----
