@@ -527,7 +527,10 @@ function buildExportHtml(rows) {
 
 function buildPrintablePdfHtml(rows) {
   const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
+  /* eslint-disable no-unreachable */
+  return buildPrintablePdfBlob(displayedRows);
 
+  /* eslint-disable-next-line no-unreachable */
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -860,6 +863,266 @@ function buildPrintablePdfHtml(rows) {
 </body>
 </html>`;
 }
+/* eslint-enable no-unreachable */
+
+function buildPrintablePdfBlob(rows) {
+  const PAGE_WIDTH = 595.28;
+  const PAGE_HEIGHT = 841.89;
+  const LEFT = 28;
+  const TOP = 26;
+  const USABLE_WIDTH = PAGE_WIDTH - LEFT * 2;
+  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
+  const content = buildPdfPageContent(displayedRows, {
+    PAGE_WIDTH,
+    PAGE_HEIGHT,
+    LEFT,
+    TOP,
+    USABLE_WIDTH,
+  });
+  const byteLength = (value) => new TextEncoder().encode(value).length;
+  const objects = [];
+  const offsets = [0];
+
+  const catalogObjectNumber = 1;
+  const pagesObjectNumber = 2;
+  const fontRegularObjectNumber = 3;
+  const fontBoldObjectNumber = 4;
+  const pageObjectNumber = 5;
+  const contentObjectNumber = 6;
+
+  objects.push({ number: fontRegularObjectNumber, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>' });
+  objects.push({ number: fontBoldObjectNumber, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>' });
+  objects.push({
+    number: contentObjectNumber,
+    body: `<< /Length ${byteLength(content)} >>\nstream\n${content}\nendstream`,
+  });
+  objects.push({
+    number: pageObjectNumber,
+    body:
+      `<< /Type /Page /Parent ${pagesObjectNumber} 0 R ` +
+      `/MediaBox [0 0 ${PAGE_WIDTH.toFixed(2)} ${PAGE_HEIGHT.toFixed(2)}] ` +
+      `/Resources << /Font << /F1 ${fontRegularObjectNumber} 0 R /F2 ${fontBoldObjectNumber} 0 R >> >> ` +
+      `/Contents ${contentObjectNumber} 0 R >>`,
+  });
+  objects.push({
+    number: pagesObjectNumber,
+    body: `<< /Type /Pages /Kids [${pageObjectNumber} 0 R] /Count 1 >>`,
+  });
+  objects.push({
+    number: catalogObjectNumber,
+    body: `<< /Type /Catalog /Pages ${pagesObjectNumber} 0 R >>`,
+  });
+
+  objects.sort((a, b) => a.number - b.number);
+
+  let pdf = '%PDF-1.4\n';
+  for (const object of objects) {
+    offsets[object.number] = byteLength(pdf);
+    pdf += `${object.number} 0 obj\n${object.body}\nendobj\n`;
+  }
+
+  const xrefOffset = byteLength(pdf);
+  pdf += 'xref\n0 7\n';
+  pdf += '0000000000 65535 f \n';
+
+  for (let number = 1; number <= 6; number += 1) {
+    const offset = offsets[number] ?? 0;
+    pdf += `${String(offset).padStart(10, '0')} 00000 n \n`;
+  }
+
+  pdf += `trailer\n<< /Size 7 /Root ${catalogObjectNumber} 0 R >>\n`;
+  pdf += `startxref\n${xrefOffset}\n%%EOF\n`;
+
+  return new Blob([pdf], { type: 'application/pdf' });
+}
+
+function buildPdfPageContent(rows, { PAGE_WIDTH, PAGE_HEIGHT, LEFT, TOP, USABLE_WIDTH }) {
+  const parts = [];
+  const regular = 1;
+  const bold = 2;
+  const darkBlue = '0.07 0.23 0.52 rg';
+  const teal = '0.00 0.42 0.55 rg';
+  const border = '0.78 0.78 0.80 RG';
+
+  const drawRect = (x, y, w, h, fill, stroke) => {
+    if (fill) parts.push(fill);
+    if (stroke) parts.push(stroke);
+    parts.push(`${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re ${fill ? 'B' : 'S'}`);
+  };
+
+  const line = (x1, y1, x2, y2, stroke = border) => {
+    parts.push(stroke);
+    parts.push(`${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`);
+  };
+
+  const writeText = (text, x, y, size, options = {}) => {
+    const {
+      align = 'left',
+      color = '0 0 0 rg',
+      font = regular,
+      maxWidth = null,
+    } = options;
+    const estimate = maxWidth || textWidthEstimate(text, size);
+    let startX = x;
+    if (align === 'center') startX = x - estimate / 2;
+    if (align === 'right') startX = x - estimate;
+    parts.push('BT');
+    parts.push(color);
+    parts.push(`/F${font} ${size.toFixed(2)} Tf`);
+    parts.push(`1 0 0 1 ${startX.toFixed(2)} ${y.toFixed(2)} Tm`);
+    parts.push(`(${escapePdfText(text)}) Tj`);
+    parts.push('ET');
+  };
+
+  const headerTop = PAGE_HEIGHT - TOP;
+  const headerBottom = headerTop - 130;
+  drawRect(LEFT, headerBottom, USABLE_WIDTH, 130, '1 1 1 rg', border);
+  drawRect(LEFT, headerBottom + 63, USABLE_WIDTH, 67, '0.95 0.97 1 rg', '0.90 0.92 0.96 RG');
+
+  writeText('JOTHI EYE BANK', LEFT + 12, headerTop - 28, 21, { font: bold, color: darkBlue });
+  writeText('Family Eye Donation Pledge Form', LEFT + 12, headerTop - 55, 15.5, { font: bold, color: teal });
+  writeText('Eye donation - a noble gift that lives on.', LEFT + 12, headerTop - 75, 10.2, { color: '0.28 0.38 0.49 rg' });
+  writeText('Let it be our family tradition.', LEFT + 12, headerTop - 88, 10.2, { color: '0.28 0.38 0.49 rg' });
+
+  drawRect(PAGE_WIDTH - LEFT - 120, headerTop - 68, 108, 46, '0.11 0.31 0.66 rg', null);
+  writeText('Date', PAGE_WIDTH - LEFT - 66, headerTop - 41, 12, { font: bold, color: '1 1 1 rg', align: 'center' });
+  line(PAGE_WIDTH - LEFT - 108, headerTop - 57, PAGE_WIDTH - LEFT - 12, headerTop - 57, '1 1 1 RG');
+
+  const bandTop = headerBottom - 16;
+  drawRect(LEFT, bandTop - 60, USABLE_WIDTH, 60, darkBlue, null);
+  writeText('JOTHI EYE CARE CENTRE', LEFT + 12, bandTop - 26, 19, { font: bold, color: '1 1 1 rg' });
+  writeText('152 & 154, Calve Subraya Chetty Street, Puducherry - 605 001.', LEFT + 12, bandTop - 47, 11.4, { font: bold, color: '1 1 1 rg' });
+
+  drawRect(PAGE_WIDTH - LEFT - 205, bandTop - 54, 195, 48, '0.98 0.94 0.76 rg', null);
+  writeText('FOR EYE DONATION', PAGE_WIDTH - LEFT - 107.5, bandTop - 18, 10, { font: bold, align: 'center' });
+  writeText('Toll No. 1919', PAGE_WIDTH - LEFT - 107.5, bandTop - 34, 14, { font: bold, align: 'center' });
+  writeText('Free (BSNL) Service', PAGE_WIDTH - LEFT - 107.5, bandTop - 47, 9.2, { align: 'center' });
+
+  const addressTop = bandTop - 78;
+  drawRect(LEFT, addressTop - 122, USABLE_WIDTH, 122, '1 1 1 rg', border);
+  drawRect(LEFT + 12, addressTop - 20, 112, 20, '0.00 0.42 0.55 rg', null);
+  writeText('ADDRESS DETAILS', LEFT + 68, addressTop - 5, 10.2, { font: bold, color: '1 1 1 rg', align: 'center' });
+
+  writeText('Address', LEFT + 10, addressTop - 40, 11.2, { font: bold });
+  line(LEFT + 70, addressTop - 43, PAGE_WIDTH - LEFT - 12, addressTop - 43);
+  line(LEFT + 10, addressTop - 60, PAGE_WIDTH - LEFT - 12, addressTop - 60);
+  line(LEFT + 10, addressTop - 80, PAGE_WIDTH - LEFT - 12, addressTop - 80);
+
+  writeText('Pin', LEFT + 10, addressTop - 101, 11, { font: bold });
+  line(LEFT + 46, addressTop - 104, LEFT + 140, addressTop - 104);
+  writeText('Dist', LEFT + 160, addressTop - 101, 11, { font: bold });
+  line(LEFT + 202, addressTop - 104, LEFT + 296, addressTop - 104);
+  writeText('State', LEFT + 316, addressTop - 101, 11, { font: bold });
+  line(LEFT + 366, addressTop - 104, LEFT + 460, addressTop - 104);
+  writeText('Telephone', LEFT + 10, addressTop - 120, 11, { font: bold });
+  line(LEFT + 84, addressTop - 123, PAGE_WIDTH - LEFT - 12, addressTop - 123);
+
+  writeText(
+    'We, the undersigned adult members of the family, pledge to donate our eyes after our death for the benefit of the needy.',
+    PAGE_WIDTH / 2,
+    addressTop - 144,
+    10.1,
+    { font: bold, align: 'center', color: '0.10 0.20 0.42 rg' }
+  );
+
+  const tableTop = addressTop - 162;
+  const tableHeight = 118;
+  drawRect(LEFT, tableTop - tableHeight, USABLE_WIDTH, tableHeight, '1 1 1 rg', border);
+  drawRect(LEFT, tableTop - 22, USABLE_WIDTH, 22, '0.04 0.45 0.57 rg', null);
+  const colXs = [LEFT, LEFT + 52, LEFT + 122, LEFT + 312, LEFT + 382, LEFT + 452];
+  const colWidths = [52, 70, 190, 70, 70, 126];
+  ['S.No', 'Title', 'Name (Block Letters)', 'Age', 'Gender', 'Signature'].forEach((label, idx) => {
+    writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 9.2, {
+      font: bold,
+      align: 'center',
+      color: '1 1 1 rg',
+    });
+    if (idx > 0) line(colXs[idx], tableTop - 22, colXs[idx], tableTop - tableHeight);
+  });
+
+  const rowHeight = 32;
+  rows.forEach((row, index) => {
+    const rowTop = tableTop - 22 - rowHeight * (index + 1);
+    line(LEFT, rowTop, LEFT + USABLE_WIDTH, rowTop);
+    writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 11, 10, { align: 'center' });
+    writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 11, 9.6, {
+      align: 'center',
+      color: '0.28 0.28 0.30 rg',
+    });
+    writeText(getRowDisplayName(row), colXs[2] + 6, rowTop + 11, 9.6, {
+      maxWidth: colWidths[2] - 12,
+    });
+    writeText(String(row.age ?? 'N/A'), colXs[3] + colWidths[3] / 2, rowTop + 11, 9.6, { align: 'center' });
+    writeText(row.gender || 'N/A', colXs[4] + colWidths[4] / 2, rowTop + 11, 9.6, { align: 'center' });
+    line(colXs[5] + 10, rowTop + 8, colXs[5] + colWidths[5] - 10, rowTop + 8, '0.45 0.52 0.60 RG');
+  });
+
+  const footerTop = tableTop - tableHeight - 18;
+  writeText('Place', LEFT + 2, footerTop, 11.2, { font: bold });
+  line(LEFT + 46, footerTop - 3, LEFT + 200, footerTop - 3);
+  writeText(
+    'To be filled in by two witnesses (Relatives, neighbours or friends)',
+    PAGE_WIDTH / 2,
+    footerTop - 20,
+    9.4,
+    { align: 'center', color: '0.30 0.38 0.48 rg' }
+  );
+
+  const witnessTop = footerTop - 118;
+  const witnessWidth = (USABLE_WIDTH - 12) / 2;
+  drawRect(LEFT, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
+  drawRect(LEFT + witnessWidth + 12, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
+  writeText('1. Witness (Next of kin)', LEFT + witnessWidth / 2, witnessTop + 86, 10.1, {
+    font: bold,
+    align: 'center',
+  });
+  writeText('2. Witness (Next of kin)', LEFT + witnessWidth + 12 + witnessWidth / 2, witnessTop + 86, 10.1, {
+    font: bold,
+    align: 'center',
+  });
+
+  ['Signature', 'Name and Relationship', 'Address', ''].forEach((label, idx) => {
+    const y = witnessTop + 64 - idx * 18;
+    writeText(label, LEFT + 10, y, 9.1);
+    writeText(':', LEFT + 72, y, 9.1);
+    line(LEFT + 84, y - 3, LEFT + witnessWidth - 10, y - 3, '0.62 0.65 0.70 RG');
+
+    writeText(label, LEFT + witnessWidth + 12 + 10, y, 9.1);
+    writeText(':', LEFT + witnessWidth + 12 + 72, y, 9.1);
+    line(
+      LEFT + witnessWidth + 12 + 84,
+      y - 3,
+      LEFT + witnessWidth + 12 + witnessWidth - 10,
+      y - 3,
+      '0.62 0.65 0.70 RG'
+    );
+  });
+
+  writeText('JOTHI EYE CARE CENTRE', PAGE_WIDTH / 2, 34, 8.5, { font: bold, align: 'center', color: teal });
+  return parts.join('\n');
+}
+
+function escapePdfText(value) {
+  return String(value ?? '')
+    .replace(/\\/g, '\\\\')
+    .replace(/\(/g, '\\(')
+    .replace(/\)/g, '\\)');
+}
+
+function textWidthEstimate(text, fontSize) {
+  return String(text).length * fontSize * 0.52;
+}
+
+function getRowTitle(row) {
+  if (row?.title) return row.title;
+  if (row?.gender === 'Male') return 'Mr.';
+  if (row?.gender === 'Female') return 'Ms.';
+  return 'Mr./Ms.';
+}
+
+function getRowDisplayName(row) {
+  return row?.fullName || row?.name || 'N/A';
+}
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
@@ -875,21 +1138,15 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
         return;
       }
 
-      const htmlContent = buildExportHtml(rows);
-
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        throw new Error('Please allow popups for this site to export PDF.');
-      }
-
-      printWindow.document.write(htmlContent);
-      printWindow.document.close();
-      printWindow.focus();
-
-      setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-      }, 600);
+      const pdfBlob = buildExportHtml(rows);
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'jothi-eye-care-centre-pledge.pdf';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err) {
       console.error('Export error:', err);
     } finally {
