@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
@@ -137,6 +137,9 @@
     .bank-left {
       min-width: 0;
       flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .bank-name {
@@ -232,7 +235,7 @@
       gap: 6px;
     }
 
-    .mini-field .caption .material-symbols-outlined {
+    .mini-field .caption .icon {
       font-size: 16px;
       color: #0c4d7b;
       line-height: 1;
@@ -281,6 +284,7 @@
     .age-col { width: 42px; text-align: center; }
     .gender-col { width: 52px; text-align: center; }
     .signature-col { width: 140px; }
+
     .center { text-align: center; }
     .muted { color: #465363; }
 
@@ -360,10 +364,6 @@
       height: 16px;
     }
 
-    .footer-gap {
-      height: 10px;
-    }
-
     .loading, .error {
       padding: 24px;
       text-align: center;
@@ -387,199 +387,55 @@
         width: 111.111%;
       }
 
-      .sheet {
-        padding: 10px 12px 8px;
-      }
+      .sheet { padding: 10px 12px 8px; }
+      .top-row { gap: 10px; margin-bottom: 6px; }
+      .logo-title-group { gap: 10px; }
+      .logo-title-group img { width: 64px; height: 64px; }
+      .title-block { padding-top: 0; }
+      .title-block h1 { font-size: 20px; line-height: 1.05; }
+      .title-block .subtitle { font-size: 10px; margin-top: 4px; }
+      .date-box { width: 140px; padding-top: 2px; }
+      .date-box .label { margin-bottom: 6px; }
 
-      .top-row {
-        gap: 10px;
-        margin-bottom: 6px;
-      }
+      .bank-row { padding: 8px 0; margin: 0 0 8px; }
+      .bank-name .name { font-size: 16px; }
+      .bank-name .detail { font-size: 9px; }
+      .bank-right { width: 160px; padding-left: 10px; }
+      .bank-right .label { font-size: 9px; }
+      .bank-right .call { font-size: 14px; }
+      .bank-right .hint { font-size: 9px; }
 
-      .logo-title-group {
-        gap: 10px;
-      }
+      .address-section { margin: 0 0 8px; }
+      .address-label { font-size: 9px; margin-bottom: 4px; }
+      .line { height: 14px; }
+      .double-lines .line + .line { margin-top: 6px; }
+      .grid-4 { gap: 10px; margin-top: 8px; }
+      .mini-field .caption { font-size: 9px; margin-bottom: 3px; }
+      .mini-field .caption .icon { font-size: 13px; }
 
-      .logo-title-group img {
-        width: 64px;
-        height: 64px;
-      }
+      .intro { margin: 6px 0 8px; font-size: 9px; line-height: 1.25; }
+      .table-wrap { margin-bottom: 8px; }
+      table { font-size: 10px; }
+      th, td { padding: 6px 6px; }
+      thead th { font-size: 8.5px; }
+      .sn { width: 42px; }
+      .title-col { width: 58px; }
+      .age-col { width: 34px; }
+      .gender-col { width: 44px; }
+      .signature-col { width: 110px; }
+      .signature-line { height: 12px; }
 
-      .title-block {
-        padding-top: 0;
-      }
+      .place-row { gap: 8px; margin: 8px 0 6px; }
+      .place-row .label { font-size: 9px; }
+      .place-row .line { flex-basis: 150px; }
 
-      .title-block h1 {
-        font-size: 20px;
-        line-height: 1.05;
-      }
-
-      .title-block .subtitle {
-        font-size: 10px;
-        margin-top: 4px;
-      }
-
-      .date-box {
-        width: 140px;
-        padding-top: 2px;
-      }
-
-      .date-box .label {
-        margin-bottom: 6px;
-      }
-
-      .bank-row {
-        padding: 8px 0;
-        margin: 0 0 8px;
-      }
-
-      .bank-name .name {
-        font-size: 16px;
-      }
-
-      .bank-name .detail {
-        font-size: 9px;
-      }
-
-      .bank-right {
-        width: 160px;
-        padding-left: 10px;
-      }
-
-      .bank-right .label {
-        font-size: 9px;
-      }
-
-      .bank-right .call {
-        font-size: 14px;
-      }
-
-      .bank-right .hint {
-        font-size: 9px;
-      }
-
-      .address-section {
-        margin: 0 0 8px;
-      }
-
-      .address-label {
-        font-size: 9px;
-        margin-bottom: 4px;
-      }
-
-      .line {
-        height: 14px;
-      }
-
-      .double-lines .line + .line {
-        margin-top: 6px;
-      }
-
-      .grid-4 {
-        gap: 10px;
-        margin-top: 8px;
-      }
-
-      .mini-field .caption {
-        font-size: 9px;
-        margin-bottom: 3px;
-      }
-
-      .mini-field .caption .material-symbols-outlined {
-        font-size: 13px;
-      }
-
-      .intro {
-        margin: 6px 0 8px;
-        font-size: 9px;
-        line-height: 1.25;
-      }
-
-      .table-wrap {
-        margin-bottom: 8px;
-      }
-
-      table {
-        font-size: 10px;
-      }
-
-      th, td {
-        padding: 6px 6px;
-      }
-
-      thead th {
-        font-size: 8.5px;
-      }
-
-      .sn {
-        width: 42px;
-      }
-
-      .title-col {
-        width: 58px;
-      }
-
-      .age-col {
-        width: 34px;
-      }
-
-      .gender-col {
-        width: 44px;
-      }
-
-      .signature-col {
-        width: 110px;
-      }
-
-      .signature-line {
-        height: 12px;
-      }
-
-      .place-row {
-        gap: 8px;
-        margin: 8px 0 6px;
-      }
-
-      .place-row .label {
-        font-size: 9px;
-      }
-
-      .place-row .line {
-        flex-basis: 150px;
-      }
-
-      .witness-note {
-        font-size: 9px;
-        margin-bottom: 6px;
-      }
-
-      .witness-grid {
-        gap: 8px;
-      }
-
-      .witness-box {
-        padding: 8px 8px 6px;
-        min-height: 132px;
-      }
-
-      .witness-title {
-        font-size: 8.5px;
-        margin-bottom: 6px;
-      }
-
-      .witness-row {
-        font-size: 8px;
-        margin-bottom: 5px;
-        gap: 6px;
-      }
-
-      .witness-row .label {
-        width: 88px;
-      }
-
-      .witness-row .fill {
-        height: 12px;
-      }
+      .witness-note { font-size: 9px; margin-bottom: 6px; }
+      .witness-grid { gap: 8px; }
+      .witness-box { padding: 8px 8px 6px; min-height: 132px; }
+      .witness-title { font-size: 8.5px; margin-bottom: 6px; }
+      .witness-row { font-size: 8px; margin-bottom: 5px; gap: 6px; }
+      .witness-row .label { width: 88px; }
+      .witness-row .fill { height: 12px; }
     }
 
     @media (max-width: 800px) {
@@ -646,7 +502,7 @@
               <div class="line"></div>
             </div>
             <div class="mini-field">
-              <div class="caption"><span class="material-symbols-outlined" aria-hidden="true">phone</span> TELEPHONE</div>
+              <div class="caption"><span class="icon">☎</span> TELEPHONE</div>
               <div class="line"></div>
             </div>
           </div>
@@ -786,14 +642,8 @@
       };
 
       const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
-      const top = PAGE_HEIGHT - TOP;
-
       drawRect(LEFT, 734, USABLE_WIDTH, 82, '1 1 1 rg', null);
       drawRect(LEFT, 734, USABLE_WIDTH, 82, null, border);
-
-      drawRect(LEFT + 18, 746, 40, 40, '0.98 0.98 0.99 rg', border);
-      writeText('JOTHI', LEFT + 38, 770, 9.4, { font: bold, align: 'center', color: '0.09 0.09 0.10 rg' });
-      writeText('2000', LEFT + 38, 756, 9.4, { font: bold, align: 'center', color: '0.09 0.09 0.10 rg' });
 
       writeText('FAMILY EYE DONATION PLEDGE', LEFT + 126, 774, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
       writeText('FORM', LEFT + 126, 756, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
