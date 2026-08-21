@@ -12,6 +12,7 @@ import eyeHero from '../asset/eyehero.png';
 import { apiRequest } from '../lib/apiClient';
 import './ThankYouPage.css';
 
+// ----- HELPER FUNCTIONS -----
 function escapeHtml(value) {
   return String(value ?? '')
     .replace(/&/g, '&amp;')
@@ -33,11 +34,15 @@ function normalizeRows(response, fallbackRows) {
   return rows.slice(0, 3);
 }
 
+// ----- PDF GENERATION USING HEADER.TXT TEMPLATE -----
 function buildExportHtml(rows) {
   const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
   return buildPrintablePdfHtml(displayedRows);
+}
 
-  /* eslint-disable-next-line no-unreachable */
+function buildPrintablePdfHtml(rows) {
+  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,8 +83,18 @@ function buildExportHtml(rows) {
       text-transform: uppercase;
     }
 
-    .text-on-surface-variant { color: #45464d; }
+    .font-body-md {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+    }
 
+    .text-on-surface-variant { color: #45464d; }
+    .text-primary { color: #000000; }
+    .text-secondary { color: #006398; }
+
+    /* ----- header (empty) ----- */
     header {
       position: fixed;
       top: 0;
@@ -92,7 +107,6 @@ function buildExportHtml(rows) {
       display: flex;
       align-items: center;
     }
-
     .header-inner {
       max-width: 1200px;
       width: 100%;
@@ -108,6 +122,192 @@ function buildExportHtml(rows) {
       padding-top: 80px;
       min-height: 100vh;
       background: #ffffff;
+    }
+
+    .form-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: #ffffff;
+    }
+
+    /* ----- pledge card (fixed aspect ratio) ----- */
+    .pledge-card {
+      width: 100%;
+      max-width: 896px;
+      aspect-ratio: 1 / 1.414;
+      background: #ffffff;
+      border: 1px solid #c6c6cd;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-bg-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image: 
+        radial-gradient(circle at top right, rgba(0, 99, 152, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at bottom left, rgba(0, 99, 152, 0.03) 0%, transparent 40%);
+      z-index: 0;
+    }
+
+    .card-content {
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ----- top row: logo + title (inline) + date ----- */
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .logo-title-group {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+    .logo-title-group img {
+      height: 120px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .title-block {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+    .title-block h1 {
+      font-family: 'Manrope', sans-serif;
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #000;
+      white-space: nowrap;
+    }
+    .title-block .subtitle {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 13px;
+      line-height: 18px;
+      color: #006398;
+      font-style: italic;
+      white-space: nowrap;
+    }
+
+    .date-block {
+      width: 12rem;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .date-block label {
+      margin-bottom: 0.25rem;
+    }
+    .date-block .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
+
+    /* ----- bank info + call ----- */
+    .bank-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #c6c6cd;
+      border-bottom: 1px solid #c6c6cd;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      background: rgba(242, 244, 246, 0.3);
+    }
+    .bank-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .bank-name {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .bank-name .name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 600;
+      color: #000;
+      white-space: nowrap;
+    }
+    .bank-name .detail {
+      font-size: 14px;
+      line-height: 20px;
+      color: #45464d;
+      white-space: nowrap;
+    }
+
+    .bank-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border-left: 1px solid #c6c6cd;
+      padding-left: 1.5rem;
+      min-width: 160px;
+    }
+    .bank-right .label {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #006398;
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+    .bank-right .call {
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 600;
+      color: #000;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .bank-right .call .material-symbols-outlined {
+      font-size: 18px;
+      vertical-align: middle;
+    }
+    .bank-right .hint {
+      font-size: 12px;
+      line-height: 16px;
+      color: #45464d;
+      text-align: center;
     }
 
     /* ----- address fields ----- */
@@ -361,11 +561,17 @@ function buildExportHtml(rows) {
   </style>
 </head>
 <body>
+  <header>
+    <div class="header-inner"></div>
+  </header>
+
   <main>
     <div class="form-wrapper">
       <div class="pledge-card">
         <div class="card-bg-overlay"></div>
         <div class="card-content">
+
+          <!-- top row: logo + title (inline) + date -->
           <div class="top-row">
             <div class="logo-title-group">
               <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal">
@@ -380,11 +586,12 @@ function buildExportHtml(rows) {
             </div>
           </div>
 
+          <!-- bank info + call -->
           <div class="bank-row">
             <div class="bank-left">
               <div class="bank-name">
-                <span class="name">JOTHI EYE CARE CENTRE</span>
-                <span class="detail">152 & 154, Calve Subraya Chetty Street, Puducherry - 605 001.</span>
+                <span class="name">JOTHI EYE BANK</span>
+                <span class="detail">Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE</span>
               </div>
             </div>
             <div class="bank-right">
@@ -394,6 +601,7 @@ function buildExportHtml(rows) {
             </div>
           </div>
 
+          <!-- address -->
           <div class="address-section">
             <div class="address-row">
               <div class="field">
@@ -422,10 +630,12 @@ function buildExportHtml(rows) {
             </div>
           </div>
 
+          <!-- description -->
           <div class="desc-text font-body-md">
             Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:
           </div>
 
+          <!-- table -->
           <div class="table-wrap">
             <table class="pledge-table">
               <thead>
@@ -458,6 +668,7 @@ function buildExportHtml(rows) {
             </table>
           </div>
 
+          <!-- bottom: place + witnesses -->
           <div>
             <div class="place-row">
               <div class="field">
@@ -469,6 +680,7 @@ function buildExportHtml(rows) {
             <p class="witness-label font-body-md">To be filled in by two witnesses (Relatives, neighbours or friends)</p>
 
             <div class="witness-grid">
+              <!-- witness 1 -->
               <div class="witness-box">
                 <span class="witness-title">1. Witness (Next of kin):</span>
                 <div class="witness-row">
@@ -493,6 +705,7 @@ function buildExportHtml(rows) {
                 </div>
               </div>
 
+              <!-- witness 2 -->
               <div class="witness-box">
                 <span class="witness-title">2. Witness (Next of kin):</span>
                 <div class="witness-row">
@@ -518,6 +731,7 @@ function buildExportHtml(rows) {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -526,624 +740,49 @@ function buildExportHtml(rows) {
 </html>`;
 }
 
-function buildPrintablePdfHtml(rows) {
-  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
-  /* eslint-disable no-unreachable */
-  return buildPrintablePdfBlob(displayedRows);
-
-  /* eslint-disable-next-line no-unreachable */
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    @page { size: A4 portrait; margin: 14mm; }
-    html, body {
-      margin: 0;
-      padding: 0;
-      background:
-        radial-gradient(circle at top left, rgba(0, 102, 138, 0.08), transparent 24%),
-        radial-gradient(circle at top right, rgba(31, 76, 201, 0.08), transparent 22%),
-        #eef5fb;
-      font-family: 'Public Sans', sans-serif;
-      color: #191c1e;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-    body { min-height: 100vh; }
-    .sheet {
-      position: relative;
-      background: #fff;
-      border: 1px solid #c6c6cd;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(11, 29, 57, 0.12);
-    }
-    .sheet::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at top right, rgba(31, 76, 201, 0.08), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(0, 102, 138, 0.08), transparent 22%);
-      pointer-events: none;
-    }
-    .content { position: relative; z-index: 1; padding: 22px 24px 20px; }
-    .brand-row, .info-row, .footer-row { display: flex; gap: 14px; }
-    .brand-row { justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .brand { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
-    .brand img {
-      width: 86px;
-      height: 86px;
-      object-fit: cover;
-      border-radius: 18px;
-      border: 1px solid rgba(31, 76, 201, 0.12);
-      background: #fff;
-      flex: none;
-    }
-    .eyebrow, .section-label, .column-head, .footer-chip {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .eyebrow { color: #00668a; margin-bottom: 6px; }
-    h1 {
-      margin: 0 0 6px;
-      font-family: 'Manrope', sans-serif;
-      font-size: 1.65rem;
-      line-height: 1.08;
-      letter-spacing: -0.04em;
-      color: #102033;
-    }
-    .subtitle { color: #4e657b; font-size: 0.94rem; line-height: 1.45; max-width: 52ch; }
-    .date-box {
-      min-width: 160px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(31, 76, 201, 0.12);
-      background: linear-gradient(180deg, rgba(244, 248, 255, 0.98), rgba(255, 255, 255, 0.98));
-    }
-    .date-line, .field-line, .sig-line, .witness-line { border-bottom: 1px solid #c6c6cd; }
-    .date-line { min-height: 20px; margin-top: 12px; }
-    .info-row { align-items: stretch; margin: 14px 0 16px; }
-    .info-card {
-      flex: 1;
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(31, 76, 201, 0.12);
-      background: rgba(244, 248, 255, 0.88);
-    }
-    .info-card strong {
-      display: block;
-      font-family: 'Manrope', sans-serif;
-      font-size: 1.04rem;
-      line-height: 1.4;
-      color: #102033;
-      margin-bottom: 6px;
-    }
-    .info-card span { color: #50657c; font-size: 0.92rem; line-height: 1.45; }
-    .callout {
-      width: 210px;
-      flex: none;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #0b6c8d 0%, #1f4cc9 100%);
-      color: #fff;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 4px;
-    }
-    .callout .label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.92; }
-    .callout .phone { font-family: 'Manrope', sans-serif; font-size: 1.25rem; font-weight: 800; }
-    .callout .hint { font-size: 0.78rem; opacity: 0.9; }
-    .address-row { margin: 0 0 14px; }
-    .address-block {
-      flex: 1;
-      padding: 14px 16px 18px;
-      border-radius: 16px;
-      border: 1px solid #c6c6cd;
-      background: #fff;
-    }
-    .address-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1.1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .address-mini {
-      padding: 12px 14px 14px;
-      border-radius: 14px;
-      border: 1px solid #d9dee8;
-      background: #f9fbff;
-    }
-    .desc-text { margin: 16px 0 14px; color: #4b5d71; font-size: 0.95rem; line-height: 1.55; }
-    .table-wrap { border: 1px solid #c6c6cd; border-radius: 14px; overflow: hidden; background: #fff; }
-    .pledge-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; color: #191c1e; }
-    .pledge-table thead { background: linear-gradient(180deg, #f4f7fb 0%, #edf3f9 100%); }
-    .pledge-table th, .pledge-table td {
-      border-right: 1px solid #c6c6cd;
-      border-bottom: 1px solid #c6c6cd;
-      padding: 11px 10px;
-      vertical-align: middle;
-    }
-    .pledge-table th:last-child, .pledge-table td:last-child { border-right: none; }
-    .pledge-table tbody tr:last-child td { border-bottom: none; }
-    .pledge-table th {
-      font-size: 0.72rem;
-      line-height: 1.2;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: #203042;
-      text-align: left;
-    }
-    .center { text-align: center; }
-    .muted { color: #4f5e70; }
-    .sn { width: 58px; text-align: center; }
-    .title { width: 92px; }
-    .age, .gender { width: 72px; text-align: center; }
-    .signature { width: 160px; text-align: center; }
-    .sig-line { min-height: 20px; width: 100%; opacity: 0.8; }
-    .footer { margin-top: 18px; }
-    .place-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
-    .place-field {
-      width: 220px;
-      padding: 12px 14px 14px;
-      border-radius: 14px;
-      border: 1px solid #c6c6cd;
-      background: rgba(249, 251, 255, 0.96);
-    }
-    .witness-note { margin-bottom: 12px; font-style: italic; text-align: center; color: #526476; font-size: 0.9rem; }
-    .witness-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    .witness-box {
-      padding: 14px 16px;
-      border-radius: 16px;
-      border: 1px solid rgba(198, 198, 205, 0.95);
-      background: rgba(242, 246, 251, 0.82);
-    }
-    .witness-title { font-weight: 800; color: #102033; margin-bottom: 12px; }
-    .witness-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 8px;
-      margin-top: 10px;
-      color: #4f5e70;
-      font-size: 0.92rem;
-    }
-    .witness-row .label { width: 150px; flex: none; }
-    .witness-row .colon { flex: none; }
-    .witness-row .witness-line { flex: 1; min-height: 20px; border-bottom: 1px dashed #c6c6cd; }
-    .footer-row {
-      margin-top: 14px;
-      align-items: center;
-      justify-content: space-between;
-      color: #66768a;
-      font-size: 0.76rem;
-    }
-    .footer-chip {
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(31, 76, 201, 0.12);
-      background: rgba(255, 255, 255, 0.92);
-      color: #17316f;
-    }
-    @media print { body { background: #fff; } .sheet { box-shadow: none; } }
-    @media (max-width: 820px) {
-      .content { padding: 18px; }
-      .brand-row { flex-direction: column; align-items: flex-start; }
-      .info-row, .witness-grid { display: grid; grid-template-columns: 1fr; }
-      .address-grid { grid-template-columns: 1fr; }
-      .callout { width: 100%; }
-    }
-  </style>
-</head>
-<body>
-  <main class="sheet">
-    <div class="card">
-      <div class="content">
-        <div class="brand-row">
-          <div class="brand">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal">
-            <div>
-              <div class="eyebrow">Family Eye Donation Pledge Form</div>
-              <h1>JOTHI EYE CARE CENTRE</h1>
-              <div class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</div>
-            </div>
-          </div>
-          <div class="date-box">
-            <div class="section-label">Date</div>
-            <div class="date-line"></div>
-          </div>
-        </div>
-
-        <div class="info-row">
-          <div class="info-card">
-            <strong>JOTHI EYE CARE CENTRE</strong>
-            <span>152 &amp; 154, Calve Subraya Chetty Street, Puducherry - 605 001.</span>
-          </div>
-          <div class="callout">
-            <div class="label">For Eye Donation</div>
-            <div class="phone">Toll No. 1919</div>
-            <div class="hint">Free (BSNL) Service</div>
-          </div>
-        </div>
-
-        <div class="address-row">
-          <div class="address-block">
-            <div class="section-label">Address</div>
-            <div class="field-line"></div>
-            <div class="field-line"></div>
-            <div class="address-grid">
-              <div class="address-mini"><div class="column-head">Pin</div><div class="field-line"></div></div>
-              <div class="address-mini"><div class="column-head">Dist</div><div class="field-line"></div></div>
-              <div class="address-mini"><div class="column-head">State</div><div class="field-line"></div></div>
-              <div class="address-mini"><div class="column-head">Telephone</div><div class="field-line"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="desc-text">
-          Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are given below:
-        </div>
-
-        <div class="table-wrap">
-          <table class="pledge-table">
-            <thead>
-              <tr>
-                <th class="sn">S.No</th>
-                <th class="title">Title</th>
-                <th>Name (Block Letters)</th>
-                <th class="age">Age</th>
-                <th class="gender">Gender</th>
-                <th class="signature">Signature</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${displayedRows
-                .map((row, index) => {
-                  const title = row.title || (row.gender === 'Male' ? 'Mr.' : row.gender === 'Female' ? 'Ms.' : 'Mr./Ms.');
-                  return `
-                    <tr>
-                      <td class="center">${index + 1}</td>
-                      <td class="muted">${escapeHtml(title)}</td>
-                      <td>${escapeHtml(row.fullName || row.name || 'N/A')}</td>
-                      <td class="center">${escapeHtml(row.age ?? 'N/A')}</td>
-                      <td class="center">${escapeHtml(row.gender || 'N/A')}</td>
-                      <td><div class="sig-line"></div></td>
-                    </tr>
-                  `;
-                })
-                .join('')}
-            </tbody>
-          </table>
-        </div>
-
-        <div class="footer">
-          <div class="place-row">
-            <div class="place-field">
-              <div class="section-label">Place</div>
-              <div class="field-line"></div>
-            </div>
-          </div>
-
-          <div class="witness-note">To be filled in by two witnesses (Relatives, neighbours or friends)</div>
-
-          <div class="witness-grid">
-            <div class="witness-box">
-              <div class="witness-title">1. Witness (Next of kin)</div>
-              <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">&nbsp;</span><span class="colon" style="opacity:0">:</span><div class="witness-line"></div></div>
-            </div>
-
-            <div class="witness-box">
-              <div class="witness-title">2. Witness (Next of kin)</div>
-              <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><div class="witness-line"></div></div>
-              <div class="witness-row"><span class="label">&nbsp;</span><span class="colon" style="opacity:0">:</span><div class="witness-line"></div></div>
-            </div>
-          </div>
-
-          <div class="footer-row">
-            <div>JOTHI EYE CARE CENTRE</div>
-            <div class="footer-chip">Eye Donation Pledge</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-</body>
-</html>`;
-}
-/* eslint-enable no-unreachable */
-
-function buildPrintablePdfBlob(rows) {
-  const PAGE_WIDTH = 595.28;
-  const PAGE_HEIGHT = 841.89;
-  const LEFT = 28;
-  const TOP = 26;
-  const USABLE_WIDTH = PAGE_WIDTH - LEFT * 2;
-  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
-  const content = buildPdfPageContent(displayedRows, {
-    PAGE_WIDTH,
-    PAGE_HEIGHT,
-    LEFT,
-    TOP,
-    USABLE_WIDTH,
-  });
-  const byteLength = (value) => new TextEncoder().encode(value).length;
-  const objects = [];
-  const offsets = [0];
-
-  const catalogObjectNumber = 1;
-  const pagesObjectNumber = 2;
-  const fontRegularObjectNumber = 3;
-  const fontBoldObjectNumber = 4;
-  const pageObjectNumber = 5;
-  const contentObjectNumber = 6;
-
-  objects.push({ number: fontRegularObjectNumber, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>' });
-  objects.push({ number: fontBoldObjectNumber, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>' });
-  objects.push({
-    number: contentObjectNumber,
-    body: `<< /Length ${byteLength(content)} >>\nstream\n${content}\nendstream`,
-  });
-  objects.push({
-    number: pageObjectNumber,
-    body:
-      `<< /Type /Page /Parent ${pagesObjectNumber} 0 R ` +
-      `/MediaBox [0 0 ${PAGE_WIDTH.toFixed(2)} ${PAGE_HEIGHT.toFixed(2)}] ` +
-      `/Resources << /Font << /F1 ${fontRegularObjectNumber} 0 R /F2 ${fontBoldObjectNumber} 0 R >> >> ` +
-      `/Contents ${contentObjectNumber} 0 R >>`,
-  });
-  objects.push({
-    number: pagesObjectNumber,
-    body: `<< /Type /Pages /Kids [${pageObjectNumber} 0 R] /Count 1 >>`,
-  });
-  objects.push({
-    number: catalogObjectNumber,
-    body: `<< /Type /Catalog /Pages ${pagesObjectNumber} 0 R >>`,
-  });
-
-  objects.sort((a, b) => a.number - b.number);
-
-  let pdf = '%PDF-1.4\n';
-  for (const object of objects) {
-    offsets[object.number] = byteLength(pdf);
-    pdf += `${object.number} 0 obj\n${object.body}\nendobj\n`;
-  }
-
-  const xrefOffset = byteLength(pdf);
-  pdf += 'xref\n0 7\n';
-  pdf += '0000000000 65535 f \n';
-
-  for (let number = 1; number <= 6; number += 1) {
-    const offset = offsets[number] ?? 0;
-    pdf += `${String(offset).padStart(10, '0')} 00000 n \n`;
-  }
-
-  pdf += `trailer\n<< /Size 7 /Root ${catalogObjectNumber} 0 R >>\n`;
-  pdf += `startxref\n${xrefOffset}\n%%EOF\n`;
-
-  return new Blob([pdf], { type: 'application/pdf' });
-}
-
-function buildPdfPageContent(rows, { PAGE_WIDTH, PAGE_HEIGHT, LEFT, TOP, USABLE_WIDTH }) {
-  const parts = [];
-  const regular = 1;
-  const bold = 2;
-  const darkBlue = '0.07 0.23 0.52 rg';
-  const teal = '0.00 0.42 0.55 rg';
-  const border = '0.78 0.78 0.80 RG';
-
-  const drawRect = (x, y, w, h, fill, stroke) => {
-    if (fill) parts.push(fill);
-    if (stroke) parts.push(stroke);
-    parts.push(`${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re ${fill ? 'B' : 'S'}`);
-  };
-
-  const line = (x1, y1, x2, y2, stroke = border) => {
-    parts.push(stroke);
-    parts.push(`${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`);
-  };
-
-  const writeText = (text, x, y, size, options = {}) => {
-    const {
-      align = 'left',
-      color = '0 0 0 rg',
-      font = regular,
-      maxWidth = null,
-    } = options;
-    const estimate = maxWidth || textWidthEstimate(text, size);
-    let startX = x;
-    if (align === 'center') startX = x - estimate / 2;
-    if (align === 'right') startX = x - estimate;
-    parts.push('BT');
-    parts.push(color);
-    parts.push(`/F${font} ${size.toFixed(2)} Tf`);
-    parts.push(`1 0 0 1 ${startX.toFixed(2)} ${y.toFixed(2)} Tm`);
-    parts.push(`(${escapePdfText(text)}) Tj`);
-    parts.push('ET');
-  };
-
-  const headerTop = PAGE_HEIGHT - TOP;
-  const headerBottom = headerTop - 130;
-  drawRect(LEFT, headerBottom, USABLE_WIDTH, 130, '1 1 1 rg', border);
-  drawRect(LEFT, headerBottom + 63, USABLE_WIDTH, 67, '0.95 0.97 1 rg', '0.90 0.92 0.96 RG');
-
-  writeText('FAMILY EYE DONATION PLEDGE FORM', LEFT + 12, headerTop - 30, 17.5, { font: bold, color: darkBlue });
-  writeText('"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"', LEFT + 12, headerTop - 50, 8.4, {
-    color: '0.25 0.42 0.65 rg',
-  });
-
-  writeText('DATE:', PAGE_WIDTH - LEFT - 62, headerTop - 32, 8.2, { font: bold, color: darkBlue });
-  line(PAGE_WIDTH - LEFT - 62, headerTop - 44, PAGE_WIDTH - LEFT - 12, headerTop - 44, '0.55 0.60 0.68 RG');
-
-  const bandTop = headerBottom - 16;
-  drawRect(LEFT, bandTop - 60, USABLE_WIDTH, 60, darkBlue, null);
-  writeText('JOTHI EYE BANK', LEFT + 12, bandTop - 26, 18, { font: bold, color: '1 1 1 rg' });
-  writeText('Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE', LEFT + 12, bandTop - 44, 8.8, {
-    color: '1 1 1 rg',
-  });
-
-  drawRect(PAGE_WIDTH - LEFT - 205, bandTop - 54, 195, 48, '0.98 0.94 0.76 rg', null);
-  writeText('FOR EYE DONATION', PAGE_WIDTH - LEFT - 107.5, bandTop - 18, 10, { font: bold, align: 'center' });
-  writeText('Toll No. 1919', PAGE_WIDTH - LEFT - 107.5, bandTop - 34, 14, { font: bold, align: 'center' });
-  writeText('[Free (BSNL) Service]', PAGE_WIDTH - LEFT - 107.5, bandTop - 47, 8.2, { align: 'center' });
-
-  const addressTop = bandTop - 78;
-  drawRect(LEFT, addressTop - 122, USABLE_WIDTH, 122, '1 1 1 rg', border);
-
-  writeText('ADDRESS:', LEFT + 10, addressTop - 40, 9.4, { font: bold });
-  line(LEFT + 70, addressTop - 43, PAGE_WIDTH - LEFT - 12, addressTop - 43);
-  line(LEFT + 10, addressTop - 60, PAGE_WIDTH - LEFT - 12, addressTop - 60);
-  line(LEFT + 10, addressTop - 80, PAGE_WIDTH - LEFT - 12, addressTop - 80);
-
-  writeText('PIN', LEFT + 10, addressTop - 101, 8.8, { font: bold });
-  line(LEFT + 46, addressTop - 104, LEFT + 140, addressTop - 104);
-  writeText('DIST', LEFT + 160, addressTop - 101, 8.8, { font: bold });
-  line(LEFT + 202, addressTop - 104, LEFT + 296, addressTop - 104);
-  writeText('STATE', LEFT + 316, addressTop - 101, 8.8, { font: bold });
-  line(LEFT + 366, addressTop - 104, LEFT + 460, addressTop - 104);
-  writeText('TELEPHONE', LEFT + 10, addressTop - 120, 8.8, { font: bold });
-  line(LEFT + 84, addressTop - 123, PAGE_WIDTH - LEFT - 12, addressTop - 123);
-
-  writeText(
-    'Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:',
-    PAGE_WIDTH / 2,
-    addressTop - 144,
-    8.2,
-    { align: 'center', color: '0.28 0.38 0.49 rg' }
-  );
-
-  const tableTop = addressTop - 162;
-  const tableHeight = 126;
-  drawRect(LEFT, tableTop - tableHeight, USABLE_WIDTH, tableHeight, '1 1 1 rg', border);
-  drawRect(LEFT, tableTop - 22, USABLE_WIDTH, 22, '0.95 0.97 1 rg', null);
-  const colXs = [LEFT, LEFT + 46, LEFT + 98, LEFT + 282, LEFT + 320, LEFT + 366];
-  const colWidths = [46, 52, 184, 38, 46, 176];
-  ['S.NO', 'TITLE', 'NAME (BLOCK LETTERS)', 'AGE', 'GENDER', 'SIGNATURE'].forEach((label, idx) => {
-    writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 8.4, {
-      font: bold,
-      align: 'center',
-      color: '0.16 0.20 0.28 rg',
-    });
-    if (idx > 0) line(colXs[idx], tableTop - 22, colXs[idx], tableTop - tableHeight);
-  });
-
-  const rowHeight = 34;
-  rows.forEach((row, index) => {
-    const rowTop = tableTop - 22 - rowHeight * (index + 1);
-    line(LEFT, rowTop, LEFT + USABLE_WIDTH, rowTop);
-    writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 11, 9.4, { align: 'center' });
-    writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 11, 9.0, {
-      align: 'center',
-      color: '0.28 0.28 0.30 rg',
-    });
-    writeText(getRowDisplayName(row), colXs[2] + 6, rowTop + 11, 9.0, {
-      maxWidth: colWidths[2] - 12,
-    });
-    writeText(String(row.age ?? 'N/A'), colXs[3] + colWidths[3] / 2, rowTop + 11, 9.0, { align: 'center' });
-    writeText(row.gender || 'N/A', colXs[4] + colWidths[4] / 2, rowTop + 11, 9.0, { align: 'center' });
-    line(colXs[5] + 10, rowTop + 8, colXs[5] + colWidths[5] - 10, rowTop + 8, '0.45 0.52 0.60 RG');
-  });
-
-  const footerTop = tableTop - tableHeight - 18;
-  writeText('PLACE:', LEFT + 2, footerTop, 8.8, { font: bold });
-  line(LEFT + 46, footerTop - 3, LEFT + 200, footerTop - 3);
-  writeText(
-    'To be filled in by two witnesses (Relatives, neighbours or friends)',
-    PAGE_WIDTH / 2,
-    footerTop - 20,
-    8.0,
-    { align: 'center', color: '0.30 0.38 0.48 rg' }
-  );
-
-  const witnessTop = footerTop - 118;
-  const witnessWidth = (USABLE_WIDTH - 12) / 2;
-  drawRect(LEFT, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
-  drawRect(LEFT + witnessWidth + 12, witnessTop, witnessWidth, 100, '0.97 0.98 1 rg', border);
-  writeText('1. WITNESS (NEXT OF KIN):', LEFT + 10, witnessTop + 86, 7.6, { font: bold });
-  writeText('2. WITNESS (NEXT OF KIN):', LEFT + witnessWidth + 12 + 10, witnessTop + 86, 7.6, { font: bold });
-
-  ['Signature', 'Name and Relationship', 'Address', ''].forEach((label, idx) => {
-    const y = witnessTop + 62 - idx * 18;
-    writeText(label, LEFT + 10, y, 8.1);
-    writeText(':', LEFT + 88, y, 8.1);
-    line(LEFT + 100, y - 3, LEFT + witnessWidth - 10, y - 3, '0.62 0.65 0.70 RG');
-
-    writeText(label, LEFT + witnessWidth + 12 + 10, y, 8.1);
-    writeText(':', LEFT + witnessWidth + 12 + 88, y, 8.1);
-    line(
-      LEFT + witnessWidth + 12 + 100,
-      y - 3,
-      LEFT + witnessWidth + 12 + witnessWidth - 10,
-      y - 3,
-      '0.62 0.65 0.70 RG'
-    );
-  });
-
-  writeText('JOTHI EYE BANK', PAGE_WIDTH / 2, 34, 8.5, { font: bold, align: 'center', color: teal });
-  return parts.join('\n');
-}
-
-function escapePdfText(value) {
-  return String(value ?? '')
-    .replace(/\\/g, '\\\\')
-    .replace(/\(/g, '\\(')
-    .replace(/\)/g, '\\)');
-}
-
-function textWidthEstimate(text, fontSize) {
-  return String(text).length * fontSize * 0.52;
-}
-
-function getRowTitle(row) {
-  if (row?.title) return row.title;
-  if (row?.gender === 'Male') return 'Mr.';
-  if (row?.gender === 'Female') return 'Ms.';
-  return 'Mr./Ms.';
-}
-
-function getRowDisplayName(row) {
-  return row?.fullName || row?.name || 'N/A';
-}
-
+// ----- MAIN COMPONENT -----
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const exportRows = Array.isArray(submittedRows) ? submittedRows : [];
 
   async function handleExportPdf() {
+    if (exportRows.length === 0) {
+      alert('No submission data to export yet.');
+      return;
+    }
+
     setExportingPdf(true);
 
     try {
+      // Fetch data from API
       const response = await apiRequest('/api/terms/getall');
       const rows = normalizeRows(response, exportRows);
 
       if (rows.length === 0) {
+        alert('No data available to export.');
         return;
       }
 
-      const pdfBlob = buildExportHtml(rows);
-      const url = URL.createObjectURL(pdfBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'jothi-eye-care-centre-pledge.pdf';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      // Build the HTML content using the header.txt template
+      const htmlContent = buildExportHtml(rows);
+
+      // Open print window
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        throw new Error('Please allow popups for this site to export PDF.');
+      }
+
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
+      printWindow.focus();
+
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
     } catch (err) {
       console.error('Export error:', err);
+      alert('Failed to export PDF: ' + err.message);
     } finally {
       setExportingPdf(false);
     }
