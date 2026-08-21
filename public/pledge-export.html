@@ -875,6 +875,43 @@
       }
     }
 
+    // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
+    async function loadData() {
+      const status = document.getElementById('status');
+      const downloadBtn = document.getElementById('downloadBtn');
+
+      try {
+        status.textContent = 'Loading data from the form...';
+        status.className = '';
+
+        const rows = readFrontendRows();
+
+        if (!rows || rows.length === 0) {
+          status.textContent = 'No pledge data found from the form.';
+          status.className = 'error';
+          updateTable([]);
+          return;
+        }
+
+        updateTable(rows);
+
+        status.textContent = `Loaded ${rows.length} record(s) from the front end.`;
+        status.className = 'success';
+
+        if (downloadBtn) {
+          downloadBtn.style.display = 'inline-flex';
+          downloadBtn.onclick = () => window.print();
+        }
+
+        setTimeout(() => window.print(), 500);
+      } catch (error) {
+        console.error('Error:', error);
+        status.textContent = 'Failed to load front-end data: ' + error.message;
+        status.className = 'error';
+        updateTable([]);
+      }
+    }
+
     // ----- START -----
     document.addEventListener('DOMContentLoaded', () => {
       loadData();
