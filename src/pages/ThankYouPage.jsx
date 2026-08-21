@@ -10,127 +10,184 @@ import {
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
 import pdfBadge from '../asset/pdf.jpeg';
+import { apiRequest } from '../lib/apiClient';
 import './ThankYouPage.css';
+
+const clinicDetails = [
+  'JOTHI EYE CARE CENTRE',
+  '152 & 154, Calve Subraya Chetty Street,',
+  'Puducherry - 605 001.',
+  '+91-413-2224534, +91-413-2337659',
+  'jothieyecare@gmail.com',
+];
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function normalizeRows(response, fallbackRows) {
+  const rows = Array.isArray(response?.data?.data)
+    ? response.data.data
+    : Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(fallbackRows)
+    ? fallbackRows
+    : [];
+
+  return rows.slice(0, 3);
+}
+
+function buildExportHtml(rows) {
+  const submittedOn = new Date().toLocaleString();
+
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JOTHI EYE CARE CENTRE - Submission Summary</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 20mm 18mm;
+      }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        color: #191c1e;
+        background: #ffffff;
+      }
+      .cover {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .cover img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto 12px;
+      }
+      .clinic-name {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #173f90;
+      }
+      .clinic-line {
+        margin: 4px 0 0;
+        font-size: 13px;
+        color: #45464d;
+      }
+      .summary-title {
+        margin: 12px 0 0;
+        font-size: 18px;
+        font-weight: 700;
+      }
+      .summary-subtitle {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: #64748b;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      th,
+      td {
+        border: 1px solid #d7deea;
+        padding: 9px 10px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        background: #f0f6ff;
+        color: #173f90;
+      }
+      tbody tr:nth-child(even) {
+        background: #f8fbff;
+      }
+      .footer {
+        margin-top: 18px;
+        font-size: 11px;
+        color: #64748b;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cover">
+      <img src="${pdfBadge}" alt="Jothi Eye Care Centre badge" />
+      <p class="clinic-name">${escapeHtml(clinicDetails[0])}</p>
+      <p class="clinic-line">${escapeHtml(clinicDetails[1])}</p>
+      <p class="clinic-line">${escapeHtml(clinicDetails[2])}</p>
+      <p class="clinic-line">${escapeHtml(clinicDetails[3])}</p>
+      <p class="clinic-line">${escapeHtml(clinicDetails[4])}</p>
+      <p class="summary-title">Eye Donation Pledge - Submission Summary</p>
+      <p class="summary-subtitle">Generated on ${escapeHtml(submittedOn)}</p>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Submitted</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (row, index) => `
+              <tr>
+                <td>${index + 1}</td>
+                <td>${escapeHtml(row.fullName || row.name || 'N/A')}</td>
+                <td>${escapeHtml(row.age ?? 'N/A')}</td>
+                <td>${escapeHtml(row.gender || 'N/A')}</td>
+                <td>${escapeHtml(row.phone || 'N/A')}</td>
+                <td>${escapeHtml(row.address || 'N/A')}</td>
+                <td>${escapeHtml(row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A')}</td>
+              </tr>
+            `
+          )
+          .join('')}
+      </tbody>
+    </table>
+
+    
+  </body>
+</html>`;
+}
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const exportRows = Array.isArray(submittedRows) ? submittedRows : [];
 
   async function handleExportPdf() {
-    if (exportRows.length === 0) {
-      return;
-    }
-
     setExportingPdf(true);
 
     try {
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <title>Eye Donation Pledge - Submission Summary</title>
-            <style>
-              @page {
-                size: A4;
-                margin: 24mm 18mm;
-              }
-              body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                color: #1a1a1a;
-                background: #ffffff;
-              }
-              .cover {
-                text-align: center;
-                margin-bottom: 22px;
-              }
-              .cover img {
-                width: 140px;
-                height: 140px;
-                object-fit: contain;
-                display: block;
-                margin: 0 auto 14px;
-              }
-              .cover h1 {
-                margin: 0;
-                font-size: 24px;
-                color: #173f90;
-              }
-              .cover p {
-                margin: 6px 0 0;
-                color: #64748b;
-                font-size: 13px;
-              }
-              table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 13px;
-              }
-              th, td {
-                border: 1px solid #d7deea;
-                padding: 9px 10px;
-                text-align: left;
-                vertical-align: top;
-              }
-              th {
-                background: #f0f6ff;
-                color: #173f90;
-              }
-              tbody tr:nth-child(even) {
-                background: #f8fbff;
-              }
-              .footer {
-                margin-top: 18px;
-                font-size: 11px;
-                color: #64748b;
-                text-align: center;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="cover">
-              <img src="${pdfBadge}" alt="Jothi Eye Donor badge" />
-              <h1>Eye Donation Pledge - Submission Summary</h1>
-              <p>Generated on ${new Date().toLocaleString()}</p>
-            </div>
-            <table>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Age</th>
-                  <th>Gender</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Submitted</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${exportRows
-                  .map(
-                    (row, index) => `
-                  <tr>
-                    <td>${index + 1}</td>
-                    <td>${row.fullName || row.name || 'N/A'}</td>
-                    <td>${row.age ?? 'N/A'}</td>
-                    <td>${row.gender || 'N/A'}</td>
-                    <td>${row.phone || 'N/A'}</td>
-                    <td>${row.address || 'N/A'}</td>
-                    <td>${row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A'}</td>
-                  </tr>
-                `
-                  )
-                  .join('')}
-              </tbody>
-            </table>
-            <div class="footer">
-              <p>This PDF was generated from the thank you page after submission.</p>
-            </div>
-          </body>
-        </html>
-      `;
+      const response = await apiRequest('/api/terms/getall');
+      const rows = normalizeRows(response, exportRows);
 
+      if (rows.length === 0) {
+        return;
+      }
+
+      const htmlContent = buildExportHtml(rows);
       const printWindow = window.open('', '_blank');
+
       if (!printWindow) {
         throw new Error('Please allow popups for this site to export PDF.');
       }
@@ -142,7 +199,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
-      }, 500);
+      }, 600);
     } catch (err) {
       console.error('Export error:', err);
     } finally {
@@ -189,8 +246,8 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               className="thank-you-page__button thank-you-page__button--ghost"
               type="button"
               onClick={handleExportPdf}
-              disabled={exportingPdf || exportRows.length === 0}
-              title={exportRows.length === 0 ? 'No submission data to export yet' : 'Download PDF'}
+              disabled={exportingPdf}
+              title={exportRows.length === 0 ? 'No submission data available yet' : 'Download PDF'}
             >
               <Download aria-hidden="true" />
               <span>{exportingPdf ? 'Generating...' : 'Export PDF'}</span>
