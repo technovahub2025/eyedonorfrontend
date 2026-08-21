@@ -460,28 +460,25 @@ function RoleSelectPage({ onRoleSelect }) {
         Admin Login
       </button>
 
-      <a
-        className="role-footer__admin-btn"
-        href="https://www.technovahub.in"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Powered by TechnovaHub
-      </a>
     </div>
 
   </div>
 
-  {/* Bottom Bar */}
-  <div className="role-footer__bottom">
-    <p>
-      © {new Date().getFullYear()} Vision of Hope. All rights reserved.
-    </p>
+   <div className="role-footer__bottom">
+        <div className="role-footer__bottom-copy">
+          <p>© {currentYear} Vision of Hope. All rights reserved.</p>
+          <p>An initiative supporting the gift of sight.</p>
+        </div>
 
-    <p>
-      An initiative supporting the gift of sight.
-    </p>
-  </div>
+        <a
+          className="role-footer__powered-btn"
+          href="https://www.technovahub.in"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Powered by TechnovaHub
+        </a>
+      </div>
 </footer>
     </div>
   );
