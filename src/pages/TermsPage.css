@@ -403,6 +403,108 @@
   line-height: 1.6;
 }
 
+.terms-card__table-copy {
+  margin-bottom: 14px;
+}
+
+.terms-card__table-wrap {
+  flex: 1;
+  border: 1px solid #c6c6cd;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  background: #ffffff;
+  overflow-x: auto;
+}
+
+.terms-card__pledge-table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  color: #191c1e;
+}
+
+.terms-card__pledge-table thead {
+  background: #f2f4f6;
+  border-bottom: 1px solid #c6c6cd;
+}
+
+.terms-card__pledge-table th {
+  padding: 0.75rem;
+  font-family: 'Public Sans', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #191c1e;
+  border-right: 1px solid #c6c6cd;
+  text-align: left;
+}
+
+.terms-card__pledge-table th:last-child {
+  border-right: none;
+}
+
+.terms-card__pledge-table th.col-sn {
+  width: 3rem;
+  text-align: center;
+}
+
+.terms-card__pledge-table th.col-title {
+  width: 6rem;
+}
+
+.terms-card__pledge-table th.col-age {
+  width: 5rem;
+  text-align: center;
+}
+
+.terms-card__pledge-table th.col-sex {
+  width: 5rem;
+  text-align: center;
+}
+
+.terms-card__pledge-table th.col-sig {
+  width: 12rem;
+  text-align: center;
+}
+
+.terms-card__pledge-table td {
+  padding: 0.5rem;
+  border-right: 1px solid #c6c6cd;
+  vertical-align: middle;
+}
+
+.terms-card__pledge-table td:last-child {
+  border-right: none;
+}
+
+.terms-card__pledge-table tbody tr {
+  border-bottom: 1px solid #c6c6cd;
+  height: 56px;
+  transition: background 0.15s;
+}
+
+.terms-card__pledge-table tbody tr:hover {
+  background: #ffffff;
+}
+
+.terms-card__pledge-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.terms-card__pledge-table .text-center {
+  text-align: center;
+}
+
+.terms-card__pledge-table .text-muted {
+  color: #45464d;
+}
+
 .terms-card__filters {
   margin: 18px 0 16px;
   padding: 16px;
@@ -1148,6 +1250,14 @@
     padding: 14px;
   }
 
+  .terms-card__table-wrap {
+    margin-bottom: 1.25rem;
+  }
+
+  .terms-card__pledge-table {
+    min-width: 640px;
+  }
+
   .terms-card__pagination-btn {
     flex: 0 0 auto;
     min-width: 42px;
@@ -1221,6 +1331,10 @@
   .terms-card__add-row,
   .terms-card__download {
     width: 100%;
+  }
+
+  .terms-card__pledge-table {
+    min-width: 600px;
   }
 }
 

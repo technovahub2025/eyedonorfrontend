@@ -9,8 +9,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import eyeHero from '../asset/eyehero.png';
-import pdfBadge from '../asset/pdf.jpeg';
-import { apiRequest } from '../lib/apiClient';
 import './ThankYouPage.css';
 
 function escapeHtml(value) {
@@ -31,12 +29,14 @@ function normalizeRows(response, fallbackRows) {
     ? fallbackRows
     : [];
 
-  return rows.slice(0, 3);
+  return rows.slice(0, 4);
 }
 
 function buildExportHtml(rows) {
-  const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
+  const displayedRows = Array.from({ length: 4 }, (_, index) => rows[index] || {});
+  return buildPrintablePdfHtml(displayedRows);
 
+  /* eslint-disable-next-line no-unreachable */
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,281 +109,84 @@ function buildExportHtml(rows) {
       background: #ffffff;
     }
 
-    .form-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 0;
-      background: #ffffff;
-    }
-
-    .pledge-card {
-      width: 100%;
-      max-width: 896px;
-      aspect-ratio: auto;
-      background: #ffffff;
-      border: 1px solid #c6c6cd;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      margin: 0 auto;
-    }
-
-    .card-bg-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle at top right, rgba(0, 99, 152, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at bottom left, rgba(0, 99, 152, 0.03) 0%, transparent 40%);
-      z-index: 0;
-    }
-
-    .card-content {
-      padding: 1.75rem 2rem 1.5rem;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      position: relative;
-      z-index: 1;
-    }
-
-    .top-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 9rem;
-      align-items: start;
-      column-gap: 1rem;
-      margin-bottom: 1.15rem;
-    }
-
-    .logo-title-group {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .logo-title-group img {
-      height: 120px;
-      width: auto;
-      object-fit: contain;
-      flex-shrink: 0;
-    }
-
-    .title-block {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .title-block h1 {
-      font-family: 'Manrope', sans-serif;
-      font-size: 20px;
-      line-height: 30px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      color: #000;
-    }
-
-    .title-block .subtitle {
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 13px;
-      line-height: 18px;
-      color: #006398;
-      font-style: italic;
-      white-space: normal;
-    }
-
-    .date-block {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      align-items: flex-end;
-      justify-content: flex-start;
-    }
-
-    .date-block label {
-      margin-bottom: 0.25rem;
-    }
-
-    .date-block .underline {
-      height: 2rem;
-      border-bottom: 1px solid #c6c6cd;
-      width: 100%;
-      max-width: 9rem;
-    }
-
-    .bank-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 12rem;
-      align-items: stretch;
-      column-gap: 1rem;
-      border-top: 1px solid #c6c6cd;
-      border-bottom: 1px solid #c6c6cd;
-      padding: 1rem 0;
-      margin-bottom: 1.5rem;
-      background: rgba(242, 244, 246, 0.3);
-    }
-
-    .bank-left {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .bank-name {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.25rem;
-      flex-wrap: wrap;
-    }
-
-    .bank-name .name {
-      font-family: 'Manrope', sans-serif;
-      font-size: 18px;
-      line-height: 28px;
-      font-weight: 600;
-      color: #000;
-      white-space: normal;
-    }
-
-    .bank-name .detail {
-      font-size: 14px;
-      line-height: 20px;
-      color: #45464d;
-      white-space: normal;
-    }
-
-    .bank-right {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      border-left: 1px solid #c6c6cd;
-      padding-left: 1.5rem;
-      min-width: 160px;
-    }
-
-    .bank-right .label {
-      font-family: 'Public Sans', sans-serif;
-      font-size: 12px;
-      line-height: 16px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #006398;
-      margin-bottom: 0.25rem;
-      text-align: center;
-    }
-
-    .bank-right .call {
-      font-family: 'Manrope', sans-serif;
-      font-size: 18px;
-      line-height: 24px;
-      font-weight: 600;
-      color: #000;
-      text-align: center;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-    }
-
-    .bank-right .hint {
-      font-size: 12px;
-      line-height: 16px;
-      color: #45464d;
-      text-align: center;
-    }
-
+    /* ----- address fields ----- */
     .address-section {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      margin-bottom: 1.4rem;
+      margin-bottom: 2rem;
     }
-
     .address-row {
       display: flex;
       gap: 1rem;
-      align-items: flex-start;
     }
-
     .address-row .field {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-
     .address-row .field label {
       margin-bottom: 0.25rem;
     }
-
-    .address-row .field .double-underline,
-    .address-grid .field .underline {
-      height: 1.6rem;
+    .address-row .field .underline {
+      height: 2rem;
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
     }
-
+    .address-row .field .double-underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
     .address-row .field .double-underline:not(:last-child) {
       margin-bottom: 0.25rem;
     }
-
     .address-grid {
       display: flex;
-      gap: 1rem;
+      gap: 2rem;
     }
-
     .address-grid .field {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-
     .address-grid .field label {
       margin-bottom: 0.25rem;
     }
+    .address-grid .field .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
 
+    /* ----- description ----- */
     .desc-text {
-      margin-bottom: 0.85rem;
+      margin-bottom: 1rem;
       color: #45464d;
     }
 
+    /* ----- table ----- */
     .table-wrap {
       flex: 1;
       border: 1px solid #c6c6cd;
       border-radius: 2px;
       overflow: hidden;
-      margin-bottom: 1.25rem;
+      margin-bottom: 2rem;
     }
-
     .pledge-table {
       width: 100%;
-      table-layout: fixed;
       border-collapse: collapse;
       font-family: 'Public Sans', sans-serif;
       font-size: 14px;
       line-height: 20px;
       color: #191c1e;
     }
-
     .pledge-table thead {
       background: #f2f4f6;
       border-bottom: 1px solid #c6c6cd;
     }
-
     .pledge-table th {
-      padding: 0.55rem 0.5rem;
+      padding: 0.75rem;
       font-family: 'Public Sans', sans-serif;
       font-size: 12px;
       line-height: 16px;
@@ -393,162 +196,166 @@ function buildExportHtml(rows) {
       color: #191c1e;
       border-right: 1px solid #c6c6cd;
       text-align: left;
-      vertical-align: middle;
     }
-
     .pledge-table th:last-child {
       border-right: none;
     }
-
-    .pledge-table th.col-sn { width: 3.25rem; text-align: center; }
-    .pledge-table th.col-title { width: 5.75rem; }
-    .pledge-table th.col-name { width: auto; }
-    .pledge-table th.col-age { width: 4.75rem; text-align: center; }
-    .pledge-table th.col-sex { width: 5.5rem; text-align: center; }
-    .pledge-table th.col-sig { width: 11rem; text-align: center; }
+    .pledge-table th.col-sn { width: 3rem; text-align: center; }
+    .pledge-table th.col-title { width: 6rem; }
+    .pledge-table th.col-name { }
+    .pledge-table th.col-age { width: 5rem; text-align: center; }
+    .pledge-table th.col-sex { width: 5rem; text-align: center; }
+    .pledge-table th.col-sig { width: 12rem; text-align: center; }
 
     .pledge-table td {
-      padding: 0.45rem 0.5rem;
+      padding: 0.5rem;
       border-right: 1px solid #c6c6cd;
       vertical-align: middle;
     }
-
     .pledge-table td:last-child {
       border-right: none;
     }
-
     .pledge-table tbody tr {
       border-bottom: 1px solid #c6c6cd;
-      height: 48px;
+      height: 56px;
+      transition: background 0.15s;
     }
-
+    .pledge-table tbody tr:hover {
+      background: #ffffff;
+    }
+    .pledge-table tbody tr:last-child {
+      border-bottom: none;
+    }
     .pledge-table .text-center { text-align: center; }
     .pledge-table .text-muted { color: #45464d; }
 
+    /* ----- bottom: place + witnesses ----- */
     .place-row {
       display: flex;
-      gap: 2rem;
-      margin-bottom: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
     }
-
     .place-row .field {
-      flex: 1;
+      width: 16rem;
       display: flex;
       flex-direction: column;
     }
-
     .place-row .field label {
       margin-bottom: 0.25rem;
     }
-
     .place-row .field .underline {
-      height: 1.6rem;
+      height: 2rem;
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
     }
 
+    .witness-label {
+      font-style: italic;
+      text-align: center;
+      color: #45464d;
+      margin-bottom: 1rem;
+    }
+
+    .witness-grid {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 3rem;
+    }
+    .witness-box {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(242, 244, 246, 0.3);
+      border: 1px solid rgba(198, 198, 205, 0.5);
+      border-radius: 2px;
+    }
+    .witness-box .witness-title {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 0.5rem;
+    }
     .witness-row {
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       gap: 0.5rem;
-      margin-bottom: 0.65rem;
     }
-
     .witness-row .label {
-      width: 12.5rem;
-      font-weight: 700;
-      flex: none;
+      width: 8rem;
+      flex-shrink: 0;
+      color: #45464d;
+      font-size: 14px;
+      line-height: 20px;
     }
-
     .witness-row .colon {
-      width: 0.6rem;
-      text-align: center;
+      color: #45464d;
+      margin-right: 0.5rem;
     }
-
     .witness-row .dash-underline {
       flex: 1;
-      border-bottom: 1px solid #c6c6cd;
-      height: 1.1rem;
+      border-bottom: 1px dashed #c6c6cd;
+      height: 1.5rem;
     }
-
     .witness-row .empty-placeholder {
-      width: 2rem;
-      display: inline-block;
+      width: 8rem;
+      flex-shrink: 0;
+    }
+    .witness-row .opacity-0 { opacity: 0; }
+
+    /* ----- material symbols tweak ----- */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
-    @media print {
-      header, .no-print {
-        display: none !important;
-      }
-      main {
-        padding-top: 0;
-      }
-      body {
-        background: #ffffff;
-      }
-      .form-wrapper {
-        padding: 0;
-        display: block;
-      }
-      .pledge-card {
-        box-shadow: none;
-        border: none;
-        max-width: none;
-        width: 100%;
-        margin: 0;
-        aspect-ratio: auto;
-      }
-      .card-content {
-        padding: 14px 18px 12px;
-      }
-      .top-row {
-        grid-template-columns: minmax(0, 1fr) 8.5rem;
-      }
-      .bank-row {
-        grid-template-columns: minmax(0, 1fr) 11rem;
-      }
-      .pledge-table th,
-      .pledge-table td {
-        padding: 0.35rem 0.45rem;
-      }
-      .witness-row .label {
-        width: 11.5rem;
-      }
+    /* ----- responsive adjustments ----- */
+    @media (max-width: 820px) {
+      .title-block h1 { font-size: 18px; line-height: 24px; white-space: normal; }
+      .title-block .subtitle { font-size: 12px; line-height: 16px; white-space: normal; }
+      .logo-title-group img { height: 90px; }
+      .card-content { padding: 1.5rem 1.25rem; }
+      .bank-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .bank-right { border-left: none; padding-left: 0; align-items: center; width: 100%; }
+      .bank-name { flex-wrap: wrap; }
+      .bank-name .detail { white-space: normal; }
+      .witness-grid { flex-direction: column; gap: 1.5rem; }
+      .address-grid { flex-wrap: wrap; gap: 0.75rem; }
+      .address-row { flex-direction: column; gap: 0.5rem; }
+      .top-row { flex-direction: column; align-items: stretch; }
+      .date-block { width: 100%; margin-left: 0; margin-top: 0.5rem; }
+      .pledge-table th, .pledge-table td { padding: 0.4rem; font-size: 12px; }
+      .pledge-table th.col-sn { width: 2.5rem; }
+      .pledge-table th.col-title { width: 4rem; }
+      .pledge-table th.col-age { width: 3.5rem; }
+      .pledge-table th.col-sex { width: 3.5rem; }
+      .pledge-table th.col-sig { width: 6rem; }
+      .bank-right .call { font-size: 16px; }
+      .bank-right .call .material-symbols-outlined { font-size: 16px; }
     }
-
-    @media (max-width: 768px) {
-      .card-content {
-        padding: 1.5rem;
-      }
-      .top-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .logo-title-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .bank-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      .bank-right {
-        border-left: none;
-        padding-left: 0;
-        align-items: flex-start;
-      }
-      .address-row {
-        flex-direction: column;
-      }
-      .address-grid {
-        flex-wrap: wrap;
-        gap: 0.75rem;
-      }
-      .pledge-table th, .pledge-table td {
-        padding: 0.4rem;
-        font-size: 12px;
-      }
+    @media (max-width: 480px) {
+      .card-content { padding: 1rem 0.75rem; }
+      .logo-title-group { flex-wrap: wrap; gap: 0.5rem; }
+      .logo-title-group img { height: 70px; }
+      .title-block h1 { font-size: 15px; line-height: 20px; }
+      .title-block .subtitle { font-size: 11px; line-height: 15px; }
+      .pledge-table th, .pledge-table td { padding: 0.2rem; font-size: 10px; }
+      .pledge-table th.col-sn { width: 2rem; }
+      .pledge-table th.col-title { width: 3rem; }
+      .pledge-table th.col-age { width: 2.5rem; }
+      .pledge-table th.col-sex { width: 2.5rem; }
+      .pledge-table th.col-sig { width: 4rem; }
+      .witness-row .label { width: 5rem; font-size: 12px; }
+      .bank-name .name { font-size: 16px; line-height: 22px; }
+      .bank-name .detail { font-size: 12px; line-height: 16px; }
+      .bank-right .call { font-size: 14px; }
+      .bank-right .call .material-symbols-outlined { font-size: 14px; }
+      .bank-right .hint { font-size: 10px; line-height: 14px; }
     }
   </style>
 </head>
@@ -560,7 +367,7 @@ function buildExportHtml(rows) {
         <div class="card-content">
           <div class="top-row">
             <div class="logo-title-group">
-              <img src="${pdfBadge}" alt="Jothi Eye Care Centre badge">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal">
               <div class="title-block">
                 <h1>Family Eye Donation Pledge Form</h1>
                 <span class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</span>
@@ -582,8 +389,7 @@ function buildExportHtml(rows) {
             <div class="bank-right">
               <span class="label">FOR EYE DONATION</span>
               <span class="call">Toll No. 1919</span>
-              <span class="hint">+91-413-2224534, +91-413-2337659</span>
-              <span class="hint">jothieyecare@gmail.com</span>
+              <span class="hint">[Free (BSNL) Service]</span>
             </div>
           </div>
 
@@ -616,7 +422,7 @@ function buildExportHtml(rows) {
           </div>
 
           <div class="desc-text font-body-md">
-            Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are given below:
+            Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:
           </div>
 
           <div class="table-wrap">
@@ -651,52 +457,401 @@ function buildExportHtml(rows) {
             </table>
           </div>
 
+          <div>
+            <div class="place-row">
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">Place:</label>
+                <div class="underline"></div>
+              </div>
+            </div>
+
+            <p class="witness-label font-body-md">To be filled in by two witnesses (Relatives, neighbours or friends)</p>
+
+            <div class="witness-grid">
+              <div class="witness-box">
+                <span class="witness-title">1. Witness (Next of kin):</span>
+                <div class="witness-row">
+                  <span class="label">Signature</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Name and Relationship</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Address</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="empty-placeholder"></span>
+                  <span class="colon opacity-0">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+              </div>
+
+              <div class="witness-box">
+                <span class="witness-title">2. Witness (Next of kin):</span>
+                <div class="witness-row">
+                  <span class="label">Signature</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Name and Relationship</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Address</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="empty-placeholder"></span>
+                  <span class="colon opacity-0">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>`;
+}
+
+function buildPrintablePdfHtml(rows) {
+  const displayedRows = Array.from({ length: 4 }, (_, index) => rows[index] || {});
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    @page { size: A4 portrait; margin: 14mm; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background:
+        radial-gradient(circle at top left, rgba(0, 102, 138, 0.08), transparent 24%),
+        radial-gradient(circle at top right, rgba(31, 76, 201, 0.08), transparent 22%),
+        #eef5fb;
+      font-family: 'Public Sans', sans-serif;
+      color: #191c1e;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    body { min-height: 100vh; }
+    .sheet {
+      position: relative;
+      background: #fff;
+      border: 1px solid #c6c6cd;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(11, 29, 57, 0.12);
+    }
+    .sheet::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(31, 76, 201, 0.08), transparent 24%),
+        radial-gradient(circle at bottom left, rgba(0, 102, 138, 0.08), transparent 22%);
+      pointer-events: none;
+    }
+    .content { position: relative; z-index: 1; padding: 22px 24px 20px; }
+    .brand-row, .info-row, .footer-row { display: flex; gap: 14px; }
+    .brand-row { justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .brand { display: flex; align-items: center; gap: 16px; flex: 1; min-width: 0; }
+    .brand img {
+      width: 86px;
+      height: 86px;
+      object-fit: cover;
+      border-radius: 18px;
+      border: 1px solid rgba(31, 76, 201, 0.12);
+      background: #fff;
+      flex: none;
+    }
+    .eyebrow, .section-label, .column-head, .footer-chip {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .eyebrow { color: #00668a; margin-bottom: 6px; }
+    h1 {
+      margin: 0 0 6px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 1.65rem;
+      line-height: 1.08;
+      letter-spacing: -0.04em;
+      color: #102033;
+    }
+    .subtitle { color: #4e657b; font-size: 0.94rem; line-height: 1.45; max-width: 52ch; }
+    .date-box {
+      min-width: 160px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 76, 201, 0.12);
+      background: linear-gradient(180deg, rgba(244, 248, 255, 0.98), rgba(255, 255, 255, 0.98));
+    }
+    .date-line, .field-line, .sig-line, .witness-line { border-bottom: 1px solid #c6c6cd; }
+    .date-line { min-height: 20px; margin-top: 12px; }
+    .info-row { align-items: stretch; margin: 14px 0 16px; }
+    .info-card {
+      flex: 1;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 76, 201, 0.12);
+      background: rgba(244, 248, 255, 0.88);
+    }
+    .info-card strong {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-size: 1.04rem;
+      line-height: 1.4;
+      color: #102033;
+      margin-bottom: 6px;
+    }
+    .info-card span { color: #50657c; font-size: 0.92rem; line-height: 1.45; }
+    .callout {
+      width: 210px;
+      flex: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0b6c8d 0%, #1f4cc9 100%);
+      color: #fff;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+    }
+    .callout .label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.92; }
+    .callout .phone { font-family: 'Manrope', sans-serif; font-size: 1.25rem; font-weight: 800; }
+    .callout .hint { font-size: 0.78rem; opacity: 0.9; }
+    .address-row { margin: 0 0 14px; }
+    .address-block {
+      flex: 1;
+      padding: 14px 16px 18px;
+      border-radius: 16px;
+      border: 1px solid #c6c6cd;
+      background: #fff;
+    }
+    .address-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .address-mini {
+      padding: 12px 14px 14px;
+      border-radius: 14px;
+      border: 1px solid #d9dee8;
+      background: #f9fbff;
+    }
+    .desc-text { margin: 16px 0 14px; color: #4b5d71; font-size: 0.95rem; line-height: 1.55; }
+    .table-wrap { border: 1px solid #c6c6cd; border-radius: 14px; overflow: hidden; background: #fff; }
+    .pledge-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; color: #191c1e; }
+    .pledge-table thead { background: linear-gradient(180deg, #f4f7fb 0%, #edf3f9 100%); }
+    .pledge-table th, .pledge-table td {
+      border-right: 1px solid #c6c6cd;
+      border-bottom: 1px solid #c6c6cd;
+      padding: 11px 10px;
+      vertical-align: middle;
+    }
+    .pledge-table th:last-child, .pledge-table td:last-child { border-right: none; }
+    .pledge-table tbody tr:last-child td { border-bottom: none; }
+    .pledge-table th {
+      font-size: 0.72rem;
+      line-height: 1.2;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #203042;
+      text-align: left;
+    }
+    .center { text-align: center; }
+    .muted { color: #4f5e70; }
+    .sn { width: 58px; text-align: center; }
+    .title { width: 92px; }
+    .age, .gender { width: 72px; text-align: center; }
+    .signature { width: 160px; text-align: center; }
+    .sig-line { min-height: 20px; width: 100%; opacity: 0.8; }
+    .footer { margin-top: 18px; }
+    .place-row { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .place-field {
+      width: 220px;
+      padding: 12px 14px 14px;
+      border-radius: 14px;
+      border: 1px solid #c6c6cd;
+      background: rgba(249, 251, 255, 0.96);
+    }
+    .witness-note { margin-bottom: 12px; font-style: italic; text-align: center; color: #526476; font-size: 0.9rem; }
+    .witness-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .witness-box {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(198, 198, 205, 0.95);
+      background: rgba(242, 246, 251, 0.82);
+    }
+    .witness-title { font-weight: 800; color: #102033; margin-bottom: 12px; }
+    .witness-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+      color: #4f5e70;
+      font-size: 0.92rem;
+    }
+    .witness-row .label { width: 150px; flex: none; }
+    .witness-row .colon { flex: none; }
+    .witness-row .witness-line { flex: 1; min-height: 20px; border-bottom: 1px dashed #c6c6cd; }
+    .footer-row {
+      margin-top: 14px;
+      align-items: center;
+      justify-content: space-between;
+      color: #66768a;
+      font-size: 0.76rem;
+    }
+    .footer-chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(31, 76, 201, 0.12);
+      background: rgba(255, 255, 255, 0.92);
+      color: #17316f;
+    }
+    @media print { body { background: #fff; } .sheet { box-shadow: none; } }
+    @media (max-width: 820px) {
+      .content { padding: 18px; }
+      .brand-row { flex-direction: column; align-items: flex-start; }
+      .info-row, .witness-grid { display: grid; grid-template-columns: 1fr; }
+      .address-grid { grid-template-columns: 1fr; }
+      .callout { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <div class="card">
+      <div class="content">
+        <div class="brand-row">
+          <div class="brand">
+            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal">
+            <div>
+              <div class="eyebrow">Family Eye Donation Pledge Form</div>
+              <h1>JOTHI EYE CARE CENTRE</h1>
+              <div class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</div>
+            </div>
+          </div>
+          <div class="date-box">
+            <div class="section-label">Date</div>
+            <div class="date-line"></div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-card">
+            <strong>JOTHI EYE CARE CENTRE</strong>
+            <span>152 &amp; 154, Calve Subraya Chetty Street, Puducherry - 605 001.</span>
+          </div>
+          <div class="callout">
+            <div class="label">For Eye Donation</div>
+            <div class="phone">Toll No. 1919</div>
+            <div class="hint">Free (BSNL) Service</div>
+          </div>
+        </div>
+
+        <div class="address-row">
+          <div class="address-block">
+            <div class="section-label">Address</div>
+            <div class="field-line"></div>
+            <div class="field-line"></div>
+            <div class="address-grid">
+              <div class="address-mini"><div class="column-head">Pin</div><div class="field-line"></div></div>
+              <div class="address-mini"><div class="column-head">Dist</div><div class="field-line"></div></div>
+              <div class="address-mini"><div class="column-head">State</div><div class="field-line"></div></div>
+              <div class="address-mini"><div class="column-head">Telephone</div><div class="field-line"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="desc-text">
+          Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are given below:
+        </div>
+
+        <div class="table-wrap">
+          <table class="pledge-table">
+            <thead>
+              <tr>
+                <th class="sn">S.No</th>
+                <th class="title">Title</th>
+                <th>Name (Block Letters)</th>
+                <th class="age">Age</th>
+                <th class="gender">Gender</th>
+                <th class="signature">Signature</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${displayedRows
+                .map((row, index) => {
+                  const title = row.title || (row.gender === 'Male' ? 'Mr.' : row.gender === 'Female' ? 'Ms.' : 'Mr./Ms.');
+                  return `
+                    <tr>
+                      <td class="center">${index + 1}</td>
+                      <td class="muted">${escapeHtml(title)}</td>
+                      <td>${escapeHtml(row.fullName || row.name || 'N/A')}</td>
+                      <td class="center">${escapeHtml(row.age ?? 'N/A')}</td>
+                      <td class="center">${escapeHtml(row.gender || 'N/A')}</td>
+                      <td><div class="sig-line"></div></td>
+                    </tr>
+                  `;
+                })
+                .join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="footer">
           <div class="place-row">
-            <div class="field">
-              <label class="font-label-caps text-on-surface-variant">Place:</label>
-              <div class="underline"></div>
+            <div class="place-field">
+              <div class="section-label">Place</div>
+              <div class="field-line"></div>
             </div>
           </div>
 
-          <div class="witness-row">
-            <span class="label">Witness 1</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
+          <div class="witness-note">To be filled in by two witnesses (Relatives, neighbours or friends)</div>
+
+          <div class="witness-grid">
+            <div class="witness-box">
+              <div class="witness-title">1. Witness (Next of kin)</div>
+              <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">&nbsp;</span><span class="colon" style="opacity:0">:</span><div class="witness-line"></div></div>
+            </div>
+
+            <div class="witness-box">
+              <div class="witness-title">2. Witness (Next of kin)</div>
+              <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><div class="witness-line"></div></div>
+              <div class="witness-row"><span class="label">&nbsp;</span><span class="colon" style="opacity:0">:</span><div class="witness-line"></div></div>
+            </div>
           </div>
-          <div class="witness-row">
-            <span class="label">Witness 2</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Witness 3</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Date</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Donor / Parent / Guardian Signature</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Name</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Relationship</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
-          </div>
-          <div class="witness-row">
-            <span class="label">Address</span>
-            <span class="colon">:</span>
-            <span class="dash-underline"></span>
+
+          <div class="footer-row">
+            <div>JOTHI EYE CARE CENTRE</div>
+            <div class="footer-chip">Eye Donation Pledge</div>
           </div>
         </div>
       </div>
@@ -714,8 +869,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const response = await apiRequest('/api/terms/getall');
-      const rows = normalizeRows(response, exportRows);
+      const rows = normalizeRows(null, exportRows);
 
       if (rows.length === 0) {
         return;

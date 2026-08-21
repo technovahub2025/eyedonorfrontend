@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
-  CheckCircle2,
   ClipboardList,
-  Eye,
   ChevronRight,
   Handshake,
   Heart,
   Plus,
   ShieldCheck,
-  Stethoscope,
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
@@ -42,6 +39,27 @@ const initialPerson = () => ({
   phone: '',
   address: '',
 });
+
+const normalizeTermsRows = (response, fallbackRows = []) => {
+  const rows = Array.isArray(response?.data?.data)
+    ? response.data.data
+    : Array.isArray(response?.data)
+    ? response.data
+    : Array.isArray(fallbackRows)
+    ? fallbackRows
+    : [];
+
+  return rows;
+};
+
+const getRowTitle = (row) => {
+  if (row?.title) return row.title;
+  if (row?.gender === 'Male') return 'Mr.';
+  if (row?.gender === 'Female') return 'Ms.';
+  return 'Mr./Ms.';
+};
+
+const getRowDisplayName = (row) => row?.fullName || row?.name || 'N/A';
 
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
@@ -159,11 +177,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
         if (!active) return;
 
-        const terms = Array.isArray(response?.data?.data)
-          ? response.data.data
-          : Array.isArray(response?.data)
-          ? response.data
-          : [];
+        const terms = normalizeTermsRows(response);
 
         setAdminRows(terms);
         setTotalRecords(Number(response?.data?.count ?? terms.length ?? 0));
@@ -329,22 +343,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
               {isAdminView ? (
                 <>
-                  <p className="terms-card__admin-copy">
-                    Review only the entries that came through the terms page.
-                  </p>
-
-                  <div className="terms-card__admin-icons" aria-hidden="true">
-                    <div className="terms-card__admin-icon">
-                      <CheckCircle2 />
-                    </div>
-                    <div className="terms-card__admin-icon terms-card__admin-icon--pink">
-                      <Eye />
-                    </div>
-                    <div className="terms-card__admin-icon">
-                      <Stethoscope />
-                    </div>
-                  </div>
-
                   <div className="terms-card__filters">
                     <div className="terms-card__filters-head">
                       <div>
@@ -423,39 +421,51 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
                   </div>
 
-{adminLoading ? (
-                     <p className="terms-card__empty">Loading terms data...</p>
+                  <div className="terms-card__table-copy">
+                    <p className="terms-card__admin-copy">
+                      Review the entries returned from the terms API in a table layout that matches
+                      the pledge form.
+                    </p>
+                  </div>
+
+                  {adminLoading ? (
+                    <p className="terms-card__empty">Loading terms data...</p>
                   ) : adminError ? (
-                     <p className="terms-card__error">{adminError}</p>
+                    <p className="terms-card__error">{adminError}</p>
                   ) : displayedAdminRows.length > 0 ? (
-                     <div className="terms-card__submitted-list terms-card__submitted-list--admin">
-                       {displayedAdminRows.map((row) => {
-                         const id = row._id || row.id || `${row.name}-${row.createdAt}`;
-                         return (
-                           <div key={id} className="terms-card__submitted-row">
-                             <span>
-                               <strong>Title:</strong> {row.title || 'N/A'}
-                             </span>
-                             <span>
-                               <strong>Name:</strong> {row.name || row.fullName || 'Unnamed'}
-                             </span>
-                             <span>
-                               <strong>Age:</strong> {row.age ?? 'N/A'}
-                             </span>
-                           <span>
-                             <strong>Gender:</strong> {row.gender || 'N/A'}
-                           </span>
-                           
-                              <span className="terms-card__submitted-time">
-                                {row.createdAt ? new Date(row.createdAt).toLocaleString() : 'No date'}
-                              </span>
-                            </div>
-                         );
-                       })}
-                     </div>
-                    ) : (
-                      <p className="terms-card__empty">{adminEmptyMessage}</p>
-                    )}
+                    <div className="terms-card__table-wrap">
+                      <table className="terms-card__pledge-table">
+                        <thead>
+                          <tr>
+                            <th className="col-sn">S.No</th>
+                            <th className="col-title">Title</th>
+                            <th className="col-name">NAME (BLOCK LETTERS)</th>
+                            <th className="col-age">AGE</th>
+                            <th className="col-sex">GENDER</th>
+                            <th className="col-sig">SIGNATURE</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {displayedAdminRows.map((row, index) => {
+                            const id = row._id || row.id || `${row.name || row.fullName}-${row.createdAt}-${index}`;
+
+                            return (
+                              <tr key={id}>
+                                <td className="text-center">{startIndex + index + 1}</td>
+                                <td className="text-muted">{getRowTitle(row)}</td>
+                                <td>{getRowDisplayName(row)}</td>
+                                <td className="text-center">{row.age ?? 'N/A'}</td>
+                                <td className="text-center">{row.gender || 'N/A'}</td>
+                                <td className="text-center">{row.signature || ''}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p className="terms-card__empty">{adminEmptyMessage}</p>
+                  )}
 
                     <div className="terms-card__pagination-wrap">
                       <div className="terms-card__pagination-info">
