@@ -208,15 +208,30 @@
 
     .title-block .contact-line {
       margin-top: 0.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 1rem;
+      align-items: center;
       color: #45464d;
       font-family: 'Public Sans', sans-serif;
-      font-size: 11px;
-      line-height: 15px;
+      font-size: 10px;
+      line-height: 13px;
+    }
+
+    .title-block .contact-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.25rem;
+      white-space: nowrap;
     }
 
     .title-block .contact-line strong {
       color: #191c1e;
       font-weight: 700;
+    }
+
+    .title-block .contact-item strong {
+      color: #006398;
     }
 
     .date-block {
@@ -790,9 +805,18 @@
                 <h1>Family Eye Donation Pledge Form</h1>
                 <span class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</span>
                 <div class="contact-line">
-                  <strong>JOTHI EYE CARE CENTRE</strong> 152 &amp; 154, Calve Subraya Chetty Street,
-                  Puducherry-605 001. +91-413-2224534. +91- 413-2337659
-                  jothieyecare@gmail.com
+                  <span class="contact-item">
+                    <strong>Address:</strong>
+                    <span>JOTHI EYE CARE CENTRE, 152 &amp; 154, Calve Subraya Chetty Street, Puducherry-605 001.</span>
+                  </span>
+                  <span class="contact-item">
+                    <strong>Phone:</strong>
+                    <span>+91-413-2224534, +91-413-2337659</span>
+                  </span>
+                  <span class="contact-item">
+                    <strong>Email:</strong>
+                    <span>jothieyecare@gmail.com</span>
+                  </span>
                 </div>
               </div>
             </div>
