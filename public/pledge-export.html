@@ -366,6 +366,8 @@
     }
     .pledge-table {
       width: 100%;
+      table-layout: fixed;
+      border: 1px solid #c6c6cd;
       border-collapse: collapse;
       font-family: 'Public Sans', sans-serif;
       font-size: 14px;
@@ -386,10 +388,8 @@
       text-transform: uppercase;
       color: #191c1e;
       border-right: 1px solid #c6c6cd;
+      border-bottom: 1px solid #c6c6cd;
       text-align: center;
-    }
-    .pledge-table th:last-child {
-      border-right: none;
     }
     .pledge-table th.col-sn { width: 2.5rem; }
     .pledge-table th.col-title { width: 4rem; }
@@ -403,14 +403,11 @@
     .pledge-table td {
       padding: 0.5rem;
       border-right: 1px solid #c6c6cd;
+      border-bottom: 1px solid #c6c6cd;
       vertical-align: middle;
       text-align: center;
     }
-    .pledge-table td:last-child {
-      border-right: none;
-    }
     .pledge-table tbody tr {
-      border-bottom: 1px solid #c6c6cd;
       height: 40px;
       transition: background 0.15s;
     }
@@ -506,26 +503,6 @@
     /* ----- material symbols tweak ----- */
     .material-symbols-outlined {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-
-    /* ----- status message ----- */
-    #status {
-      margin: 1rem 0;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      text-align: center;
-      background: #e3f2fd;
-      color: #0d47a1;
-    }
-    #status.error {
-      background: #ffebee;
-      color: #b71c1c;
-    }
-    #status.success {
-      background: #e8f5e9;
-      color: #1b5e20;
     }
 
     /* ----- responsive adjustments ----- */
@@ -746,8 +723,6 @@
         </div>
       </div>
 
-      <!-- Status message -->
-      <div id="status">⏳ Loading pledge data from API...</div>
     </div>
   </main>
 
@@ -825,89 +800,20 @@
       tbody.innerHTML = html;
     }
 
-    // ----- MAIN: LOAD DATA FROM API -----
-    async function loadData() {
-      const status = document.getElementById('status');
-
-      try {
-        status.textContent = '⏳ Fetching data from API...';
-        status.className = '';
-
-        const apiBase = readApiBase().replace(/\/$/, '');
-        const response = await fetch(apiBase + '/api/terms/getall', {
-          headers: { Accept: 'application/json' },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        
-        // Extract rows from response
-        let rows = [];
-        if (Array.isArray(data?.data?.data)) {
-          rows = data.data.data;
-        } else if (Array.isArray(data?.data)) {
-          rows = data.data;
-        } else if (Array.isArray(data)) {
-          rows = data;
-        }
-
-        if (!rows || rows.length === 0) {
-          status.textContent = '⚠️ No pledge data found.';
-          status.className = 'error';
-          updateTable([]);
-          return;
-        }
-
-        // Update the table with fetched data
-        updateTable(rows);
-
-        status.textContent = `✅ Loaded ${rows.length} records successfully!`;
-        status.className = 'success';
-
-      } catch (error) {
-        console.error('Error:', error);
-        status.textContent = '❌ Failed to load data: ' + error.message;
-        status.className = 'error';
-        updateTable([]);
-      }
-    }
-
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
-      const status = document.getElementById('status');
       const downloadBtn = document.getElementById('downloadBtn');
 
       try {
-        status.textContent = 'Loading data from the form...';
-        status.className = '';
-
         const rows = readFrontendRows();
-
-        if (!rows || rows.length === 0) {
-          status.textContent = 'No pledge data found from the form.';
-          status.className = 'error';
-          updateTable([]);
-          return;
-        }
-
         updateTable(rows);
-
-        status.textContent = `Loaded ${rows.length} record(s) from the front end.`;
-        status.className = 'success';
 
         if (downloadBtn) {
           downloadBtn.style.display = 'inline-flex';
           downloadBtn.onclick = () => window.print();
         }
-
-        setTimeout(() => window.print(), 500);
       } catch (error) {
         console.error('Error:', error);
-        status.textContent = 'Failed to load front-end data: ' + error.message;
-        status.className = 'error';
         updateTable([]);
       }
     }
