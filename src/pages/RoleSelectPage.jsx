@@ -209,11 +209,11 @@ function RoleSelectPage({ onRoleSelect }) {
               <p className="role-section__eyebrow">Report an eye donor</p>
               <h3>24x7 support line</h3>
               <p>In case of a sad demise, contact the nearest eye bank immediately.</p>
-              <a className="role-call" href="tel:18001234567">
+              <a className="role-call" href="tel:1919">
                 <span className="material-symbols-outlined" aria-hidden="true">
                   call
                 </span>
-                1800 123 4567
+                1919
               </a>
               <span className="role-panel__note">Available 24x7 - Toll free</span>
             </article>
