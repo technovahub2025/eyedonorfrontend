@@ -4,561 +4,753 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JOTHI EYE CARE CENTRE - Family Eye Donation Pledge Form</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@100..900&family=Public+Sans:wght@100..900&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
       padding: 0;
-      background: #eef5fb;
-      color: #1b1f23;
+      background: #f7f9fb;
       font-family: 'Public Sans', sans-serif;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: #191c1e;
+      overscroll-behavior: none;
     }
 
-    @page {
-      size: A4 portrait;
-      margin: 8mm;
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+    ::-webkit-scrollbar { display: none; }
+
+    /* ----- typography helpers ----- */
+    .font-headline-xl {
+      font-family: 'Manrope', sans-serif;
+      font-size: 32px;
+      line-height: 40px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .font-headline-lg {
+      font-family: 'Manrope', sans-serif;
+      font-size: 24px;
+      line-height: 32px;
+      font-weight: 600;
+    }
+    .font-headline-md {
+      font-family: 'Manrope', sans-serif;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 600;
+    }
+    .font-body-lg {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+    }
+    .font-body-md {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+    }
+    .font-label-caps {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .font-serif {
+      font-family: Georgia, 'Times New Roman', serif;
     }
 
-    body {
-      min-height: 100vh;
+    /* ----- colors ----- */
+    .text-primary { color: #000000; }
+    .text-secondary { color: #006398; }
+    .text-on-surface { color: #191c1e; }
+    .text-on-surface-variant { color: #45464d; }
+    .bg-surface { background: #f7f9fb; }
+    .bg-surface-container-lowest { background: #ffffff; }
+    .bg-surface-container-low { background: #f2f4f6; }
+    .border-outline-variant { border-color: #c6c6cd; }
+
+    /* ----- header (empty) ----- */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      border-bottom: 1px solid #c6c6cd;
+      height: 80px;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 18px;
+      align-items: center;
+    }
+    .header-inner {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      height: 100%;
     }
 
-    .page {
-      width: min(100%, 794px);
-      background: #fff;
-      border: 1px solid #d3d7df;
-      box-shadow: 0 18px 45px rgba(10, 22, 44, 0.18);
+    main {
+      padding-top: 80px;
+      min-height: 100vh;
+      background: #ffffff;
+    }
+
+    .form-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background: #ffffff;
+    }
+
+    /* ----- pledge card (fixed aspect ratio) ----- */
+    .pledge-card {
+      width: 100%;
+      max-width: 896px;
+      aspect-ratio: 1 / 1.414;
+      background: #ffffff;
+      border: 1px solid #c6c6cd;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.02);
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
-    .page::before {
-      content: "";
+    /* subtle radial overlay */
+    .card-bg-overlay {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at top left, rgba(0, 102, 138, 0.08), transparent 22%),
-        radial-gradient(circle at top right, rgba(31, 76, 201, 0.06), transparent 18%);
       pointer-events: none;
+      background-image: 
+        radial-gradient(circle at top right, rgba(0, 99, 152, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at bottom left, rgba(0, 99, 152, 0.03) 0%, transparent 40%);
+      z-index: 0;
     }
 
-    .sheet {
+    .card-content {
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
       position: relative;
       z-index: 1;
-      padding: 18px 20px 16px;
     }
 
+    /* ----- top row: logo + title (inline) + date ----- */
     .top-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 10px;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-
     .logo-title-group {
       display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      min-width: 0;
+      align-items: center;
+      gap: 1.5rem;
       flex: 1;
+      min-width: 0;
     }
-
     .logo-title-group img {
-      width: 82px;
-      height: 82px;
-      object-fit: cover;
-      flex: none;
+      height: 120px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
     }
-
     .title-block {
-      min-width: 0;
-      padding-top: 3px;
-    }
-
-    .title-block h1 {
-      margin: 0;
-      font-family: 'Manrope', sans-serif;
-      font-size: 27px;
-      line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      color: #111;
-      text-transform: uppercase;
-    }
-
-    .title-block .subtitle {
-      margin-top: 8px;
-      font-family: Georgia, 'Times New Roman', serif;
-      font-size: 14px;
-      font-style: italic;
-      color: #0f5d7e;
-    }
-
-    .date-box {
-      width: 178px;
-      flex: none;
-      padding-top: 8px;
-    }
-
-    .date-box .label {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      color: #0c4d7b;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-
-    .date-line {
-      height: 20px;
-      border-bottom: 1px solid #bcc3ce;
-    }
-
-    .bank-row {
-      display: flex;
-      align-items: stretch;
-      justify-content: space-between;
-      gap: 12px;
-      border-top: 1px solid #cdd2d9;
-      border-bottom: 1px solid #cdd2d9;
-      padding: 14px 0;
-      margin: 2px 0 16px;
-    }
-
-    .bank-left {
-      min-width: 0;
-      flex: 1;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      min-width: 0;
     }
-
-    .bank-name {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .bank-name .name {
+    .title-block h1 {
       font-family: 'Manrope', sans-serif;
       font-size: 22px;
-      line-height: 1.1;
-      font-weight: 800;
-      color: #111;
+      line-height: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: #000;
+      white-space: nowrap;
+    }
+    .title-block .subtitle {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-size: 13px;
+      line-height: 18px;
+      color: #006398;
+      font-style: italic;
+      white-space: nowrap;
     }
 
+    .date-block {
+      width: 12rem;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+    .date-block label {
+      margin-bottom: 0.25rem;
+    }
+    .date-block .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
+
+    /* ----- bank info + call ----- */
+    .bank-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #c6c6cd;
+      border-bottom: 1px solid #c6c6cd;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+      background: rgba(242, 244, 246, 0.3);
+    }
+    .bank-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .bank-name {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .bank-name .name {
+      font-family: 'Manrope', sans-serif;
+      font-size: 20px;
+      line-height: 28px;
+      font-weight: 600;
+      color: #000;
+      white-space: nowrap;
+    }
     .bank-name .detail {
-      font-size: 11px;
-      color: #4a5665;
+      font-size: 14px;
+      line-height: 20px;
+      color: #45464d;
+      white-space: nowrap;
     }
 
     .bank-right {
-      width: 196px;
-      flex: none;
-      border-left: 1px solid #cdd2d9;
-      padding-left: 16px;
-      text-align: center;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      gap: 3px;
+      align-items: center;
+      border-left: 1px solid #c6c6cd;
+      padding-left: 1.5rem;
+      min-width: 160px;
     }
-
     .bank-right .label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #0c4d7b;
-      letter-spacing: 0.06em;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
+      color: #006398;
+      margin-bottom: 0.25rem;
+      text-align: center;
     }
-
     .bank-right .call {
       font-family: 'Manrope', sans-serif;
-      font-size: 17px;
-      font-weight: 800;
-      color: #111;
-      line-height: 1.1;
-    }
-
-    .bank-right .hint {
-      font-size: 10px;
-      color: #4a5665;
-    }
-
-    .address-section {
-      margin: 4px 0 14px;
-    }
-
-    .address-label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #20232a;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .line {
-      height: 20px;
-      border-bottom: 1px solid #bcc3ce;
-    }
-
-    .double-lines .line + .line {
-      margin-top: 10px;
-    }
-
-    .grid-4 {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1.1fr;
-      gap: 18px;
-      margin-top: 12px;
-    }
-
-    .mini-field .caption {
-      font-size: 11px;
-      font-weight: 800;
-      color: #20232a;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 600;
+      color: #000;
+      text-align: center;
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: center;
+      gap: 4px;
+    }
+    .bank-right .call .material-symbols-outlined {
+      font-size: 18px;
+      vertical-align: middle;
+    }
+    .bank-right .hint {
+      font-size: 12px;
+      line-height: 16px;
+      color: #45464d;
+      text-align: center;
     }
 
-    .mini-field .caption .icon {
-      font-size: 16px;
-      color: #0c4d7b;
-      line-height: 1;
+    /* ----- address fields ----- */
+    .address-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .address-row {
+      display: flex;
+      gap: 1rem;
+    }
+    .address-row .field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .address-row .field label {
+      margin-bottom: 0.25rem;
+    }
+    .address-row .field .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
+    .address-row .field .double-underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
+    }
+    .address-row .field .double-underline:not(:last-child) {
+      margin-bottom: 0.25rem;
+    }
+    .address-grid {
+      display: flex;
+      gap: 2rem;
+    }
+    .address-grid .field {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .address-grid .field label {
+      margin-bottom: 0.25rem;
+    }
+    .address-grid .field .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
     }
 
-    .intro {
-      margin: 10px 0 12px;
-      font-size: 11px;
-      color: #4a5665;
-      line-height: 1.45;
+    /* ----- description ----- */
+    .desc-text {
+      margin-bottom: 1rem;
+      color: #45464d;
     }
 
+    /* ----- table with all fields ----- */
     .table-wrap {
-      border: 1px solid #bfc5ce;
-      margin-bottom: 12px;
+      flex: 1;
+      border: 1px solid #c6c6cd;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 2rem;
     }
-
-    table {
+    .pledge-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #191c1e;
     }
-
-    th, td {
-      border-right: 1px solid #bfc5ce;
-      border-bottom: 1px solid #bfc5ce;
-      padding: 10px 8px;
-      vertical-align: top;
+    .pledge-table thead {
+      background: #f2f4f6;
+      border-bottom: 1px solid #c6c6cd;
     }
-
-    th:last-child, td:last-child { border-right: none; }
-    tr:last-child td { border-bottom: none; }
-
-    thead th {
-      background: #eef4fb;
-      font-size: 10.5px;
-      font-weight: 800;
-      text-transform: uppercase;
+    .pledge-table th {
+      padding: 0.75rem 0.5rem;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 11px;
+      line-height: 16px;
+      font-weight: 700;
       letter-spacing: 0.05em;
-      color: #20232a;
-      text-align: left;
+      text-transform: uppercase;
+      color: #191c1e;
+      border-right: 1px solid #c6c6cd;
+      text-align: center;
     }
-
-    .sn { width: 52px; text-align: center; }
-    .title-col { width: 72px; }
-    .age-col { width: 42px; text-align: center; }
-    .gender-col { width: 52px; text-align: center; }
-    .signature-col { width: 140px; }
-
-    .center { text-align: center; }
-    .muted { color: #465363; }
-
-    .signature-line {
-      height: 18px;
-      border-bottom: 1px solid #97a0ab;
+    .pledge-table th:last-child {
+      border-right: none;
     }
+    .pledge-table th.col-sn { width: 2.5rem; }
+    .pledge-table th.col-title { width: 4rem; }
+    .pledge-table th.col-name { width: 18%; }
+    .pledge-table th.col-age { width: 4rem; }
+    .pledge-table th.col-gender { width: 5rem; }
+    .pledge-table th.col-phone { width: 12%; }
+    .pledge-table th.col-address { width: 22%; }
+    .pledge-table th.col-sig { width: 8rem; }
 
+    .pledge-table td {
+      padding: 0.5rem;
+      border-right: 1px solid #c6c6cd;
+      vertical-align: middle;
+      text-align: center;
+    }
+    .pledge-table td:last-child {
+      border-right: none;
+    }
+    .pledge-table tbody tr {
+      border-bottom: 1px solid #c6c6cd;
+      height: 40px;
+      transition: background 0.15s;
+    }
+    .pledge-table tbody tr:hover {
+      background: #f8fafc;
+    }
+    .pledge-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    .pledge-table .text-muted { color: #45464d; }
+    .pledge-table .text-left { text-align: left; }
+
+    /* ----- bottom: place + witnesses ----- */
     .place-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 16px 0 12px;
+      margin-bottom: 1.5rem;
+    }
+    .place-row .field {
+      width: 16rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .place-row .field label {
+      margin-bottom: 0.25rem;
+    }
+    .place-row .field .underline {
+      height: 2rem;
+      border-bottom: 1px solid #c6c6cd;
+      width: 100%;
     }
 
-    .place-row .label {
-      font-size: 11px;
-      font-weight: 800;
-      color: #20232a;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .place-row .line {
-      flex: 0 0 180px;
-    }
-
-    .witness-note {
-      text-align: center;
-      font-size: 11px;
+    .witness-label {
       font-style: italic;
-      color: #4a5665;
-      margin-bottom: 10px;
+      text-align: center;
+      color: #45464d;
+      margin-bottom: 1rem;
     }
 
     .witness-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 3rem;
     }
-
     .witness-box {
-      border: 1px solid #b9c1cb;
-      padding: 12px 12px 10px;
-      min-height: 188px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: rgba(242, 244, 246, 0.3);
+      border: 1px solid rgba(198, 198, 205, 0.5);
+      border-radius: 2px;
     }
-
-    .witness-title {
-      font-size: 11px;
-      font-weight: 800;
-      color: #0c4d7b;
+    .witness-box .witness-title {
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
-      margin-bottom: 10px;
+      color: #000;
+      margin-bottom: 0.5rem;
     }
-
     .witness-row {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 11px;
-      color: #20232a;
-      margin-bottom: 10px;
+      align-items: flex-end;
+      gap: 0.5rem;
     }
-
     .witness-row .label {
-      width: 112px;
-      flex: none;
+      width: 8rem;
+      flex-shrink: 0;
+      color: #45464d;
+      font-size: 14px;
+      line-height: 20px;
     }
-
     .witness-row .colon {
-      flex: none;
+      color: #45464d;
+      margin-right: 0.5rem;
     }
-
-    .witness-row .fill {
+    .witness-row .dash-underline {
       flex: 1;
-      border-bottom: 1px dashed #b9c1cb;
-      height: 16px;
+      border-bottom: 1px dashed #c6c6cd;
+      height: 1.5rem;
+    }
+    .witness-row .empty-placeholder {
+      width: 8rem;
+      flex-shrink: 0;
+    }
+    .witness-row .opacity-0 { opacity: 0; }
+
+    /* ----- material symbols tweak ----- */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
-    .loading, .error {
-      padding: 24px;
+    /* ----- status message ----- */
+    #status {
+      margin: 1rem 0;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
       text-align: center;
-      color: #4a5665;
+      background: #e3f2fd;
+      color: #0d47a1;
+    }
+    #status.error {
+      background: #ffebee;
+      color: #b71c1c;
+    }
+    #status.success {
+      background: #e8f5e9;
+      color: #1b5e20;
     }
 
-    .error { color: #b42318; }
-
-    @media print {
-      body {
-        padding: 0;
-        background: #fff;
-      }
-
-      .page {
-        width: 100%;
-        box-shadow: none;
-        border: none;
-        transform: scale(0.9);
-        transform-origin: top center;
-        width: 111.111%;
-      }
-
-      .sheet { padding: 10px 12px 8px; }
-      .top-row { gap: 10px; margin-bottom: 6px; }
-      .logo-title-group { gap: 10px; }
-      .logo-title-group img { width: 64px; height: 64px; }
-      .title-block { padding-top: 0; }
-      .title-block h1 { font-size: 20px; line-height: 1.05; }
-      .title-block .subtitle { font-size: 10px; margin-top: 4px; }
-      .date-box { width: 140px; padding-top: 2px; }
-      .date-box .label { margin-bottom: 6px; }
-
-      .bank-row { padding: 8px 0; margin: 0 0 8px; }
-      .bank-name .name { font-size: 16px; }
-      .bank-name .detail { font-size: 9px; }
-      .bank-right { width: 160px; padding-left: 10px; }
-      .bank-right .label { font-size: 9px; }
+    /* ----- responsive adjustments ----- */
+    @media (max-width: 820px) {
+      .title-block h1 { font-size: 18px; line-height: 24px; white-space: normal; }
+      .title-block .subtitle { font-size: 12px; line-height: 16px; white-space: normal; }
+      .logo-title-group img { height: 90px; }
+      .card-content { padding: 1.5rem 1.25rem; }
+      .bank-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .bank-right { border-left: none; padding-left: 0; align-items: center; width: 100%; }
+      .bank-name { flex-wrap: wrap; }
+      .bank-name .detail { white-space: normal; }
+      .witness-grid { flex-direction: column; gap: 1.5rem; }
+      .address-grid { flex-wrap: wrap; gap: 0.75rem; }
+      .address-row { flex-direction: column; gap: 0.5rem; }
+      .top-row { flex-direction: column; align-items: stretch; }
+      .date-block { width: 100%; margin-left: 0; margin-top: 0.5rem; }
+      .pledge-table th, .pledge-table td { padding: 0.3rem; font-size: 11px; }
+      .pledge-table th.col-sn { width: 2rem; }
+      .pledge-table th.col-title { width: 3rem; }
+      .pledge-table th.col-age { width: 3rem; }
+      .pledge-table th.col-gender { width: 3.5rem; }
+      .pledge-table th.col-phone { width: 10%; }
+      .pledge-table th.col-address { width: 18%; }
+      .pledge-table th.col-sig { width: 5rem; }
+      .bank-right .call { font-size: 16px; }
+      .bank-right .call .material-symbols-outlined { font-size: 16px; }
+    }
+    @media (max-width: 480px) {
+      .card-content { padding: 1rem 0.75rem; }
+      .logo-title-group { flex-wrap: wrap; gap: 0.5rem; }
+      .logo-title-group img { height: 70px; }
+      .title-block h1 { font-size: 15px; line-height: 20px; }
+      .title-block .subtitle { font-size: 11px; line-height: 15px; }
+      .pledge-table th, .pledge-table td { padding: 0.2rem; font-size: 9px; }
+      .pledge-table th.col-sn { width: 1.5rem; }
+      .pledge-table th.col-title { width: 2.5rem; }
+      .pledge-table th.col-age { width: 2.5rem; }
+      .pledge-table th.col-gender { width: 3rem; }
+      .pledge-table th.col-phone { width: 8%; }
+      .pledge-table th.col-address { width: 14%; }
+      .pledge-table th.col-sig { width: 3.5rem; }
+      .witness-row .label { width: 5rem; font-size: 12px; }
+      .bank-name .name { font-size: 16px; line-height: 22px; }
+      .bank-name .detail { font-size: 12px; line-height: 16px; }
       .bank-right .call { font-size: 14px; }
-      .bank-right .hint { font-size: 9px; }
-
-      .address-section { margin: 0 0 8px; }
-      .address-label { font-size: 9px; margin-bottom: 4px; }
-      .line { height: 14px; }
-      .double-lines .line + .line { margin-top: 6px; }
-      .grid-4 { gap: 10px; margin-top: 8px; }
-      .mini-field .caption { font-size: 9px; margin-bottom: 3px; }
-      .mini-field .caption .icon { font-size: 13px; }
-
-      .intro { margin: 6px 0 8px; font-size: 9px; line-height: 1.25; }
-      .table-wrap { margin-bottom: 8px; }
-      table { font-size: 10px; }
-      th, td { padding: 6px 6px; }
-      thead th { font-size: 8.5px; }
-      .sn { width: 42px; }
-      .title-col { width: 58px; }
-      .age-col { width: 34px; }
-      .gender-col { width: 44px; }
-      .signature-col { width: 110px; }
-      .signature-line { height: 12px; }
-
-      .place-row { gap: 8px; margin: 8px 0 6px; }
-      .place-row .label { font-size: 9px; }
-      .place-row .line { flex-basis: 150px; }
-
-      .witness-note { font-size: 9px; margin-bottom: 6px; }
-      .witness-grid { gap: 8px; }
-      .witness-box { padding: 8px 8px 6px; min-height: 132px; }
-      .witness-title { font-size: 8.5px; margin-bottom: 6px; }
-      .witness-row { font-size: 8px; margin-bottom: 5px; gap: 6px; }
-      .witness-row .label { width: 88px; }
-      .witness-row .fill { height: 12px; }
-    }
-
-    @media (max-width: 800px) {
-      body { padding: 0; }
-      .page { width: 100%; }
-      .sheet { padding: 14px; }
-      .top-row, .bank-row, .witness-grid { flex-direction: column; display: flex; }
-      .date-box, .bank-right { width: 100%; border-left: none; padding-left: 0; text-align: left; }
-      .grid-4 { grid-template-columns: 1fr; }
-      .witness-grid { display: grid; grid-template-columns: 1fr; }
+      .bank-right .call .material-symbols-outlined { font-size: 14px; }
+      .bank-right .hint { font-size: 10px; line-height: 14px; }
     }
   </style>
 </head>
-  <body>
-  <div class="page">
-    <div class="sheet">
-      <div id="versionTag" class="loading" style="padding: 8px 0 0; text-align: left; font-size: 10px; color: #6b7280;">
-        Export version: v1.1
+<body>
+  <header>
+    <div class="header-inner"></div>
+  </header>
+
+  <main>
+    <div class="form-wrapper">
+      <div class="pledge-card">
+        <div class="card-bg-overlay"></div>
+        <div class="card-content">
+
+          <!-- top row: logo + title (inline) + date -->
+          <div class="top-row">
+            <div class="logo-title-group">
+              <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal">
+              <div class="title-block">
+                <h1>Family Eye Donation Pledge Form</h1>
+                <span class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</span>
+              </div>
+            </div>
+            <div class="date-block">
+              <label class="font-label-caps text-on-surface-variant">Date:</label>
+              <div class="underline"></div>
+            </div>
+          </div>
+
+          <!-- bank info + call -->
+          <div class="bank-row">
+            <div class="bank-left">
+              <div class="bank-name">
+                <span class="name">JOTHI EYE BANK</span>
+                <span class="detail">Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE</span>
+              </div>
+            </div>
+            <div class="bank-right">
+              <span class="label">FOR EYE DONATION</span>
+              <span class="call">Toll No. 1919</span>
+              <span class="hint">[Free (BSNL) Service]</span>
+            </div>
+          </div>
+
+          <!-- address -->
+          <div class="address-section">
+            <div class="address-row">
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">Address:</label>
+                <div class="double-underline"></div>
+                <div class="double-underline"></div>
+              </div>
+            </div>
+            <div class="address-grid">
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">Pin</label>
+                <div class="underline"></div>
+              </div>
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">Dist</label>
+                <div class="underline"></div>
+              </div>
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">State</label>
+                <div class="underline"></div>
+              </div>
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle; margin-right:4px;">phone</span> Telephone</label>
+                <div class="underline"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- description -->
+          <div class="desc-text font-body-md">
+            Name, Age, Gender, Phone, Address and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are given below:
+          </div>
+
+          <!-- table with all fields -->
+          <div class="table-wrap">
+            <table class="pledge-table">
+              <thead>
+                <tr>
+                  <th class="col-sn">#</th>
+                  <th class="col-title">Title</th>
+                  <th class="col-name">NAME</th>
+                  <th class="col-age">AGE</th>
+                  <th class="col-gender">GENDER</th>
+                  <th class="col-phone">PHONE</th>
+                  <th class="col-address">ADDRESS</th>
+                  <th class="col-sig">SIGNATURE</th>
+                </tr>
+              </thead>
+              <tbody id="pledgeTableBody">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:1.5rem; color:#64748b;">
+                    ⏳ Loading data from API...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- bottom: place + witnesses -->
+          <div>
+            <div class="place-row">
+              <div class="field">
+                <label class="font-label-caps text-on-surface-variant">Place:</label>
+                <div class="underline"></div>
+              </div>
+            </div>
+
+            <p class="witness-label font-body-md">To be filled in by two witnesses (Relatives, neighbours or friends)</p>
+
+            <div class="witness-grid">
+              <!-- witness 1 -->
+              <div class="witness-box">
+                <span class="witness-title">1. Witness (Next of kin):</span>
+                <div class="witness-row">
+                  <span class="label">Signature</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Name and Relationship</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Address</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="empty-placeholder"></span>
+                  <span class="colon opacity-0">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+              </div>
+
+              <!-- witness 2 -->
+              <div class="witness-box">
+                <span class="witness-title">2. Witness (Next of kin):</span>
+                <div class="witness-row">
+                  <span class="label">Signature</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Name and Relationship</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="label">Address</span>
+                  <span class="colon">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+                <div class="witness-row">
+                  <span class="empty-placeholder"></span>
+                  <span class="colon opacity-0">:</span>
+                  <div class="dash-underline"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-      <div id="status" class="loading">Loading pledge data...</div>
-      <div id="content" hidden>
-        <div class="top-row">
-          <div class="logo-title-group">
-            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB_2L6WokL_lPCzrLNvNinfCFFfTLnhyA0qSx-tdSymMWCvDqjsu9ichinl2xd8ec8QCGDJvvqMZ_kKZZ1xAm7ksKDzY9lSLHKNMGUbsyaGw2qErp4pPPCpQ0GrgFO1vD0glf9oBctMPHtlfyODnFBssuSL9LcaTf006pwle60K52xRPHhG36xxGpIpVnOSNlx3hunTkoS-SZP97tlV_B2V5nH4X2DCU_3zh2vmuXkgkAeMq_R5RCwg-wJ7NiDNk-9EQ" alt="Jothi Eye Bank Seal" />
-            <div class="title-block">
-              <h1>Family Eye Donation Pledge Form</h1>
-              <div class="subtitle">"Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"</div>
-            </div>
-          </div>
-          <div class="date-box">
-            <div class="label">Date:</div>
-            <div class="date-line"></div>
-          </div>
-        </div>
 
-        <div class="bank-row">
-          <div class="bank-left">
-            <div class="bank-name">
-              <div class="name">JOTHI EYE BANK</div>
-              <div class="detail">Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE</div>
-            </div>
-          </div>
-          <div class="bank-right">
-            <div class="label">FOR EYE DONATION</div>
-            <div class="call">Toll No. 1919</div>
-            <div class="hint">[Free (BSNL) Service]</div>
-          </div>
-        </div>
-
-        <div class="address-section">
-          <div class="address-label">ADDRESS:</div>
-          <div class="double-lines">
-            <div class="line"></div>
-            <div class="line"></div>
-          </div>
-          <div class="grid-4">
-            <div class="mini-field">
-              <div class="caption">PIN</div>
-              <div class="line"></div>
-            </div>
-            <div class="mini-field">
-              <div class="caption">DIST</div>
-              <div class="line"></div>
-            </div>
-            <div class="mini-field">
-              <div class="caption">STATE</div>
-              <div class="line"></div>
-            </div>
-            <div class="mini-field">
-              <div class="caption"><span class="icon">☎</span> TELEPHONE</div>
-              <div class="line"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="intro">
-          Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th class="sn">S.No</th>
-                <th class="title-col">Title</th>
-                <th>Name (Block Letters)</th>
-                <th class="age-col">Age</th>
-                <th class="gender-col">Gender</th>
-                <th class="signature-col">Signature</th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-
-        <div class="place-row">
-          <div class="label">PLACE:</div>
-          <div class="line"></div>
-        </div>
-
-        <div class="witness-note">To be filled in by two witnesses (Relatives, neighbours or friends)</div>
-
-        <div class="witness-grid">
-          <div class="witness-box">
-            <div class="witness-title">1. WITNESS (NEXT OF KIN):</div>
-            <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">&nbsp;</span><span class="colon">&nbsp;</span><span class="fill"></span></div>
-          </div>
-          <div class="witness-box">
-            <div class="witness-title">2. WITNESS (NEXT OF KIN):</div>
-            <div class="witness-row"><span class="label">Signature</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">Name and Relationship</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">Address</span><span class="colon">:</span><span class="fill"></span></div>
-            <div class="witness-row"><span class="label">&nbsp;</span><span class="colon">&nbsp;</span><span class="fill"></span></div>
-          </div>
-        </div>
-      </div>
+      <!-- Status message -->
+      <div id="status">⏳ Loading pledge data from API...</div>
     </div>
-  </div>
+  </main>
 
   <script>
+    // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
       return String(value ?? '')
         .replace(/&/g, '&amp;')
@@ -566,15 +758,6 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-    }
-
-    function normalizeRows(response) {
-      const rows = Array.isArray(response?.data?.data)
-        ? response.data.data
-        : Array.isArray(response?.data)
-        ? response.data
-        : [];
-      return rows.slice(0, 3);
     }
 
     function getRowTitle(row) {
@@ -593,242 +776,97 @@
       return url.searchParams.get('apiBase') || window.location.origin;
     }
 
-    function escapePdfText(value) {
-      return String(value ?? '')
-        .replace(/\\/g, '\\\\')
-        .replace(/\(/g, '\\(')
-        .replace(/\)/g, '\\)');
-    }
+    // ----- UPDATE TABLE WITH ALL FIELDS -----
+    function updateTable(rows) {
+      const tbody = document.getElementById('pledgeTableBody');
+      if (!tbody) return;
 
-    function textWidthEstimate(text, fontSize) {
-      return String(text).length * fontSize * 0.52;
-    }
-
-    function buildPdfBlob(rows) {
-      const PAGE_WIDTH = 595.28;
-      const PAGE_HEIGHT = 841.89;
-      const LEFT = 24;
-      const TOP = 22;
-      const USABLE_WIDTH = PAGE_WIDTH - LEFT * 2;
-      const regular = 1;
-      const bold = 2;
-      const border = '0.76 0.78 0.82 RG';
-      const blue = '0.07 0.22 0.45 rg';
-      const parts = [];
-      const offsets = [0];
-      const objects = [];
-      const byteLength = (value) => new TextEncoder().encode(value).length;
-
-      const drawRect = (x, y, w, h, fill = null, stroke = border) => {
-        if (fill) parts.push(fill);
-        if (stroke) parts.push(stroke);
-        parts.push(`${x.toFixed(2)} ${y.toFixed(2)} ${w.toFixed(2)} ${h.toFixed(2)} re ${fill ? 'B' : 'S'}`);
-      };
-
-      const line = (x1, y1, x2, y2, stroke = border) => {
-        parts.push(stroke);
-        parts.push(`${x1.toFixed(2)} ${y1.toFixed(2)} m ${x2.toFixed(2)} ${y2.toFixed(2)} l S`);
-      };
-
-      const writeText = (text, x, y, size, options = {}) => {
-        const { align = 'left', color = '0 0 0 rg', font = regular, maxWidth = null } = options;
-        const estimated = maxWidth || textWidthEstimate(text, size);
-        let startX = x;
-        if (align === 'center') startX = x - estimated / 2;
-        if (align === 'right') startX = x - estimated;
-        parts.push('BT');
-        parts.push(color);
-        parts.push(`/F${font} ${size.toFixed(2)} Tf`);
-        parts.push(`1 0 0 1 ${startX.toFixed(2)} ${y.toFixed(2)} Tm`);
-        parts.push(`(${escapePdfText(text)}) Tj`);
-        parts.push('ET');
-      };
-
-      const displayedRows = Array.from({ length: 3 }, (_, index) => rows[index] || {});
-      drawRect(LEFT, 734, USABLE_WIDTH, 82, '1 1 1 rg', null);
-      drawRect(LEFT, 734, USABLE_WIDTH, 82, null, border);
-
-      writeText('FAMILY EYE DONATION PLEDGE', LEFT + 126, 774, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
-      writeText('FORM', LEFT + 126, 756, 16.2, { font: bold, color: '0.07 0.08 0.10 rg' });
-      writeText('Eye Donation, let us make it our Family Tradition !! Let', LEFT + 126, 740, 7.9, {
-        color: '0.09 0.40 0.68 rg',
-      });
-      writeText('us light up lives !!!', LEFT + 126, 731, 7.9, {
-        color: '0.09 0.40 0.68 rg',
-      });
-      writeText('DATE:', PAGE_WIDTH - LEFT - 54, 777, 8.2, { font: bold, color: blue });
-      line(PAGE_WIDTH - LEFT - 54, 769, PAGE_WIDTH - LEFT - 8, 769);
-
-      drawRect(LEFT, 683, USABLE_WIDTH, 42, '1 1 1 rg', border);
-      writeText('JOTHI EYE BANK', LEFT + 10, 705, 14.8, { font: bold, color: '0.07 0.08 0.10 rg' });
-      writeText('Run by JOTHI EYE CARE FOUNDATION (Society)', LEFT + 10, 691, 8.0, {
-        color: '0.30 0.31 0.35 rg',
-      });
-      writeText('@ JOTHI EYE CARE CENTRE', LEFT + 10, 682, 8.0, {
-        color: '0.30 0.31 0.35 rg',
-      });
-      line(LEFT + 408, 691, LEFT + 408, 725, '0.78 0.80 0.84 RG');
-      writeText('FOR EYE DONATION', PAGE_WIDTH - LEFT - 70, 712, 8.6, { font: bold, align: 'center', color: blue });
-      writeText('Call  No. 1919', PAGE_WIDTH - LEFT - 70, 694, 16.0, { font: bold, align: 'center' });
-      writeText('[Free (BSNL) Service]', PAGE_WIDTH - LEFT - 70, 681, 7.2, { align: 'center', color: '0.33 0.34 0.38 rg' });
-
-      writeText('Address:', LEFT + 4, 649, 8.4, { font: bold, color: '0.26 0.27 0.31 rg' });
-      line(LEFT + 4, 625, PAGE_WIDTH - LEFT - 6, 625);
-      line(LEFT + 4, 607, PAGE_WIDTH - LEFT - 6, 607);
-
-      writeText('Pin', LEFT + 2, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
-      writeText('Dist', LEFT + 148, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
-      writeText('State', LEFT + 290, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
-      writeText('Telephone', LEFT + 428, 588, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
-      line(LEFT + 4, 568, LEFT + 125, 568);
-      line(LEFT + 150, 568, LEFT + 270, 568);
-      line(LEFT + 292, 568, LEFT + 412, 568);
-      line(LEFT + 430, 568, PAGE_WIDTH - LEFT - 6, 568);
-
-      writeText(
-        'Name, Age and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are give below:',
-        LEFT + 2,
-        532,
-        7.0,
-        { color: '0.26 0.35 0.46 rg' }
-      );
-
-      const tableTop = 512;
-      const rowHeight = 31;
-      const headerHeight = 20;
-      const tableHeight = headerHeight + rowHeight * 3;
-      drawRect(LEFT, tableTop - tableHeight, USABLE_WIDTH, tableHeight, '1 1 1 rg', border);
-      drawRect(LEFT, tableTop - headerHeight, USABLE_WIDTH, headerHeight, '0.94 0.96 0.99 rg', null);
-
-      const colXs = [LEFT, LEFT + 40, LEFT + 86, LEFT + 308, LEFT + 360, LEFT + 420];
-      const colWidths = [40, 46, 222, 52, 60, 127];
-      ['S.No', 'Title', 'NAME (BLOCK LETTERS)', 'AGE', 'SEX', 'SIGNATURE'].forEach((label, idx) => {
-        writeText(label, colXs[idx] + colWidths[idx] / 2, tableTop - 8, 7.4, {
-          font: bold,
-          align: 'center',
-          color: '0.17 0.21 0.28 rg',
-        });
-        if (idx > 0) line(colXs[idx], tableTop - headerHeight, colXs[idx], tableTop - tableHeight);
-      });
-
-      displayedRows.forEach((row, index) => {
-        const rowTop = tableTop - headerHeight - rowHeight * (index + 1);
-        line(LEFT, rowTop, LEFT + USABLE_WIDTH, rowTop);
-        writeText(String(index + 1), LEFT + colWidths[0] / 2, rowTop + 10, 8.0, { align: 'center' });
-        writeText(getRowTitle(row), colXs[1] + colWidths[1] / 2, rowTop + 10, 7.6, { align: 'center', color: '0.30 0.30 0.33 rg' });
-        writeText(getRowDisplayName(row), colXs[2] + 4, rowTop + 10, 7.4, { maxWidth: colWidths[2] - 8 });
-        writeText(String(row.age ?? ''), colXs[3] + colWidths[3] / 2, rowTop + 10, 7.6, { align: 'center' });
-        writeText(row.gender || '', colXs[4] + colWidths[4] / 2, rowTop + 10, 7.6, { align: 'center' });
-        line(colXs[5] + 10, rowTop + 8, colXs[5] + colWidths[5] - 10, rowTop + 8, '0.55 0.60 0.67 RG');
-      });
-
-      writeText('Place:', LEFT + 2, 332, 8.0, { font: bold, color: '0.26 0.27 0.31 rg' });
-      line(LEFT + 2, 308, LEFT + 180, 308);
-      writeText('To be filled in by two witnesses (Relatives, neighbours or friends)', PAGE_WIDTH / 2, 288, 7.4, {
-        align: 'center',
-        color: '0.30 0.38 0.48 rg',
-      });
-
-      const witnessY = 170;
-      const witnessWidth = (USABLE_WIDTH - 50) / 2;
-      drawRect(LEFT, witnessY, witnessWidth, 128, '0.97 0.98 1 rg', border);
-      drawRect(LEFT + witnessWidth + 50, witnessY, witnessWidth, 128, '0.97 0.98 1 rg', border);
-      writeText('1. Witness (Next of kin):', LEFT + 10, witnessY + 108, 8.0, { font: bold, color: '0.07 0.22 0.45 rg' });
-      writeText('2. Witness (Next of kin):', LEFT + witnessWidth + 60, witnessY + 108, 8.0, { font: bold, color: '0.07 0.22 0.45 rg' });
-
-      const witnessLines = [
-        ['Signature', 74],
-        ['Name and Relationship', 74],
-        ['Address', 74],
-        ['', 74],
-      ];
-
-      witnessLines.forEach((item, idx) => {
-        const y = witnessY + 82 - idx * 20;
-        writeText(item[0], LEFT + 8, y, 7.4, { color: '0.26 0.27 0.31 rg' });
-        writeText(':', LEFT + 82, y, 7.4, { color: '0.26 0.27 0.31 rg' });
-        line(LEFT + 92, y - 3, LEFT + witnessWidth - 10, y - 3, '0.65 0.68 0.72 RG');
-
-        writeText(item[0], LEFT + witnessWidth + 60, y, 7.4, { color: '0.26 0.27 0.31 rg' });
-        writeText(':', LEFT + witnessWidth + 134, y, 7.4, { color: '0.26 0.27 0.31 rg' });
-        line(LEFT + witnessWidth + 144, y - 3, LEFT + witnessWidth + 50 + witnessWidth - 10, y - 3, '0.65 0.68 0.72 RG');
-      });
-
-      objects.push({ number: 3, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Roman >>' });
-      objects.push({ number: 4, body: '<< /Type /Font /Subtype /Type1 /BaseFont /Times-Bold >>' });
-      objects.push({ number: 5, body: `<< /Length ${byteLength(parts.join('\n'))} >>\nstream\n${parts.join('\n')}\nendstream` });
-      objects.push({
-        number: 6,
-        body:
-          `<< /Type /Page /Parent 2 0 R ` +
-          `/MediaBox [0 0 ${PAGE_WIDTH.toFixed(2)} ${PAGE_HEIGHT.toFixed(2)}] ` +
-          `/Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> ` +
-          `/Contents 5 0 R >>`,
-      });
-      objects.push({ number: 2, body: `<< /Type /Pages /Kids [6 0 R] /Count 1 >>` });
-      objects.push({ number: 1, body: `<< /Type /Catalog /Pages 2 0 R >>` });
-      objects.sort((a, b) => a.number - b.number);
-
-      let pdf = '%PDF-1.4\n';
-      for (const object of objects) {
-        offsets[object.number] = byteLength(pdf);
-        pdf += `${object.number} 0 obj\n${object.body}\nendobj\n`;
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:1.5rem; color:#64748b;">
+              No data available
+            </td>
+          </tr>
+        `;
+        return;
       }
 
-      const xrefOffset = byteLength(pdf);
-      pdf += 'xref\n0 7\n';
-      pdf += '0000000000 65535 f \n';
-      for (let number = 1; number <= 6; number += 1) {
-        pdf += `${String(offsets[number] ?? 0).padStart(10, '0')} 00000 n \n`;
-      }
-      pdf += 'trailer\n<< /Size 7 /Root 1 0 R >>\n';
-      pdf += `startxref\n${xrefOffset}\n%%EOF\n`;
+      let html = '';
+      rows.forEach((row, index) => {
+        const title = getRowTitle(row);
+        const name = getRowDisplayName(row);
+        html += `
+          <tr>
+            <td>${index + 1}</td>
+            <td class="text-muted">${escapeHtml(title)}</td>
+            <td class="text-left">${escapeHtml(name)}</td>
+            <td>${escapeHtml(String(row.age ?? ''))}</td>
+            <td>${escapeHtml(row.gender || '')}</td>
+            <td>${escapeHtml(row.phone || '')}</td>
+            <td class="text-left" style="font-size:12px;">${escapeHtml(row.address || '')}</td>
+            <td></td>
+          </tr>
+        `;
+      });
 
-      return new Blob([pdf], { type: 'application/pdf' });
+      tbody.innerHTML = html;
     }
 
-    function downloadBlob(blob, filename) {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1500);
-    }
-
-    async function loadAndDownload() {
+    // ----- MAIN: LOAD DATA FROM API -----
+    async function loadData() {
       const status = document.getElementById('status');
+
       try {
-        status.textContent = 'Preparing download...';
+        status.textContent = '⏳ Fetching data from API...';
+        status.className = '';
+
         const apiBase = readApiBase().replace(/\/$/, '');
         const response = await fetch(apiBase + '/api/terms/getall', {
           headers: { Accept: 'application/json' },
         });
-        const data = await response.json();
-        const rows = normalizeRows(data);
 
-        if (!rows.length) {
-          status.textContent = 'No pledge data found.';
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Extract rows from response
+        let rows = [];
+        if (Array.isArray(data?.data?.data)) {
+          rows = data.data.data;
+        } else if (Array.isArray(data?.data)) {
+          rows = data.data;
+        } else if (Array.isArray(data)) {
+          rows = data;
+        }
+
+        if (!rows || rows.length === 0) {
+          status.textContent = '⚠️ No pledge data found.';
+          status.className = 'error';
+          updateTable([]);
           return;
         }
 
-        const pdfBlob = buildPdfBlob(rows);
-        const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-        downloadBlob(pdfBlob, `jothi-eye-care-centre-pledge-${stamp}.pdf`);
+        // Update the table with fetched data
+        updateTable(rows);
 
-        setTimeout(() => {
-          window.close();
-        }, 1000);
+        status.textContent = `✅ Loaded ${rows.length} records successfully!`;
+        status.className = 'success';
+
       } catch (error) {
-        status.textContent = 'Failed to download pledge PDF.';
+        console.error('Error:', error);
+        status.textContent = '❌ Failed to load data: ' + error.message;
         status.className = 'error';
-        console.error(error);
+        updateTable([]);
       }
     }
 
-    loadAndDownload();
+    // ----- START -----
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
   </script>
 </body>
 </html>
