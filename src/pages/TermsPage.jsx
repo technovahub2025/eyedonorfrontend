@@ -423,8 +423,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                   <div className="terms-card__table-copy">
                     <p className="terms-card__admin-copy">
-                      Review the entries returned from the terms API in a clean card layout instead
-                      of a table.
+                      Review the entries returned from the terms API in a tabular layout.
                     </p>
                   </div>
 
@@ -433,51 +432,45 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   ) : adminError ? (
                     <p className="terms-card__error">{adminError}</p>
                   ) : displayedAdminRows.length > 0 ? (
-                    <div className="terms-card__admin-cards">
-                      {displayedAdminRows.map((row, index) => {
-                        const id =
-                          row._id ||
-                          row.id ||
-                          `${row.name || row.fullName || 'row'}-${row.createdAt || index}`;
-                        const createdLabel = row.createdAt
-                          ? new Date(row.createdAt).toLocaleString()
-                          : 'N/A';
+                    <div className="terms-card__table-wrap">
+                      <table className="terms-card__pledge-table">
+                        <thead>
+                          <tr>
+                            <th className="col-sn">Entry</th>
+                            <th className="col-title">Title</th>
+                            <th>Name</th>
+                            <th className="col-age">Age</th>
+                            <th className="col-sex">Gender</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Created At</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {displayedAdminRows.map((row, index) => {
+                            const id =
+                              row._id ||
+                              row.id ||
+                              `${row.name || row.fullName || 'row'}-${row.createdAt || index}`;
+                            const createdLabel = row.createdAt
+                              ? new Date(row.createdAt).toLocaleString()
+                              : 'N/A';
 
-                        return (
-                          <article key={id} className="terms-card__admin-card">
-                            <div className="terms-card__admin-card-head">
-                              <div>
-                                <p className="terms-card__admin-card-kicker">
-                                  Entry {startIndex + index + 1}
-                                </p>
-                                <h3 className="terms-card__admin-card-title">
-                                  {getRowDisplayName(row)}
-                                </h3>
-                                <p className="terms-card__admin-card-subtitle">
-                                  {getRowTitle(row)}
-                                </p>
-                              </div>
-                              <span className="terms-card__admin-card-time">{createdLabel}</span>
-                            </div>
-
-                            <div className="terms-card__admin-card-grid">
-                              <div>
-                                <strong>Age</strong>
-                                <span>{row.age ?? 'N/A'}</span>
-                              </div>
-                              <div>
-                                <strong>Gender</strong>
-                                <span>{row.gender || 'N/A'}</span>
-                              </div>
-                              <div>
-                                <strong>Phone</strong>
-                                <span>{row.phone || row.mobile || row.telephone || 'N/A'}</span>
-                              </div>
-                             
-                            </div>
-                          </article>
-                        );
-                      })}
+                            return (
+                              <tr key={id}>
+                                <td className="text-center">Entry {startIndex + index + 1}</td>
+                                <td>{getRowTitle(row)}</td>
+                                <td>{getRowDisplayName(row)}</td>
+                                <td className="text-center">{row.age ?? 'N/A'}</td>
+                                <td className="text-center">{row.gender || 'N/A'}</td>
+                                <td>{row.phone || row.mobile || row.telephone || 'N/A'}</td>
+                                <td>{row.address || 'N/A'}</td>
+                                <td>{createdLabel}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   ) : (
                     <p className="terms-card__empty">{adminEmptyMessage}</p>

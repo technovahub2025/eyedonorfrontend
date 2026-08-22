@@ -234,34 +234,6 @@
       color: #006398;
     }
 
-    .date-block {
-      width: 12rem;
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      align-items: flex-end;
-    }
-    .date-block label {
-      margin-bottom: 0.25rem;
-    }
-    .date-block .date-value {
-      min-height: 2rem;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-end;
-      width: 100%;
-      padding-bottom: 0.35rem;
-      color: #191c1e;
-      font-weight: 700;
-      text-align: right;
-      border-bottom: 1px solid #c6c6cd;
-    }
-    .date-block .underline {
-      height: 2rem;
-      border-bottom: 1px solid #c6c6cd;
-      width: 100%;
-    }
-
     /* ----- bank info + call ----- */
     .bank-row {
       display: flex;
@@ -421,11 +393,11 @@
 
     /* ----- table with all fields ----- */
     .table-wrap {
-      flex: 1;
+      flex: 0 0 auto;
       border: 1px solid #c6c6cd;
       border-radius: 2px;
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
     }
     .pledge-table {
       width: 100%;
@@ -488,25 +460,45 @@
       justify-content: space-between;
       align-items: flex-end;
       gap: 1.5rem;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
     }
-    .place-row {
+    .inline-entry {
       display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
+      align-items: flex-end;
+      gap: 0.5rem;
+      min-width: 0;
     }
-    .place-row .field {
-      width: 16rem;
+    .inline-entry--place {
+      flex: 1;
+    }
+    .inline-entry--date {
+      width: 14rem;
+      flex-shrink: 0;
+      justify-content: flex-end;
+    }
+    .inline-label {
+      white-space: nowrap;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #45464d;
+      flex-shrink: 0;
+    }
+    .inline-value {
       display: flex;
-      flex-direction: column;
-    }
-    .place-row .field label {
-      margin-bottom: 0.25rem;
-    }
-    .place-row .field .underline {
-      height: 2rem;
+      align-items: flex-end;
+      min-height: 1.9rem;
+      flex: 1;
       border-bottom: 1px solid #c6c6cd;
-      width: 100%;
+      color: #191c1e;
+      font-weight: 700;
+      padding: 0 0 0.25rem;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     /* ----- material symbols tweak ----- */
@@ -667,7 +659,7 @@
       .pledge-table th.col-address { width: 21%; }
 
       .place-row {
-        margin-bottom: 0.75rem;
+        margin-bottom: 0;
       }
 
     }
@@ -686,7 +678,8 @@
       .address-row { flex-direction: column; gap: 0.5rem; }
       .top-row { flex-direction: column; align-items: stretch; }
       .bottom-row { flex-direction: column; align-items: stretch; }
-      .date-block { width: 100%; margin-left: 0; margin-top: 0.5rem; }
+      .inline-entry--date { width: 100%; justify-content: flex-start; }
+      .inline-entry--place { width: 100%; }
       .pledge-table th, .pledge-table td { padding: 0.3rem; font-size: 11px; }
       .pledge-table th.col-sn { width: 2rem; }
       .pledge-table th.col-title { width: 3rem; }
@@ -823,23 +816,19 @@
             </table>
           </div>
 
-          <!-- bottom: place + statement -->
+          <!-- bottom: place + date -->
           <div>
             <div class="bottom-row">
-            <div class="place-row">
-              <div class="field">
-                <label class="font-label-caps text-on-surface-variant">Place:</label>
-                <div class="underline"></div>
+              <div class="inline-entry inline-entry--place">
+                <span class="inline-label">Place:</span>
+                <span class="inline-value" contenteditable="true" aria-label="Place"></span>
+              </div>
+              <div class="inline-entry inline-entry--date">
+                <span class="inline-label">Date:</span>
+                <span class="inline-value" id="currentDate" contenteditable="true" aria-label="Date"></span>
               </div>
             </div>
-            <!-- bottom section -->
-
-
-  <div class="date-block">
-    <label class="font-label-caps text-on-surface-variant">Date:</label>
-    <div class="date-value" id="currentDate"></div>
-  </div>
-</div>
+          </div>
 
         </div>
       </div>
