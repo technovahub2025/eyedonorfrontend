@@ -14,11 +14,17 @@ async function apiRequest(path, { method = 'GET', body, token } = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new Error(`Unable to reach the API server at ${API_BASE_URL}. Make sure the backend is running.`);
+  }
 
   const text = await response.text();
   const data = text ? safeJsonParse(text) : null;
@@ -46,11 +52,17 @@ async function apiDownload(path, { method = 'GET', body, token } = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
+  let response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  } catch {
+    throw new Error(`Unable to reach the API server at ${API_BASE_URL}. Make sure the backend is running.`);
+  }
 
   if (!response.ok) {
     const text = await response.text();
