@@ -175,7 +175,7 @@
       min-width: 0;
     }
     .logo-title-group img {
-      height: 120px;
+      height: 150px;
       width: auto;
       object-fit: contain;
       flex-shrink: 0;
@@ -239,9 +239,22 @@
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
+      align-items: flex-end;
     }
     .date-block label {
       margin-bottom: 0.25rem;
+    }
+    .date-block .date-value {
+      min-height: 2rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      width: 100%;
+      padding-bottom: 0.35rem;
+      color: #191c1e;
+      font-weight: 700;
+      text-align: right;
+      border-bottom: 1px solid #c6c6cd;
     }
     .date-block .underline {
       height: 2rem;
@@ -397,7 +410,13 @@
     /* ----- description ----- */
     .desc-text {
       margin-bottom: 1rem;
-      color: #45464d;
+      color: #006398;
+      text-align: center;
+      font-family: 'Manrope', sans-serif;
+      font-size: 18px;
+      line-height: 26px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
     }
 
     /* ----- table with all fields ----- */
@@ -442,7 +461,6 @@
     .pledge-table th.col-gender { width: 5rem; }
     .pledge-table th.col-phone { width: 12%; }
     .pledge-table th.col-address { width: 22%; }
-    .pledge-table th.col-sig { width: 8rem; }
 
     .pledge-table td {
       padding: 0.5rem;
@@ -464,7 +482,7 @@
     .pledge-table .text-muted { color: #45464d; }
     .pledge-table .text-left { text-align: left; }
 
-    /* ----- bottom: place + witnesses ----- */
+    /* ----- bottom: place + statement ----- */
     .place-row {
       display: flex;
       align-items: center;
@@ -483,66 +501,6 @@
       border-bottom: 1px solid #c6c6cd;
       width: 100%;
     }
-
-    .witness-label {
-      font-style: italic;
-      text-align: center;
-      color: #45464d;
-      margin-bottom: 1rem;
-    }
-
-    .witness-grid {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 3rem;
-    }
-    .witness-box {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      padding: 1rem;
-      background: rgba(242, 244, 246, 0.3);
-      border: 1px solid rgba(198, 198, 205, 0.5);
-      border-radius: 2px;
-    }
-    .witness-box .witness-title {
-      font-family: 'Public Sans', sans-serif;
-      font-size: 12px;
-      line-height: 16px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: #000;
-      margin-bottom: 0.5rem;
-    }
-    .witness-row {
-      display: flex;
-      align-items: flex-end;
-      gap: 0.5rem;
-    }
-    .witness-row .label {
-      width: 8rem;
-      flex-shrink: 0;
-      color: #45464d;
-      font-size: 14px;
-      line-height: 20px;
-    }
-    .witness-row .colon {
-      color: #45464d;
-      margin-right: 0.5rem;
-    }
-    .witness-row .dash-underline {
-      flex: 1;
-      border-bottom: 1px dashed #c6c6cd;
-      height: 1.5rem;
-    }
-    .witness-row .empty-placeholder {
-      width: 8rem;
-      flex-shrink: 0;
-    }
-    .witness-row .opacity-0 { opacity: 0; }
 
     /* ----- material symbols tweak ----- */
     .material-symbols-outlined {
@@ -596,7 +554,7 @@
       }
 
       .logo-title-group img {
-        height: 82px;
+        height: 96px;
       }
 
       .title-block h1 {
@@ -700,41 +658,11 @@
       .pledge-table th.col-gender { width: 10%; }
       .pledge-table th.col-phone { width: 12%; }
       .pledge-table th.col-address { width: 21%; }
-      .pledge-table th.col-sig { width: 8%; }
 
       .place-row {
         margin-bottom: 0.75rem;
       }
 
-      .witness-label {
-        margin-bottom: 0.6rem;
-        font-size: 11px;
-        line-height: 14px;
-      }
-
-      .witness-grid {
-        gap: 1rem;
-      }
-
-      .witness-box {
-        padding: 0.7rem;
-        gap: 0.45rem;
-      }
-
-      .witness-box .witness-title {
-        margin-bottom: 0.2rem;
-        font-size: 10px;
-      }
-
-      .witness-row .label {
-        width: 6.5rem;
-        font-size: 11px;
-        line-height: 14px;
-      }
-
-      .witness-row .dash-underline {
-        height: 1rem;
-      }
     }
 
     /* ----- responsive adjustments ----- */
@@ -747,7 +675,6 @@
       .bank-right { border-left: none; padding-left: 0; align-items: center; width: 100%; }
       .bank-name { flex-wrap: wrap; }
       .bank-name .detail { white-space: normal; }
-      .witness-grid { flex-direction: column; gap: 1.5rem; }
       .address-grid { flex-wrap: wrap; gap: 0.75rem; }
       .address-row { flex-direction: column; gap: 0.5rem; }
       .top-row { flex-direction: column; align-items: stretch; }
@@ -759,14 +686,13 @@
       .pledge-table th.col-gender { width: 3.5rem; }
       .pledge-table th.col-phone { width: 10%; }
       .pledge-table th.col-address { width: 18%; }
-      .pledge-table th.col-sig { width: 5rem; }
       .bank-right .call { font-size: 16px; }
       .bank-right .call .material-symbols-outlined { font-size: 16px; }
     }
     @media (max-width: 480px) {
       .card-content { padding: 1rem 0.75rem; }
       .logo-title-group { flex-wrap: wrap; gap: 0.5rem; }
-      .logo-title-group img { height: 70px; }
+      .logo-title-group img { height: 88px; }
       .title-block h1 { font-size: 15px; line-height: 20px; }
       .title-block .subtitle { font-size: 11px; line-height: 15px; }
       .pledge-table th, .pledge-table td { padding: 0.2rem; font-size: 9px; }
@@ -776,8 +702,6 @@
       .pledge-table th.col-gender { width: 3rem; }
       .pledge-table th.col-phone { width: 8%; }
       .pledge-table th.col-address { width: 14%; }
-      .pledge-table th.col-sig { width: 3.5rem; }
-      .witness-row .label { width: 5rem; font-size: 12px; }
       .bank-name .name { font-size: 16px; line-height: 22px; }
       .bank-name .detail { font-size: 12px; line-height: 16px; }
       .bank-right .call { font-size: 14px; }
@@ -822,7 +746,7 @@
             </div>
             <div class="date-block">
               <label class="font-label-caps text-on-surface-variant">Date:</label>
-              <div class="underline"></div>
+              <div class="date-value" id="currentDate"></div>
             </div>
           </div>
 
@@ -872,7 +796,7 @@
 
           <!-- description -->
           <div class="desc-text font-body-md">
-            Name, Age, Gender, Phone, Address and Signature of adult family members who wish to pledge their eyes for donation as a family commitment are given below:
+            I am a proud eye donator and ambassador
           </div>
 
           <!-- table with all fields -->
@@ -887,12 +811,11 @@
                   <th class="col-gender">GENDER</th>
                   <th class="col-phone">PHONE</th>
                   <th class="col-address">ADDRESS</th>
-                  <th class="col-sig">SIGNATURE</th>
                 </tr>
               </thead>
               <tbody id="pledgeTableBody">
                 <tr>
-                  <td colspan="8" style="text-align:center; padding:1.5rem; color:#64748b;">
+                  <td colspan="7" style="text-align:center; padding:1.5rem; color:#64748b;">
                     ⏳ Loading data from API...
                   </td>
                 </tr>
@@ -900,66 +823,12 @@
             </table>
           </div>
 
-          <!-- bottom: place + witnesses -->
+          <!-- bottom: place + statement -->
           <div>
             <div class="place-row">
               <div class="field">
                 <label class="font-label-caps text-on-surface-variant">Place:</label>
                 <div class="underline"></div>
-              </div>
-            </div>
-
-            <p class="witness-label font-body-md">To be filled in by two witnesses (Relatives, neighbours or friends)</p>
-
-            <div class="witness-grid">
-              <!-- witness 1 -->
-              <div class="witness-box">
-                <span class="witness-title">1. Witness (Next of kin):</span>
-                <div class="witness-row">
-                  <span class="label">Signature</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="label">Name and Relationship</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="label">Address</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="empty-placeholder"></span>
-                  <span class="colon opacity-0">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-              </div>
-
-              <!-- witness 2 -->
-              <div class="witness-box">
-                <span class="witness-title">2. Witness (Next of kin):</span>
-                <div class="witness-row">
-                  <span class="label">Signature</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="label">Name and Relationship</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="label">Address</span>
-                  <span class="colon">:</span>
-                  <div class="dash-underline"></div>
-                </div>
-                <div class="witness-row">
-                  <span class="empty-placeholder"></span>
-                  <span class="colon opacity-0">:</span>
-                  <div class="dash-underline"></div>
-                </div>
               </div>
             </div>
           </div>
@@ -1025,7 +894,7 @@
       if (!rows || rows.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="8" style="text-align:center; padding:1.5rem; color:#64748b;">
+            <td colspan="7" style="text-align:center; padding:1.5rem; color:#64748b;">
               No data available
             </td>
           </tr>
@@ -1046,7 +915,6 @@
             <td>${escapeHtml(row.gender || '')}</td>
             <td>${escapeHtml(row.phone || '')}</td>
             <td class="text-left" style="font-size:12px;">${escapeHtml(row.address || '')}</td>
-            <td></td>
           </tr>
         `;
       });
@@ -1090,6 +958,15 @@
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
       try {
+        const dateEl = document.getElementById('currentDate');
+        if (dateEl) {
+          dateEl.textContent = new Date().toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          });
+        }
+
         const rows = readFrontendRows();
         updateTable(rows);
         await new Promise((resolve) => setTimeout(resolve, 300));
