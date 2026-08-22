@@ -4,8 +4,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import RoleSelectPage from './pages/RoleSelectPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
-import UserLoginPage from './pages/UserLoginPage';
-import UserDashboardPage from './pages/UserDashboardPage';
+
 import SharedFooter from './components/SharedFooter';
 import './App.css';
 
@@ -14,8 +13,7 @@ const pages = {
   terms: TermsPage,
   'thank-you': ThankYouPage,
   'admin-login': AdminLoginPage,
-  'user-login': UserLoginPage,
-  'user-dashboard': UserDashboardPage,
+ 
 };
 
 function App() {
