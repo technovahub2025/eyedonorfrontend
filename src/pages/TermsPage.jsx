@@ -436,7 +436,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <table className="terms-card__pledge-table">
                         <thead>
                           <tr>
-                            <th className="col-sn">Entry</th>
+                            
                             <th className="col-title">Title</th>
                             <th>Name</th>
                             <th className="col-age">Age</th>
