@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ClipboardList,
   ChevronRight,
+  Download,
   Handshake,
   Heart,
   Plus,
@@ -60,6 +61,21 @@ const getRowTitle = (row) => {
 };
 
 const getRowDisplayName = (row) => row?.fullName || row?.name || 'N/A';
+
+const formatAdminDateTime = (value) => {
+  if (!value) return 'N/A';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'N/A';
+  return date.toLocaleString();
+};
+
+const escapeHtml = (value) =>
+  String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
@@ -223,6 +239,147 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setCurrentPage(1);
   }
 
+  function buildAdminPdfHtml(rows) {
+    const nowLabel = new Date().toLocaleString();
+    const tableRows = rows
+      .map(
+        (row, index) => `
+          <tr>
+            <td>Entry ${index + 1}</td>
+            <td>${escapeHtml(getRowTitle(row))}</td>
+            <td>${escapeHtml(getRowDisplayName(row))}</td>
+            <td style="text-align:center;">${escapeHtml(row.age ?? 'N/A')}</td>
+            <td style="text-align:center;">${escapeHtml(row.gender || 'N/A')}</td>
+            <td>${escapeHtml(row.phone || row.mobile || row.telephone || 'N/A')}</td>
+            <td>${escapeHtml(row.address || 'N/A')}</td>
+            <td>${escapeHtml(formatAdminDateTime(row.createdAt))}</td>
+          </tr>
+        `
+      )
+      .join('');
+
+    return `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Terms Export</title>
+  <style>
+    @page { size: A4 landscape; margin: 12mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #1a1c1e;
+      background: #ffffff;
+    }
+    .page {
+      padding: 0;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: #17316f;
+    }
+    .meta {
+      margin: 0 0 16px;
+      color: #64748b;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 11px;
+    }
+    th, td {
+      border: 1px solid #c6c6cd;
+      padding: 8px;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    th {
+      background: #f2f4f6;
+      text-align: left;
+      font-weight: 700;
+      font-size: 11px;
+    }
+    td:first-child, th:first-child {
+      width: 10%;
+    }
+    td:nth-child(2), th:nth-child(2) {
+      width: 10%;
+    }
+    td:nth-child(4), th:nth-child(4),
+    td:nth-child(5), th:nth-child(5) {
+      width: 8%;
+    }
+    td:nth-child(6), th:nth-child(6) {
+      width: 14%;
+    }
+    td:nth-child(7), th:nth-child(7) {
+      width: 24%;
+    }
+    td:nth-child(8), th:nth-child(8) {
+      width: 16%;
+    }
+    .empty {
+      padding: 18px;
+      text-align: center;
+      color: #64748b;
+    }
+    @media print {
+      .no-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Terms Entries Export</h1>
+    <p class="meta">Generated: ${escapeHtml(nowLabel)} | Total rows: ${rows.length}</p>
+    ${
+      rows.length > 0
+        ? `<table>
+            <thead>
+              <tr>
+                <th>Entry</th>
+                <th>Title</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Created At</th>
+              </tr>
+            </thead>
+            <tbody>${tableRows}</tbody>
+          </table>`
+        : '<div class="empty">No rows available to export.</div>'
+    }
+  </div>
+  <script>
+    window.addEventListener('load', () => {
+      window.print();
+      setTimeout(() => window.close(), 250);
+    });
+  </script>
+</body>
+</html>`;
+  }
+
+  function handleExportAdminPdf() {
+    const rowsToExport = filteredAdminRows.map((row) => ({ ...row }));
+    const popup = window.open('', '_blank', 'width=1200,height=900');
+
+    if (!popup) {
+      setTermsError('Please allow popups to export the PDF.');
+      return;
+    }
+
+    popup.document.open();
+    popup.document.write(buildAdminPdfHtml(rowsToExport));
+    popup.document.close();
+  }
+
   function addPerson() {
     setUpdatingPeople(true);
     setPeople((current) => [...current, initialPerson()]);
@@ -338,6 +495,17 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   </h2>
                 </div>
                 <div className="terms-card__admin-actions">
+                  {isAdminView && (
+                    <button
+                      type="button"
+                      className="terms-card__download"
+                      onClick={handleExportAdminPdf}
+                      disabled={adminLoading || displayedAdminRows.length === 0}
+                    >
+                      <Download aria-hidden="true" />
+                      <span>Export PDF</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
