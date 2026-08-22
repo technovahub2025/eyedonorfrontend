@@ -483,6 +483,13 @@
     .pledge-table .text-left { text-align: left; }
 
     /* ----- bottom: place + statement ----- */
+    .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
     .place-row {
       display: flex;
       align-items: center;
@@ -678,6 +685,7 @@
       .address-grid { flex-wrap: wrap; gap: 0.75rem; }
       .address-row { flex-direction: column; gap: 0.5rem; }
       .top-row { flex-direction: column; align-items: stretch; }
+      .bottom-row { flex-direction: column; align-items: stretch; }
       .date-block { width: 100%; margin-left: 0; margin-top: 0.5rem; }
       .pledge-table th, .pledge-table td { padding: 0.3rem; font-size: 11px; }
       .pledge-table th.col-sn { width: 2rem; }
@@ -745,10 +753,6 @@
                   </span>
                 </div>
               </div>
-            </div>
-            <div class="date-block">
-              <label class="font-label-caps text-on-surface-variant">Date:</label>
-              <div class="date-value" id="currentDate"></div>
             </div>
           </div>
 
@@ -827,13 +831,27 @@
 
           <!-- bottom: place + statement -->
           <div>
+            <div class="bottom-row">
             <div class="place-row">
               <div class="field">
                 <label class="font-label-caps text-on-surface-variant">Place:</label>
                 <div class="underline"></div>
               </div>
             </div>
-          </div>
+            <!-- bottom section -->
+<div class="bottom-row">
+  <div class="place-row">
+    <div class="field">
+      <label class="font-label-caps text-on-surface-variant">Place:</label>
+      <div class="underline"></div>
+    </div>
+  </div>
+
+  <div class="date-block">
+    <label class="font-label-caps text-on-surface-variant">Date:</label>
+    <div class="date-value" id="currentDate"></div>
+  </div>
+</div>
 
         </div>
       </div>
