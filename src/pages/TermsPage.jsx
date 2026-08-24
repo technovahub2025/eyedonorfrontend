@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
   ClipboardList,
-  ChevronRight,
   Download,
   Handshake,
   Heart,
@@ -74,7 +73,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [exportingPdf, setExportingPdf] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
   const [adminFilters, setAdminFilters] = useState({
     date: '',
@@ -82,7 +80,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     month: '',
     year: '',
   });
-  const itemsPerPage = 20;
   const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = [
     'January',
@@ -122,28 +119,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     return dateMatch && weekdayMatch && monthMatch && yearMatch;
   });
 
-  const safeTotalPages = Math.max(Math.ceil(filteredAdminRows.length / itemsPerPage), 1);
-  const currentSafePage = Math.min(currentPage, safeTotalPages);
-  const startIndex = (currentSafePage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayedAdminRows = filteredAdminRows.slice(startIndex, endIndex);
-  const hasPrevPage = currentSafePage > 1;
-  const hasNextPage = currentSafePage < safeTotalPages;
-  const paginationItems = (() => {
-    if (safeTotalPages <= 6) {
-      return Array.from({ length: safeTotalPages }, (_, index) => index + 1);
-    }
-
-    if (currentSafePage <= 3) {
-      return [1, 2, 3, 4, 'ellipsis', safeTotalPages];
-    }
-
-    if (currentSafePage >= safeTotalPages - 2) {
-      return [1, 'ellipsis', safeTotalPages - 3, safeTotalPages - 2, safeTotalPages - 1, safeTotalPages];
-    }
-
-    return [1, 'ellipsis', currentSafePage - 1, currentSafePage, currentSafePage + 1, 'ellipsis', safeTotalPages];
-  })();
   const availableYears = Array.from(
     new Set(
       adminRows
@@ -182,12 +157,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
         setAdminRows(terms);
         setTotalRecords(Number(response?.data?.count ?? terms.length ?? 0));
-        setCurrentPage(1);
       } catch (err) {
         if (!active) return;
         setAdminRows([]);
         setTotalRecords(0);
-        setCurrentPage(1);
         setAdminError(err.message);
       } finally {
         if (active) {
@@ -211,7 +184,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
   function updateAdminFilter(field, value) {
     setAdminFilters((current) => ({ ...current, [field]: value }));
-    setCurrentPage(1);
   }
 
   function clearAdminFilters() {
@@ -221,7 +193,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       month: '',
       year: '',
     });
-    setCurrentPage(1);
   }
 
   async function handleExportAdminPdf() {
@@ -363,7 +334,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       type="button"
                       className="terms-card__download"
                       onClick={handleExportAdminPdf}
-                      disabled={adminLoading || exportingPdf || displayedAdminRows.length === 0}
+                      disabled={adminLoading || exportingPdf || filteredAdminRows.length === 0}
                     >
                       <Download aria-hidden="true" />
                       <span>{exportingPdf ? 'Downloading...' : 'Download PDF'}</span>
@@ -462,7 +433,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     <p className="terms-card__empty">Loading terms data...</p>
                   ) : adminError ? (
                     <p className="terms-card__error">{adminError}</p>
-                  ) : displayedAdminRows.length > 0 ? (
+                  ) : filteredAdminRows.length > 0 ? (
                     <div className="terms-card__table-wrap">
                       <table className="terms-card__pledge-table">
                         <thead>
@@ -476,7 +447,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           </tr>
                         </thead>
                         <tbody>
-                          {displayedAdminRows.map((row) => {
+                          {filteredAdminRows.map((row) => {
                             const id =
                               row._id || row.id || `${row.name || row.fullName || 'row'}-${row.createdAt || ''}`;
                             const createdLabel = row.createdAt
@@ -500,59 +471,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   ) : (
                     <p className="terms-card__empty">{adminEmptyMessage}</p>
                   )}
-
-                    <div className="terms-card__pagination-wrap">
-                      <div className="terms-card__pagination-info">
-                        <span>
-                          Page <strong>{currentSafePage}</strong> of <strong>{safeTotalPages}</strong>
-                        </span>
-                        <span>
-                          <strong>{filteredAdminRows.length}</strong> shown of{' '}
-                          <strong>{totalRecords}</strong> total records
-                        </span>
-                        <span>{itemsPerPage} per page</span>
-                      </div>
-
-                      <div className="terms-card__pagination" aria-label="Admin pagination">
-                        <button
-                          type="button"
-                          className="terms-card__pagination-btn terms-card__pagination-btn--nav"
-                          onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                          disabled={adminLoading || !hasPrevPage}
-                        >
-                          <ArrowLeft aria-hidden="true" />
-                          <span>Prev</span>
-                        </button>
-                        {paginationItems.map((item, index) =>
-                          item === 'ellipsis' ? (
-                            <span key={`ellipsis-${index}`} className="terms-card__pagination-ellipsis">
-                              ...
-                            </span>
-                          ) : (
-                            <button
-                              key={item}
-                              type="button"
-                              className={`terms-card__pagination-btn${
-                                currentSafePage === item ? ' terms-card__pagination-btn--active' : ''
-                              }`}
-                              onClick={() => setCurrentPage(item)}
-                              disabled={adminLoading || currentSafePage === item}
-                            >
-                              {item}
-                            </button>
-                          )
-                        )}
-                        <button
-                          type="button"
-                          className="terms-card__pagination-btn terms-card__pagination-btn--nav"
-                          onClick={() => setCurrentPage((p) => Math.min(safeTotalPages, p + 1))}
-                          disabled={adminLoading || !hasNextPage}
-                        >
-                          <span>Next</span>
-                          <ChevronRight aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
                  </>
               ) : (
                 <>
