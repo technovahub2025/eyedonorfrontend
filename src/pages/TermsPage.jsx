@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import eyeImage from '../asset/eyehero.png';
-import { apiDownload, apiRequest } from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -228,24 +228,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setExportingPdf(true);
 
     try {
-      const rowsToExport = filteredAdminRows.map((row) => ({
-        ...row,
-      }));
+      const rowsToExport = filteredAdminRows.map((row) => ({ ...row }));
+      window.__PLEDGE_EXPORT_ROWS__ = rowsToExport;
 
-      const blob = await apiDownload('/api/terms/exportpdf', {
-        method: 'POST',
-        body: { rows: rowsToExport },
-        token: adminToken,
-      });
+      const exportUrl = new URL('/pledge-export.html', window.location.origin);
+      const popup = window.open(exportUrl.toString(), '_blank');
 
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'terms-entries-export.pdf';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      if (!popup) {
+        throw new Error('Please allow popups for this site to export the PDF.');
+      }
     } catch (err) {
       setTermsError(err.message);
     } finally {
