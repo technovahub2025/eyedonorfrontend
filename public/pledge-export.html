@@ -326,56 +326,6 @@
       text-align: center;
     }
 
-    /* ----- address fields ----- */
-    .address-section {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    .address-row {
-      display: flex;
-      gap: 1rem;
-    }
-    .address-row .field {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .address-row .field label {
-      margin-bottom: 0.25rem;
-    }
-    .address-row .field .underline {
-      height: 2rem;
-      border-bottom: 1px solid #c6c6cd;
-      width: 100%;
-    }
-    .address-row .field .double-underline {
-      height: 2rem;
-      border-bottom: 1px solid #c6c6cd;
-      width: 100%;
-    }
-    .address-row .field .double-underline:not(:last-child) {
-      margin-bottom: 0.25rem;
-    }
-    .address-grid {
-      display: flex;
-      gap: 2rem;
-    }
-    .address-grid .field {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .address-grid .field label {
-      margin-bottom: 0.25rem;
-    }
-    .address-grid .field .underline {
-      height: 2rem;
-      border-bottom: 1px solid #c6c6cd;
-      width: 100%;
-    }
-
     /* ----- description ----- */
     .desc-text {
       margin-bottom: 1rem;
@@ -429,7 +379,6 @@
     .pledge-table th.col-age { width: 4rem; }
     .pledge-table th.col-gender { width: 5rem; }
     .pledge-table th.col-phone { width: 12%; }
-    .pledge-table th.col-address { width: 22%; }
 
     .pledge-table td {
       padding: 0.5rem;
@@ -598,23 +547,6 @@
         line-height: 13px;
       }
 
-      .address-section {
-        gap: 0.75rem;
-        margin-bottom: 1rem;
-      }
-
-      .address-row,
-      .address-grid {
-        gap: 0.9rem;
-      }
-
-      .address-row .field .underline,
-      .address-row .field .double-underline,
-      .address-grid .field .underline,
-      .place-row .field .underline {
-        height: 1.3rem;
-      }
-
       .desc-text {
         margin-bottom: 0.7rem;
         font-size: 11px;
@@ -650,7 +582,6 @@
       .pledge-table th.col-age { width: 8%; }
       .pledge-table th.col-gender { width: 10%; }
       .pledge-table th.col-phone { width: 12%; }
-      .pledge-table th.col-address { width: 21%; }
 
       .place-row {
         margin-bottom: 0;
@@ -668,8 +599,6 @@
       .bank-right { border-left: none; padding-left: 0; align-items: center; width: 100%; }
       .bank-name { flex-wrap: wrap; }
       .bank-name .detail { white-space: normal; }
-      .address-grid { flex-wrap: wrap; gap: 0.75rem; }
-      .address-row { flex-direction: column; gap: 0.5rem; }
       .bottom-row { flex-direction: column; align-items: stretch; }
       .inline-entry--date { width: 100%; justify-content: flex-start; }
       .inline-entry--place { width: 100%; }
@@ -679,7 +608,6 @@
       .pledge-table th.col-age { width: 3rem; }
       .pledge-table th.col-gender { width: 3.5rem; }
       .pledge-table th.col-phone { width: 10%; }
-      .pledge-table th.col-address { width: 18%; }
       .desc-text { font-size: 16px; line-height: 22px; }
       .bank-right .call { font-size: 16px; }
       .bank-right .call .material-symbols-outlined { font-size: 16px; }
@@ -696,7 +624,6 @@
       .pledge-table th.col-age { width: 2.5rem; }
       .pledge-table th.col-gender { width: 3rem; }
       .pledge-table th.col-phone { width: 8%; }
-      .pledge-table th.col-address { width: 14%; }
       .bank-name .name { font-size: 16px; line-height: 22px; }
       .bank-name .detail { font-size: 12px; line-height: 16px; }
       .bank-right .call { font-size: 14px; }
@@ -755,29 +682,6 @@
             </div>
           </div>
 
-          <!-- address -->
-          <div class="address-section">
-           
-            <div class="address-grid">
-              <div class="field">
-                <label class="font-label-caps text-on-surface-variant">Pin</label>
-                <div class="underline"></div>
-              </div>
-              <div class="field">
-                <label class="font-label-caps text-on-surface-variant">Dist</label>
-                <div class="underline"></div>
-              </div>
-              <div class="field">
-                <label class="font-label-caps text-on-surface-variant">State</label>
-                <div class="underline"></div>
-              </div>
-              <div class="field">
-                <label class="font-label-caps text-on-surface-variant"><span class="material-symbols-outlined" style="font-size:16px; vertical-align:middle; margin-right:4px;">phone</span> Telephone</label>
-                <div class="underline"></div>
-              </div>
-            </div>
-          </div>
-
           <!-- description -->
           <div class="desc-text font-body-md">
             I am a proud eye donator and ambassador
@@ -794,12 +698,11 @@
                   <th class="col-age">AGE</th>
                   <th class="col-gender">GENDER</th>
                   <th class="col-phone">PHONE</th>
-                  <th class="col-address">ADDRESS</th>
                 </tr>
               </thead>
               <tbody id="pledgeTableBody">
                 <tr>
-                  <td colspan="7" style="text-align:center; padding:1.5rem; color:#64748b;">
+                  <td colspan="6" style="text-align:center; padding:1.5rem; color:#64748b;">
                     ⏳ Loading data from API...
                   </td>
                 </tr>
@@ -882,7 +785,7 @@
       if (!rows || rows.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="7" style="text-align:center; padding:1.5rem; color:#64748b;">
+            <td colspan="6" style="text-align:center; padding:1.5rem; color:#64748b;">
               No data available
             </td>
           </tr>
@@ -902,7 +805,6 @@
             <td>${escapeHtml(String(row.age ?? ''))}</td>
             <td>${escapeHtml(row.gender || '')}</td>
             <td>${escapeHtml(row.phone || '')}</td>
-            <td class="text-left" style="font-size:12px;">${escapeHtml(row.address || '')}</td>
           </tr>
         `;
       });

@@ -38,7 +38,6 @@ const initialPerson = () => ({
   age: '',
   gender: '',
   phone: '',
-  address: '',
 });
 
 const normalizeTermsRows = (response, fallbackRows = []) => {
@@ -229,9 +228,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setExportingPdf(true);
 
     try {
-      const rowsToExport = filteredAdminRows.map((row, index) => ({
+      const rowsToExport = filteredAdminRows.map((row) => ({
         ...row,
-        entry: startIndex + index + 1,
       }));
 
       const blob = await apiDownload('/api/terms/exportpdf', {
@@ -272,7 +270,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       age: person.age === '' ? '' : Number(person.age),
       gender: person.gender.trim(),
       phone: person.phone.trim(),
-      address: person.address.trim(),
     };
 
     return apiRequest(createTermsEndpoint, {
@@ -302,12 +299,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     const incomplete = people.find(
       (person) =>
-        (person.fullName || person.age || person.gender || person.phone || person.address) &&
-        (!person.fullName || !person.age || !person.gender || !person.phone || !person.address)
+        (person.fullName || person.age || person.gender || person.phone) &&
+        (!person.fullName || !person.age || !person.gender || !person.phone)
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all five fields for each person you added.');
+      setTermsError('Please fill in all four fields for each person you added.');
       setSavingTerm(false);
       return;
     }
@@ -479,35 +476,29 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <table className="terms-card__pledge-table">
                         <thead>
                           <tr>
-                            <th className="col-sn">Entry</th>
                             <th className="col-title">Title</th>
                             <th>Name</th>
                             <th className="col-age">Age</th>
                             <th className="col-sex">Gender</th>
                             <th>Phone</th>
-                            <th>Address</th>
                             <th>Created At</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {displayedAdminRows.map((row, index) => {
+                          {displayedAdminRows.map((row) => {
                             const id =
-                              row._id ||
-                              row.id ||
-                              `${row.name || row.fullName || 'row'}-${row.createdAt || index}`;
+                              row._id || row.id || `${row.name || row.fullName || 'row'}-${row.createdAt || ''}`;
                             const createdLabel = row.createdAt
                               ? new Date(row.createdAt).toLocaleString()
                               : 'N/A';
 
                             return (
                               <tr key={id}>
-                                <td className="text-center">Entry {startIndex + index + 1}</td>
                                 <td>{getRowTitle(row)}</td>
                                 <td>{getRowDisplayName(row)}</td>
                                 <td className="text-center">{row.age ?? 'N/A'}</td>
                                 <td className="text-center">{row.gender || 'N/A'}</td>
                                 <td>{row.phone || row.mobile || row.telephone || 'N/A'}</td>
-                                <td>{row.address || 'N/A'}</td>
                                 <td>{createdLabel}</td>
                               </tr>
                             );
@@ -664,19 +655,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 required
                               />
                             </label>
-
-                            <label className="terms-card__field terms-card__field--full">
-                              <span>Address</span>
-                              <textarea
-                                placeholder="Enter your address"
-                                value={person.address}
-                                onChange={(event) =>
-                                  updatePerson(person.id, 'address', event.target.value)
-                                }
-                                rows={2}
-                                required
-                              />
-                            </label>
                           </div>
 
                         </div>
@@ -779,9 +757,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             </span>
                             <span>
                               <strong>Phone:</strong> {row.phone || 'N/A'}
-                            </span>
-                            <span>
-                              <strong>Address:</strong> {row.address || 'N/A'}
                             </span>
                             <span className="terms-card__submitted-time">
                               {new Date(row.createdAt).toLocaleString()}
