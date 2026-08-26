@@ -416,13 +416,14 @@
       gap: 0.5rem;
       min-width: 0;
     }
-    .inline-entry--place {
-      flex: 1;
-    }
     .inline-entry--date {
       width: 14rem;
       flex-shrink: 0;
       justify-content: flex-end;
+    }
+    .inline-entry--place {
+      flex: 1;
+      justify-content: flex-start;
     }
     .inline-label {
       white-space: nowrap;
@@ -447,6 +448,11 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+    .inline-entry--place .inline-value {
+      border-bottom: none;
+      min-height: auto;
+      padding-bottom: 0;
     }
 
     /* ----- material symbols tweak ----- */
@@ -712,16 +718,16 @@
             </table>
           </div>
 
-          <!-- bottom: place + date -->
+          <!-- bottom: date + place -->
           <div>
             <div class="bottom-row">
-              <div class="inline-entry inline-entry--place">
-                <span class="inline-label">Place:</span>
-                <span class="inline-value" contenteditable="true" aria-label="Place"></span>
-              </div>
               <div class="inline-entry inline-entry--date">
                 <span class="inline-label">Date:</span>
                 <span class="inline-value" id="currentDate" contenteditable="true" aria-label="Date"></span>
+              </div>
+              <div class="inline-entry inline-entry--place">
+                <span class="inline-label">Place:</span>
+                <span class="inline-value" aria-hidden="true"></span>
               </div>
             </div>
           </div>

@@ -499,7 +499,7 @@
 
 .terms-card__pledge-table {
   width: 100%;
-  min-width: 720px;
+  min-width: 820px;
   border-collapse: collapse;
   font-family: 'Public Sans', sans-serif;
   font-size: 14px;
@@ -553,6 +553,11 @@
   text-align: center;
 }
 
+.terms-card__pledge-table th.col-action {
+  width: 6rem;
+  text-align: center;
+}
+
 .terms-card__pledge-table td {
   padding: 0.5rem;
   border-right: 1px solid #c6c6cd;
@@ -583,6 +588,41 @@
 
 .terms-card__pledge-table .text-muted {
   color: #45464d;
+}
+
+.terms-card__row-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(31, 76, 201, 0.18);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(31, 76, 201, 0.08), rgba(255, 255, 255, 0.98));
+  color: #17316f;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.terms-card__row-download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(31, 76, 201, 0.08);
+}
+
+.terms-card__row-download:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.terms-card__row-download svg {
+  width: 15px;
+  height: 15px;
 }
 
 .terms-card__filters {
@@ -1335,7 +1375,7 @@
   }
 
   .terms-card__pledge-table {
-    min-width: 640px;
+    min-width: 760px;
   }
 
   .terms-card__pagination-btn {
@@ -1426,7 +1466,12 @@
   }
 
   .terms-card__pledge-table {
-    min-width: 600px;
+    min-width: 700px;
+  }
+
+  .terms-card__row-download {
+    min-height: 32px;
+    padding: 0 10px;
   }
 }
 

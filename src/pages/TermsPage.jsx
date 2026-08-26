@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import eyeImage from '../asset/eyehero.png';
-import { apiRequest } from '../lib/apiClient';
+import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -73,6 +73,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [downloadingPdfId, setDownloadingPdfId] = useState('');
   const [totalRecords, setTotalRecords] = useState(0);
   const [adminFilters, setAdminFilters] = useState({
     date: '',
@@ -212,6 +213,37 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsError(err.message);
     } finally {
       setExportingPdf(false);
+    }
+  }
+
+  async function handleDownloadRowPdf(row) {
+    const rowId = row?._id || row?.id;
+
+    if (!rowId) {
+      setTermsError('This entry does not have a valid PDF id.');
+      return;
+    }
+
+    setDownloadingPdfId(rowId);
+    setTermsError('');
+
+    try {
+      const blob = await apiDownload(`/api/admin/terms/${rowId}/pdf`, {
+        token: adminToken,
+      });
+
+      const objectUrl = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = objectUrl;
+      anchor.download = `terms-pledge-${rowId}.pdf`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (err) {
+      setTermsError(err.message);
+    } finally {
+      setDownloadingPdfId('');
     }
   }
 
@@ -444,6 +476,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             <th className="col-sex">Gender</th>
                             <th>Phone</th>
                             <th>Created At</th>
+                            <th className="col-action">PDF</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -462,6 +495,17 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 <td className="text-center">{row.gender || 'N/A'}</td>
                                 <td>{row.phone || row.mobile || row.telephone || 'N/A'}</td>
                                 <td>{createdLabel}</td>
+                                <td className="text-center">
+                                  <button
+                                    type="button"
+                                    className="terms-card__row-download"
+                                    onClick={() => handleDownloadRowPdf(row)}
+                                    disabled={adminLoading || downloadingPdfId === id}
+                                  >
+                                    <Download aria-hidden="true" />
+                                    <span>{downloadingPdfId === id ? '...' : 'PDF'}</span>
+                                  </button>
+                                </td>
                               </tr>
                             );
                           })}
