@@ -39,6 +39,14 @@ const initialPerson = () => ({
   phone: '',
 });
 
+function createBatchId() {
+  if (window.crypto?.randomUUID) {
+    return window.crypto.randomUUID();
+  }
+
+  return `batch-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 const normalizeTermsRows = (response, fallbackRows = []) => {
   const rows = Array.isArray(response?.data?.data)
     ? response.data.data
@@ -217,7 +225,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   }
 
   async function handleDownloadRowPdf(row) {
-    const rowId = row?._id || row?.id;
+    const batchId = row?.batchId;
+    const rowsToExport = batchId
+      ? adminRows.filter((entry) => entry.batchId === batchId)
+      : [row];
+    const firstRow = rowsToExport[0];
+    const rowId = firstRow?._id || firstRow?.id;
 
     if (!rowId) {
       setTermsError('This entry does not have a valid PDF id.');
@@ -228,7 +241,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsError('');
 
     try {
-      const rowsToExport = [{ ...row }];
       window.__PLEDGE_EXPORT_ROWS__ = rowsToExport;
 
       const exportUrl = new URL('/pledge-export.html', window.location.origin);
@@ -261,6 +273,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       age: person.age === '' ? '' : Number(person.age),
       gender: person.gender.trim(),
       phone: person.phone.trim(),
+      batchId: person.batchId,
     };
 
     return apiRequest(createTermsEndpoint, {
@@ -302,13 +315,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     try {
       const saved = [];
+      const batchId = createBatchId();
 
       for (const person of people) {
-        const response = await submitPerson(person);
+        const response = await submitPerson({
+          ...person,
+          batchId,
+        });
         const savedPerson = {
           ...person,
           id: response?.data?._id || response?._id || person.id,
           createdAt: response?.data?.createdAt || response?.createdAt || new Date().toISOString(),
+          batchId: response?.data?.batchId || response?.batchId || batchId,
         };
         saved.push(savedPerson);
       }
