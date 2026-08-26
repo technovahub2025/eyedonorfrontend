@@ -68,6 +68,55 @@ const getRowTitle = (row) => {
 
 const getRowDisplayName = (row) => row?.fullName || row?.name || 'N/A';
 
+function getRowTime(row) {
+  if (!row?.createdAt) return null;
+  const time = new Date(row.createdAt).getTime();
+  return Number.isNaN(time) ? null : time;
+}
+
+function collectPdfRows(row, rows) {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return [row].filter(Boolean);
+  }
+
+  const batchId = row?.batchId;
+  if (batchId) {
+    const grouped = rows.filter((entry) => entry.batchId === batchId);
+    if (grouped.length > 0) {
+      return grouped;
+    }
+  }
+
+  const clickedTime = getRowTime(row);
+  if (clickedTime === null) {
+    return [row].filter(Boolean);
+  }
+
+  const withTime = rows
+    .map((entry) => ({
+      entry,
+      time: getRowTime(entry),
+    }))
+    .filter((item) => item.time !== null)
+    .sort((a, b) => a.time - b.time);
+
+  const nearest = withTime
+    .map((item) => ({
+      ...item,
+      distance: Math.abs(item.time - clickedTime),
+    }))
+    .filter((item) => item.distance <= 120000)
+    .sort((a, b) => a.distance - b.distance || a.time - b.time)
+    .slice(0, 3)
+    .map((item) => item.entry);
+
+  if (nearest.length > 0) {
+    return nearest;
+  }
+
+  return [row].filter(Boolean);
+}
+
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
@@ -225,10 +274,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   }
 
   async function handleDownloadRowPdf(row) {
-    const batchId = row?.batchId;
-    const rowsToExport = batchId
-      ? adminRows.filter((entry) => entry.batchId === batchId)
-      : [row];
+    const rowsToExport = collectPdfRows(row, adminRows);
     const firstRow = rowsToExport[0];
     const rowId = firstRow?._id || firstRow?.id;
 
