@@ -236,10 +236,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       const anchor = document.createElement('a');
       anchor.href = objectUrl;
       anchor.download = `terms-pledge-${rowId}.pdf`;
+      anchor.style.display = 'none';
       document.body.appendChild(anchor);
-      anchor.click();
+      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
+      anchor.dispatchEvent(clickEvent);
       anchor.remove();
-      window.URL.revokeObjectURL(objectUrl);
+
+      // Delay revocation so the browser can finish starting the download.
+      window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1500);
     } catch (err) {
       setTermsError(err.message);
     } finally {
