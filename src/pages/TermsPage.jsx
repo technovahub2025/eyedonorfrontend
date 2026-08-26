@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import eyeImage from '../asset/eyehero.png';
-import { apiDownload, apiRequest } from '../lib/apiClient';
+import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -228,22 +228,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsError('');
 
     try {
-      const blob = await apiDownload(`/api/admin/terms/${rowId}/pdf`, {
-        token: adminToken,
-      });
+      const rowsToExport = [{ ...row }];
+      window.__PLEDGE_EXPORT_ROWS__ = rowsToExport;
 
-      const objectUrl = window.URL.createObjectURL(blob);
-      const anchor = document.createElement('a');
-      anchor.href = objectUrl;
-      anchor.download = `terms-pledge-${rowId}.pdf`;
-      anchor.style.display = 'none';
-      document.body.appendChild(anchor);
-      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true, view: window });
-      anchor.dispatchEvent(clickEvent);
-      anchor.remove();
+      const exportUrl = new URL('/pledge-export.html', window.location.origin);
+      const popup = window.open(exportUrl.toString(), '_blank');
 
-      // Delay revocation so the browser can finish starting the download.
-      window.setTimeout(() => window.URL.revokeObjectURL(objectUrl), 1500);
+      if (!popup) {
+        throw new Error('Please allow popups for this site to export the PDF.');
+      }
     } catch (err) {
       setTermsError(err.message);
     } finally {
