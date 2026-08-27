@@ -11,7 +11,7 @@ import {
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
-import eyeImage from '../asset/eyehero.png';
+import eyeImage from '../asset/eye.png';
 import { apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
