@@ -841,7 +841,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         </div>
                       ) : null}
 
-                      <div className="terms-card__field terms-card__field--full">
+                      <div className="terms-card__field terms-card__field--full terms-card__place-field">
                         <label className="terms-card__field-label">
                           <span>Place</span>
                           <input

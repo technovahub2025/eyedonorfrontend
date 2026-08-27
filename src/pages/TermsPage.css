@@ -937,6 +937,16 @@
   grid-column: 1 / -1;
 }
 
+.terms-card__place-field {
+  width: 100%;
+  align-self: stretch;
+  justify-self: stretch;
+}
+
+.terms-card__place-field .terms-card__field-label {
+  width: 100%;
+}
+
 .terms-card__details-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
