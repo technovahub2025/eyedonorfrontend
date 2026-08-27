@@ -759,13 +759,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     <span className="terms-card__top-banner-icon" aria-hidden="true">
                       3
                     </span>
-                    <div className="terms-card__top-banner-copy">
-                      <strong>Add 3 people to continue</strong>
-                      <span>
-                        You need to enter at least three complete people details before submitting
-                        the pledge.
-                      </span>
-                    </div>
+                    
                   </div>
 
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm} noValidate>
@@ -976,7 +970,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </button>
                     </div>
                   </form>
-
+<div className="terms-card__top-banner-copy">
+                      <strong>Add 3 people to continue</strong>
+                      <span>
+                        You need to enter at least three complete people details before submitting
+                        the pledge.
+                      </span>
+                    </div>
                   {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
                   {termsError ? <p className="terms-card__error">{termsError}</p> : null}
 
