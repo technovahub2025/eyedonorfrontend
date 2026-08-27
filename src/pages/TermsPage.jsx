@@ -22,7 +22,7 @@ const steps = [
 ];
 
 const createTermsEndpoint = '/api/terms/createterms';
-const requiredPeopleCount = 2;
+const requiredPeopleCount = 3;
 const adminRowsPerPage = 20;
 
 const pledgePoints = [
@@ -755,13 +755,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                  </>
               ) : (
                 <>
-                  <div className="terms-card__top-banner" role="status" aria-live="polite">
-                    <span className="terms-card__top-banner-icon" aria-hidden="true">
-                      3
-                    </span>
-                    
-                  </div>
-
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm} noValidate>
                     <section className="terms-card__section terms-card__section--details">
                       <div className="terms-card__section-header">
@@ -941,6 +934,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </div>
                     </section>
 
+                    <section className="terms-card__bottom-note" aria-label="Minimum people notice">
+                      <span className="terms-card__bottom-note-icon" aria-hidden="true">
+                        3
+                      </span>
+                      <div className="terms-card__bottom-note-copy">
+                        <strong>Add at least 3 people to continue</strong>
+                        <span>You need at least three complete people details before submitting.</span>
+                      </div>
+                    </section>
+
                     <label className="terms-card__agree">
                       <input
                         type="checkbox"
@@ -970,13 +973,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </button>
                     </div>
                   </form>
-<div className="terms-card__top-banner-copy">
-                      <strong>Add 2 people to continue</strong>
-                      <span>
-                        You need to enter at least two complete people details before submitting
-                        the pledge.
-                      </span>
-                    </div>
                   {termsMessage ? <p className="terms-card__success">{termsMessage}</p> : null}
                   {termsError ? <p className="terms-card__error">{termsError}</p> : null}
 
