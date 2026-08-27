@@ -939,7 +939,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         3
                       </span>
                       <div className="terms-card__bottom-note-copy">
-                        <strong>Add at least 3 people to continue</strong>
+                        <strong>Add at least 2 people to continue</strong>
                         <span>You need at least three complete people details before submitting.</span>
                       </div>
                     </section>
