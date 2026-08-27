@@ -123,6 +123,10 @@ function normalizeWhatsAppPhone(value) {
   return `${value || ''}`.replace(/\D/g, '');
 }
 
+function isValidMobileNumber(value) {
+  return /^[6-9]\d{9}$/.test(`${value || ''}`.trim());
+}
+
 function buildManualWhatsAppUrl(phone) {
   const normalizedPhone = normalizeWhatsAppPhone(phone);
 
@@ -420,6 +424,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (incomplete) {
       setTermsError('Please fill in all four fields for each person you added.');
+      setSavingTerm(false);
+      return;
+    }
+
+    const invalidPhone = people.find((person) => !isValidMobileNumber(person.phone));
+
+    if (invalidPhone) {
+      setTermsError('Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.');
       setSavingTerm(false);
       return;
     }
@@ -834,9 +846,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               <span>Phone Number</span>
                               <input
                                 type="tel"
+                                inputMode="numeric"
+                                maxLength={10}
+                                pattern="[6-9][0-9]{9}"
                                 placeholder="Enter your phone number"
                                 value={person.phone}
-                                onChange={(event) => updatePerson(person.id, 'phone', event.target.value)}
+                                onChange={(event) =>
+                                  updatePerson(
+                                    person.id,
+                                    'phone',
+                                    event.target.value.replace(/\D/g, '').slice(0, 10)
+                                  )
+                                }
                                 required
                               />
                             </label>
