@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
+  ArrowRight,
   ClipboardList,
   Download,
   Handshake,
@@ -22,6 +23,7 @@ const steps = [
 
 const createTermsEndpoint = '/api/terms/createterms';
 const requiredPeopleCount = 3;
+const adminRowsPerPage = 20;
 
 const pledgePoints = [
   'I understand this is a voluntary pledge.',
@@ -132,6 +134,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const [downloadingPdfId, setDownloadingPdfId] = useState('');
   const [totalRecords, setTotalRecords] = useState(0);
+  const [adminPage, setAdminPage] = useState(1);
   const [adminFilters, setAdminFilters] = useState({
     name: '',
     date: '',
@@ -180,6 +183,10 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     return nameMatch && dateMatch && weekdayMatch && monthMatch && yearMatch;
   });
+  const adminTotalPages = Math.max(1, Math.ceil(filteredAdminRows.length / adminRowsPerPage));
+  const adminCurrentPage = Math.min(adminPage, adminTotalPages);
+  const adminPageStart = (adminCurrentPage - 1) * adminRowsPerPage;
+  const paginatedAdminRows = filteredAdminRows.slice(adminPageStart, adminPageStart + adminRowsPerPage);
 
   const availableYears = Array.from(
     new Set(
@@ -238,6 +245,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     };
   }, [adminToken, isAdminView]);
 
+  useEffect(() => {
+    setAdminPage(1);
+  }, [adminFilters]);
+
+  useEffect(() => {
+    setAdminPage((current) => Math.min(current, adminTotalPages));
+  }, [adminTotalPages]);
+
   function updatePerson(id, field, value) {
     setPeople((current) =>
       current.map((person) => (person.id === id ? { ...person, [field]: value } : person))
@@ -256,6 +271,35 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       month: '',
       year: '',
     });
+  }
+
+  function goToAdminPage(nextPage) {
+    setAdminPage(Math.max(1, Math.min(nextPage, adminTotalPages)));
+  }
+
+  function getAdminPaginationItems() {
+    if (adminTotalPages <= 7) {
+      return Array.from({ length: adminTotalPages }, (_, index) => index + 1);
+    }
+
+    const items = [1];
+    const start = Math.max(2, adminCurrentPage - 1);
+    const end = Math.min(adminTotalPages - 1, adminCurrentPage + 1);
+
+    if (start > 2) {
+      items.push('ellipsis-start');
+    }
+
+    for (let page = start; page <= end; page += 1) {
+      items.push(page);
+    }
+
+    if (end < adminTotalPages - 1) {
+      items.push('ellipsis-end');
+    }
+
+    items.push(adminTotalPages);
+    return items;
   }
 
   async function handleExportAdminPdf() {
@@ -543,8 +587,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                   ) : adminError ? (
                     <p className="terms-card__error">{adminError}</p>
                   ) : filteredAdminRows.length > 0 ? (
-                    <div className="terms-card__table-wrap">
-                      <table className="terms-card__pledge-table">
+                    <>
+                      <div className="terms-card__table-wrap">
+                        <table className="terms-card__pledge-table">
                         <thead>
                           <tr>
                             <th className="col-title">Title</th>
@@ -557,7 +602,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           </tr>
                         </thead>
                         <tbody>
-                          {filteredAdminRows.map((row) => {
+                          {paginatedAdminRows.map((row) => {
                             const id =
                               row._id || row.id || `${row.name || row.fullName || 'row'}-${row.createdAt || ''}`;
                             const createdLabel = row.createdAt
@@ -588,7 +633,66 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           })}
                         </tbody>
                       </table>
-                    </div>
+                      </div>
+                      <div className="terms-card__pagination-wrap">
+                        <div className="terms-card__pagination-info">
+                          <span>
+                            Showing <strong>{adminPageStart + 1}</strong>-
+                            <strong>{Math.min(adminPageStart + adminRowsPerPage, filteredAdminRows.length)}</strong> of{' '}
+                            <strong>{filteredAdminRows.length}</strong>
+                          </span>
+                          <span>
+                            Page <strong>{adminCurrentPage}</strong> of <strong>{adminTotalPages}</strong>
+                          </span>
+                        </div>
+
+                        <div className="terms-card__pagination" aria-label="Admin table pagination">
+                          <button
+                            type="button"
+                            className="terms-card__pagination-btn terms-card__pagination-btn--nav"
+                            onClick={() => goToAdminPage(adminCurrentPage - 1)}
+                            disabled={adminCurrentPage === 1}
+                          >
+                            <ArrowLeft aria-hidden="true" />
+                            <span>Prev</span>
+                          </button>
+
+                          {getAdminPaginationItems().map((item) => {
+                            if (item === 'ellipsis-start' || item === 'ellipsis-end') {
+                              return (
+                                <span key={item} className="terms-card__pagination-ellipsis" aria-hidden="true">
+                                  ...
+                                </span>
+                              );
+                            }
+
+                            return (
+                              <button
+                                key={item}
+                                type="button"
+                                className={`terms-card__pagination-btn${
+                                  adminCurrentPage === item ? ' terms-card__pagination-btn--active' : ''
+                                }`}
+                                onClick={() => goToAdminPage(item)}
+                                aria-current={adminCurrentPage === item ? 'page' : undefined}
+                              >
+                                {item}
+                              </button>
+                            );
+                          })}
+
+                          <button
+                            type="button"
+                            className="terms-card__pagination-btn terms-card__pagination-btn--nav"
+                            onClick={() => goToAdminPage(adminCurrentPage + 1)}
+                            disabled={adminCurrentPage === adminTotalPages}
+                          >
+                            <span>Next</span>
+                            <ArrowRight aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+                    </>
                   ) : (
                     <p className="terms-card__empty">{adminEmptyMessage}</p>
                   )}
