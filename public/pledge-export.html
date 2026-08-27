@@ -1051,6 +1051,195 @@ main {
   }
 }
 
+/* ----- PDF CAPTURE MODE: force the desktop layout regardless of viewport ----- */
+html.pdf-capture-mode,
+body.pdf-capture-mode {
+  background: #ffffff !important;
+}
+
+html.pdf-capture-mode header,
+body.pdf-capture-mode header,
+html.pdf-capture-mode main,
+body.pdf-capture-mode main {
+  padding-top: 0 !important;
+  min-height: auto !important;
+}
+
+html.pdf-capture-mode .form-wrapper,
+body.pdf-capture-mode .form-wrapper {
+  padding: 0 !important;
+}
+
+html.pdf-capture-mode .pledge-card,
+body.pdf-capture-mode .pledge-card {
+  width: 896px !important;
+  max-width: none !important;
+  aspect-ratio: 1 / 1.414 !important;
+  border: 1px solid #c6c6cd !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+  transform: none !important;
+  transform-origin: top center !important;
+  margin: 0 auto !important;
+}
+
+html.pdf-capture-mode .card-content,
+body.pdf-capture-mode .card-content {
+  padding: 2.5rem 3rem !important;
+}
+
+html.pdf-capture-mode .header-block,
+body.pdf-capture-mode .header-block {
+  gap: 0.75rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+html.pdf-capture-mode .header-block img,
+body.pdf-capture-mode .header-block img {
+  height: 230px !important;
+}
+
+html.pdf-capture-mode .title-block h1,
+body.pdf-capture-mode .title-block h1 {
+  font-size: 22px !important;
+  line-height: 30px !important;
+}
+
+html.pdf-capture-mode .title-block .subtitle,
+body.pdf-capture-mode .title-block .subtitle {
+  font-size: 13px !important;
+  line-height: 18px !important;
+}
+
+html.pdf-capture-mode .contact-line,
+body.pdf-capture-mode .contact-line {
+  gap: 0.35rem 1rem !important;
+}
+
+html.pdf-capture-mode .bank-row,
+body.pdf-capture-mode .bank-row {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-bottom: 2rem !important;
+  padding: 1rem 0 !important;
+}
+
+html.pdf-capture-mode .bank-name .name,
+body.pdf-capture-mode .bank-name .name {
+  font-size: 20px !important;
+  line-height: 28px !important;
+}
+
+html.pdf-capture-mode .bank-name .detail,
+body.pdf-capture-mode .bank-name .detail {
+  font-size: 14px !important;
+  line-height: 20px !important;
+  white-space: normal !important;
+}
+
+html.pdf-capture-mode .bank-right,
+body.pdf-capture-mode .bank-right {
+  min-width: 160px !important;
+  padding-left: 1.5rem !important;
+}
+
+html.pdf-capture-mode .bank-right .call,
+body.pdf-capture-mode .bank-right .call {
+  font-size: 18px !important;
+  line-height: 24px !important;
+}
+
+html.pdf-capture-mode .bank-right .hint,
+body.pdf-capture-mode .bank-right .hint {
+  font-size: 12px !important;
+  line-height: 16px !important;
+}
+
+html.pdf-capture-mode .desc-text,
+body.pdf-capture-mode .desc-text {
+  font-size: 18px !important;
+  line-height: 26px !important;
+  margin-bottom: 1rem !important;
+}
+
+html.pdf-capture-mode .table-wrap,
+body.pdf-capture-mode .table-wrap {
+  overflow: hidden !important;
+  margin-bottom: 1rem !important;
+}
+
+html.pdf-capture-mode .pledge-table,
+body.pdf-capture-mode .pledge-table {
+  table-layout: fixed !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+html.pdf-capture-mode .pledge-table th,
+html.pdf-capture-mode .pledge-table td,
+body.pdf-capture-mode .pledge-table th,
+body.pdf-capture-mode .pledge-table td {
+  padding: 0.5rem !important;
+  font-size: 11px !important;
+  line-height: 16px !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-sn,
+body.pdf-capture-mode .pledge-table th.col-sn {
+  width: 2.5rem !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-title,
+body.pdf-capture-mode .pledge-table th.col-title {
+  width: 4rem !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-name,
+body.pdf-capture-mode .pledge-table th.col-name {
+  width: 18% !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-age,
+body.pdf-capture-mode .pledge-table th.col-age {
+  width: 4rem !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-gender,
+body.pdf-capture-mode .pledge-table th.col-gender {
+  width: 5rem !important;
+}
+
+html.pdf-capture-mode .pledge-table th.col-phone,
+body.pdf-capture-mode .pledge-table th.col-phone {
+  width: 12% !important;
+}
+
+html.pdf-capture-mode .bottom-row,
+body.pdf-capture-mode .bottom-row {
+  flex-direction: row !important;
+  gap: 1rem !important;
+  margin-top: 0.25rem !important;
+}
+
+html.pdf-capture-mode .inline-entry--date,
+body.pdf-capture-mode .inline-entry--date {
+  width: 14rem !important;
+}
+
+html.pdf-capture-mode .inline-label,
+body.pdf-capture-mode .inline-label {
+  font-size: 12px !important;
+  line-height: 16px !important;
+}
+
+html.pdf-capture-mode .inline-value,
+body.pdf-capture-mode .inline-value {
+  font-size: 14px !important;
+  line-height: 20px !important;
+  min-height: 1.9rem !important;
+}
+
 /* ----- print layout (unchanged) ----- */
 @media print {
   @page {
@@ -1345,6 +1534,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       });
     }
 
+    function setPdfCaptureMode(active) {
+      document.documentElement.classList.toggle('pdf-capture-mode', active);
+      document.body.classList.toggle('pdf-capture-mode', active);
+    }
+
     // ----- UPDATE TABLE WITH ALL FIELDS -----
     function updateTable(rows) {
       const tbody = document.getElementById('pledgeTableBody');
@@ -1386,35 +1580,44 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         throw new Error('PDF tools are still loading.');
       }
 
-      if (document.fonts && document.fonts.ready) {
-        await document.fonts.ready;
+      setPdfCaptureMode(true);
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        await Promise.all(Array.from(card.querySelectorAll('img')).map(waitForImageLoad));
+
+        const canvas = await window.html2canvas(card, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          windowWidth: 896,
+          windowHeight: 1268,
+          scrollX: 0,
+          scrollY: 0,
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 4;
+        const usableWidth = pageWidth - margin * 2;
+        const usableHeight = pageHeight - margin * 2;
+        const imgProps = pdf.getImageProperties(imgData);
+        const fitRatio = Math.min(usableWidth / imgProps.width, usableHeight / imgProps.height);
+        const finalWidth = imgProps.width * fitRatio;
+        const finalHeight = imgProps.height * fitRatio;
+        const offsetX = (pageWidth - finalWidth) / 2;
+        const offsetY = (pageHeight - finalHeight) / 2;
+
+        pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
+        pdf.save('jothi-eye-care-centre-pledge.pdf');
+      } finally {
+        setPdfCaptureMode(false);
       }
-
-      await Promise.all(Array.from(card.querySelectorAll('img')).map(waitForImageLoad));
-
-      const canvas = await window.html2canvas(card, {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: '#ffffff',
-        windowWidth: 1280,
-        windowHeight: 1800,
-        scrollX: 0,
-        scrollY: 0,
-      });
-
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-      const imgProps = pdf.getImageProperties(imgData);
-      const fitRatio = Math.min(pageWidth / imgProps.width, pageHeight / imgProps.height);
-      const finalWidth = imgProps.width * fitRatio;
-      const finalHeight = imgProps.height * fitRatio;
-      const offsetX = (pageWidth - finalWidth) / 2;
-      const offsetY = (pageHeight - finalHeight) / 2;
-
-      pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
-      pdf.save('jothi-eye-care-centre-pledge.pdf');
     }
 
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
