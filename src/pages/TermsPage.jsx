@@ -23,7 +23,7 @@ const steps = [
 
 const createTermsEndpoint = '/api/terms/createterms';
 const requiredPeopleCount = 3;
-const adminRowsPerPage = 10;
+const adminRowsPerPage = 20;
 
 const pledgePoints = [
   'I understand this is a voluntary pledge.',
