@@ -70,6 +70,8 @@ const getRowTitle = (row) => {
 
 const getRowDisplayName = (row) => row?.fullName || row?.name || 'N/A';
 
+const getRowPlace = (row) => row?.place || 'N/A';
+
 function getRowTime(row) {
   if (!row?.createdAt) return null;
   const time = new Date(row.createdAt).getTime();
@@ -148,6 +150,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
+  const [place, setPlace] = useState('');
   const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
   const [submissionWhatsappLinks, setSubmissionWhatsappLinks] = useState([]);
@@ -390,6 +393,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       name: person.fullName.trim(),
       age: person.age === '' ? '' : Number(person.age),
       gender: person.gender.trim(),
+      place: place.trim(),
       phone: person.phone.trim(),
       batchId: person.batchId,
     };
@@ -424,6 +428,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
+    if (!place.trim()) {
+      setTermsError('Please enter the place before submitting the pledge.');
+      showSubmissionPopup('Failed to submit: Please enter the place before submitting the pledge.');
+      setSavingTerm(false);
+      return;
+    }
+
     const incomplete = people.find(
       (person) =>
         (person.fullName || person.age || person.gender || person.phone) &&
@@ -431,8 +442,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all three fields for each person you added.');
-      showSubmissionPopup('Failed to submit: Please fill in all  fields for each person you added.');
+      setTermsError('Please fill in all four fields for each person you added.');
+      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
       setSavingTerm(false);
       return;
     }
@@ -461,6 +472,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         });
         const savedPerson = {
           ...person,
+          place: place.trim(),
           id: response?.data?._id || response?._id || person.id,
           createdAt: response?.data?.createdAt || response?.createdAt || new Date().toISOString(),
           batchId: response?.data?.batchId || response?.batchId || batchId,
@@ -502,6 +514,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         showSubmissionPopup('Successfully submitted.');
       }
       resetPeople();
+      setPlace('');
       setPledgeAccepted(false);
 
       if (!isAdminView) {
@@ -673,6 +686,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <tr>
                             <th className="col-title">Title</th>
                             <th>Name</th>
+                            <th>Place</th>
                             <th className="col-age">Age</th>
                             <th className="col-sex">Gender</th>
                             <th>Phone</th>
@@ -692,6 +706,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               <tr key={id}>
                                 <td>{getRowTitle(row)}</td>
                                 <td>{getRowDisplayName(row)}</td>
+                                <td>{getRowPlace(row)}</td>
                                 <td className="text-center">{row.age ?? 'N/A'}</td>
                                 <td className="text-center">{row.gender || 'N/A'}</td>
                                 <td>{row.phone || row.mobile || row.telephone || 'N/A'}</td>
@@ -825,6 +840,19 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           ) : null}
                         </div>
                       ) : null}
+
+                      <div className="terms-card__field terms-card__field--full">
+                        <label className="terms-card__field-label">
+                          <span>Place</span>
+                          <input
+                            type="text"
+                            placeholder="Enter your place"
+                            value={place}
+                            onChange={(event) => setPlace(event.target.value)}
+                            required
+                          />
+                        </label>
+                      </div>
 
                       {people.map((person, index) => (
                         <div key={person.id} className="terms-card__person">
@@ -983,6 +1011,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                           <div key={row.id} className="terms-card__submitted-row">
                             <span>
                               <strong>Name:</strong> {row.fullName || row.name}
+                            </span>
+                            <span>
+                              <strong>Place:</strong> {row.place || 'N/A'}
                             </span>
                             <span>
                               <strong>Age:</strong> {row.age}
