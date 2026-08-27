@@ -778,6 +778,19 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                  </>
               ) : (
                 <>
+                  <div className="terms-card__top-banner" role="status" aria-live="polite">
+                    <span className="terms-card__top-banner-icon" aria-hidden="true">
+                      3
+                    </span>
+                    <div className="terms-card__top-banner-copy">
+                      <strong>Add 3 people to continue</strong>
+                      <span>
+                        You need to enter at least three complete people details before submitting
+                        the pledge.
+                      </span>
+                    </div>
+                  </div>
+
                   <form className="terms-card__admin-form" onSubmit={handleCreateTerm} noValidate>
                     <section className="terms-card__section terms-card__section--details">
                       <div className="terms-card__section-header">
