@@ -119,6 +119,20 @@ function collectPdfRows(row, rows) {
   return [row].filter(Boolean);
 }
 
+function normalizeWhatsAppPhone(value) {
+  return `${value || ''}`.replace(/\D/g, '');
+}
+
+function buildManualWhatsAppUrl(phone) {
+  const normalizedPhone = normalizeWhatsAppPhone(phone);
+
+  if (!normalizedPhone) {
+    return '';
+  }
+
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent('you registered successfully')}`;
+}
+
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
@@ -128,6 +142,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
   const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
+  const [submissionWhatsappLinks, setSubmissionWhatsappLinks] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
   const [adminLoading, setAdminLoading] = useState(false);
   const [adminError, setAdminError] = useState('');
@@ -382,6 +397,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setSavingTerm(true);
     setTermsMessage('');
     setTermsError('');
+    setSubmissionWhatsappLinks([]);
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
@@ -408,6 +424,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
+    const whatsappPopups = people.map(() => window.open('', '_blank'));
+
     try {
       const saved = [];
       const batchId = createBatchId();
@@ -427,7 +445,35 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }
 
       setSubmittedRows((current) => [...saved, ...current]);
-      setTermsMessage('Your details and pledge were submitted successfully.');
+
+      const whatsappLinks = saved
+        .map((row, index) => ({
+          id: row.id,
+          name: row.fullName || row.name || `Person ${index + 1}`,
+          url: buildManualWhatsAppUrl(row.phone || row.mobile || row.telephone),
+        }))
+        .filter((item) => Boolean(item.url));
+
+      setSubmissionWhatsappLinks(whatsappLinks);
+
+      let blockedCount = 0;
+      whatsappLinks.forEach((item, index) => {
+        const popup = whatsappPopups[index];
+        if (popup && !popup.closed) {
+          popup.location.href = item.url;
+          popup.focus();
+          return;
+        }
+
+        blockedCount += 1;
+        window.open(item.url, '_blank');
+      });
+
+      setTermsMessage(
+        blockedCount > 0
+          ? 'Your details and pledge were submitted successfully. Some WhatsApp tabs were blocked, so use the links below.'
+          : 'Your details and pledge were submitted successfully. WhatsApp tabs were opened for manual sending.'
+      );
       resetPeople();
       setPledgeAccepted(false);
 
@@ -435,6 +481,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         onAccept?.(saved);
       }
     } catch (err) {
+      whatsappPopups.forEach((popup) => {
+        if (popup && !popup.closed) {
+          popup.close();
+        }
+      });
       setTermsError(err.message);
     } finally {
       setSavingTerm(false);
@@ -896,6 +947,28 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               {new Date(row.createdAt).toLocaleString()}
                             </span>
                           </div>
+                        ))}
+                      </div>
+                    </section>
+                  ) : null}
+
+                  {submissionWhatsappLinks.length > 0 ? (
+                    <section
+                      className="terms-card__submitted terms-card__submitted--whatsapp"
+                      aria-label="WhatsApp follow-up"
+                    >
+                      <h3>WhatsApp follow-up</h3>
+                      <div className="terms-card__submitted-list">
+                        {submissionWhatsappLinks.map((item) => (
+                          <a
+                            key={item.id}
+                            className="terms-card__whatsapp-link"
+                            href={item.url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Send WhatsApp to {item.name}
+                          </a>
                         ))}
                       </div>
                     </section>
