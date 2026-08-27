@@ -133,6 +133,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [downloadingPdfId, setDownloadingPdfId] = useState('');
   const [totalRecords, setTotalRecords] = useState(0);
   const [adminFilters, setAdminFilters] = useState({
+    name: '',
     date: '',
     weekday: '',
     month: '',
@@ -161,6 +162,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   };
 
   const filteredAdminRows = adminRows.filter((row) => {
+    const nameQuery = adminFilters.name.trim().toLowerCase();
+    const rowName = `${row?.fullName || row?.name || ''}`.toLowerCase();
     const date = getRowDate(row);
     const rowDate = date
       ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
@@ -173,8 +176,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     const weekdayMatch = !adminFilters.weekday || rowWeekday === adminFilters.weekday;
     const monthMatch = !adminFilters.month || rowMonth === adminFilters.month;
     const yearMatch = !adminFilters.year || rowYear === adminFilters.year;
+    const nameMatch = !nameQuery || rowName.includes(nameQuery);
 
-    return dateMatch && weekdayMatch && monthMatch && yearMatch;
+    return nameMatch && dateMatch && weekdayMatch && monthMatch && yearMatch;
   });
 
   const availableYears = Array.from(
@@ -246,6 +250,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
   function clearAdminFilters() {
     setAdminFilters({
+      name: '',
       date: '',
       weekday: '',
       month: '',
@@ -442,13 +447,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     <div className="terms-card__filters-head">
                       <div>
                         <p className="terms-card__filters-kicker">Filter results</p>
-                        <h3>Find entries by date</h3>
+                        <h3>Find entries by name or date</h3>
                       </div>
                       <button
                         type="button"
                         className="terms-card__filters-clear"
                         onClick={clearAdminFilters}
                         disabled={
+                          !adminFilters.name &&
                           !adminFilters.date &&
                           !adminFilters.weekday &&
                           !adminFilters.month &&
@@ -460,6 +466,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
 
                     <div className="terms-card__filters-grid">
+                      <label className="terms-card__filter">
+                        <span>Name</span>
+                        <input
+                          type="search"
+                          value={adminFilters.name}
+                          onChange={(event) => updateAdminFilter('name', event.target.value)}
+                          placeholder="Search by name"
+                        />
+                      </label>
+
                       <label className="terms-card__filter">
                         <span>Date</span>
                         <input
