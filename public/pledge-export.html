@@ -609,23 +609,59 @@
       .bank-right .call .material-symbols-outlined { font-size: 16px; }
     }
     @media (max-width: 480px) {
-      .card-content { padding: 1rem 0.75rem; }
+      header {
+        height: 64px;
+      }
+
+      .header-inner {
+        padding: 0 1rem;
+      }
+
+      main {
+        padding-top: 64px;
+      }
+
+      .form-wrapper {
+        padding: 0.5rem;
+      }
+
+      .pledge-card {
+        aspect-ratio: auto;
+        min-height: auto;
+        overflow: visible;
+        transform: none;
+        max-width: 100%;
+      }
+
+      .card-content { padding: 0.85rem 0.65rem; }
       .header-block { gap: 0.5rem; }
-      .header-block img { height: 120px; }
-      .title-block h1 { font-size: 15px; line-height: 20px; }
-      .title-block .subtitle { font-size: 11px; line-height: 15px; }
-      .pledge-table th, .pledge-table td { padding: 0.2rem; font-size: 9px; }
+      .header-block img { height: 96px; }
+      .title-block h1 { font-size: 14px; line-height: 18px; }
+      .title-block .subtitle { font-size: 10px; line-height: 14px; }
+      .contact-line { gap: 0.2rem 0.5rem; }
+      .contact-item { white-space: normal; }
+      .bank-row { gap: 0.5rem; padding: 0.75rem 0; }
+      .bank-name { gap: 0.35rem; }
+      .bank-name .name { font-size: 14px; line-height: 18px; }
+      .bank-name .detail { font-size: 11px; line-height: 15px; white-space: normal; }
+      .bank-right { min-width: 0; }
+      .desc-text { font-size: 13px; line-height: 18px; margin-bottom: 0.7rem; }
+      .table-wrap {
+        overflow: visible;
+      }
+      .pledge-table {
+        min-width: 0;
+        table-layout: fixed;
+      }
+      .pledge-table th, .pledge-table td { padding: 0.16rem; font-size: 8px; line-height: 10px; }
       .pledge-table th.col-sn { width: 1.5rem; }
-      .pledge-table th.col-title { width: 2.5rem; }
-      .pledge-table th.col-age { width: 2.5rem; }
+      .pledge-table th.col-title { width: 2rem; }
+      .pledge-table th.col-name { width: 34%; }
+      .pledge-table th.col-age { width: 2.4rem; }
       .pledge-table th.col-gender { width: 3rem; }
-      .pledge-table th.col-phone { width: 8%; }
-      .bank-name .name { font-size: 16px; line-height: 22px; }
-      .bank-name .detail { font-size: 12px; line-height: 16px; }
-      .bank-right .call { font-size: 14px; }
-      .bank-right .call .material-symbols-outlined { font-size: 14px; }
-      .bank-right .hint { font-size: 10px; line-height: 14px; }
-      .desc-text { font-size: 14px; line-height: 20px; }
+      .pledge-table th.col-phone { width: 28%; }
+      .bank-right .call { font-size: 13px; }
+      .bank-right .hint { font-size: 9px; line-height: 12px; }
     }
   </style>
 </head>
