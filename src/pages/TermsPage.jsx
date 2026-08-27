@@ -431,8 +431,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all four fields for each person you added.');
-      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
+      setTermsError('Please fill in all three fields for each person you added.');
+      showSubmissionPopup('Failed to submit: Please fill in all  fields for each person you added.');
       setSavingTerm(false);
       return;
     }
