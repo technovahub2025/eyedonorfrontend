@@ -137,6 +137,10 @@ function buildManualWhatsAppUrl(phone) {
   return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent('you registered successfully')}`;
 }
 
+function showSubmissionPopup(message) {
+  window.alert(message);
+}
+
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
@@ -405,6 +409,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
+      showSubmissionPopup('Failed to submit: Please confirm the pledge before you continue.');
       setSavingTerm(false);
       return;
     }
@@ -412,6 +417,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     // Check if there are at least 3 people
     if (people.length < requiredPeopleCount) {
       setTermsError(`Please add at least ${requiredPeopleCount} people before submitting the pledge.`);
+      showSubmissionPopup(
+        `Failed to submit: Please add at least ${requiredPeopleCount} people before submitting the pledge.`
+      );
       setSavingTerm(false);
       return;
     }
@@ -424,6 +432,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (incomplete) {
       setTermsError('Please fill in all four fields for each person you added.');
+      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
       setSavingTerm(false);
       return;
     }
@@ -432,6 +441,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (invalidPhone) {
       setTermsError('Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.');
+      showSubmissionPopup(
+        'Failed to submit: Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.'
+      );
       setSavingTerm(false);
       return;
     }
@@ -486,6 +498,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
           ? 'Your details and pledge were submitted successfully. Some WhatsApp tabs were blocked, so use the links below.'
           : 'Your details and pledge were submitted successfully. WhatsApp tabs were opened for manual sending.'
       );
+      if (!isAdminView) {
+        showSubmissionPopup('Successfully submitted.');
+      }
       resetPeople();
       setPledgeAccepted(false);
 
@@ -499,6 +514,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         }
       });
       setTermsError(err.message);
+      showSubmissionPopup(`Failed to submit: ${err.message}`);
     } finally {
       setSavingTerm(false);
     }
