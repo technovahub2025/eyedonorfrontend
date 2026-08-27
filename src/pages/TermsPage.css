@@ -763,6 +763,10 @@
   margin-top: 16px;
 }
 
+.terms-card__section--people {
+  margin-top: 20px;
+}
+
 .terms-card__section-header {
   display: flex;
   align-items: center;
@@ -875,13 +879,19 @@
   background: rgba(255, 255, 255, 0.72);
 }
 
+.terms-card__people-stack {
+  display: grid;
+  gap: 14px;
+}
+
 .terms-card__person + .terms-card__person {
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .terms-card__add-person-wrap {
   display: flex;
   justify-content: flex-start;
+  margin-top: 2px;
 }
 
 .terms-card__field {

@@ -804,87 +804,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         </label>
                       </div>
 
-                      {people.map((person, index) => (
-                        <div key={person.id} className="terms-card__person">
-                          <div className="terms-card__field terms-card__field--full">
-                            <label className="terms-card__field-label">
-                              <span>Full Name</span>
-                              <input
-                                type="text"
-                                placeholder="Enter your full name"
-                                value={person.fullName}
-                                onChange={(event) =>
-                                  updatePerson(person.id, 'fullName', event.target.value)
-                                }
-                                required
-                              />
-                            </label>
-                          </div>
-
-                          <div className="terms-card__details-grid">
-                            <label className="terms-card__field">
-                              <span>Age</span>
-                              <input
-                                type="number"
-                                min="0"
-                                placeholder="Enter your age"
-                                value={person.age}
-                                onChange={(event) => updatePerson(person.id, 'age', event.target.value)}
-                                required
-                              />
-                            </label>
-
-                            <label className="terms-card__field">
-                              <span>Gender</span>
-                              <select
-                                value={person.gender}
-                                onChange={(event) =>
-                                  updatePerson(person.id, 'gender', event.target.value)
-                                }
-                                required
-                              >
-                                <option value="">Select gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                              </select>
-                            </label>
-
-                            <label className="terms-card__field">
-                              <span>Phone Number</span>
-                              <input
-                                type="tel"
-                                inputMode="numeric"
-                                maxLength={10}
-                                pattern="[6-9][0-9]{9}"
-                                placeholder="Enter your phone number"
-                                value={person.phone}
-                                onChange={(event) =>
-                                  updatePerson(
-                                    person.id,
-                                    'phone',
-                                    event.target.value.replace(/\D/g, '').slice(0, 10)
-                                  )
-                                }
-                                required
-                              />
-                            </label>
-                          </div>
-
-                        </div>
-                      ))}
-
-                      <div className="terms-card__add-person-wrap">
-                        <button
-                          type="button"
-                          className="terms-card__add-row"
-                          onClick={addPerson}
-                          disabled={updatingPeople}
-                        >
-                          <Plus aria-hidden="true" />
-                          <span>Add Another Person</span>
-                        </button>
-                      </div>
-
                     </section>
 
                     <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
@@ -917,6 +836,102 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             </article>
                           );
                         })}
+                      </div>
+                    </section>
+
+                    <section className="terms-card__section terms-card__section--people" aria-label="People details">
+                      <div className="terms-card__section-header">
+                        <div className="terms-card__section-title">
+                          <UserRound aria-hidden="true" />
+                          <span>PEOPLE DETAILS</span>
+                        </div>
+                        <span className="terms-card__updating-status">
+                          {Math.min(people.length, requiredPeopleCount)}/{requiredPeopleCount} added
+                        </span>
+                      </div>
+
+                      <div className="terms-card__people-stack">
+                        {people.map((person, index) => (
+                          <div key={person.id} className="terms-card__person">
+                            <div className="terms-card__field terms-card__field--full">
+                              <label className="terms-card__field-label">
+                                <span>Full Name {index + 1}</span>
+                                <input
+                                  type="text"
+                                  placeholder="Enter your full name"
+                                  value={person.fullName}
+                                  onChange={(event) =>
+                                    updatePerson(person.id, 'fullName', event.target.value)
+                                  }
+                                  required
+                                />
+                              </label>
+                            </div>
+
+                            <div className="terms-card__details-grid">
+                              <label className="terms-card__field">
+                                <span>Age</span>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  placeholder="Enter your age"
+                                  value={person.age}
+                                  onChange={(event) =>
+                                    updatePerson(person.id, 'age', event.target.value)
+                                  }
+                                  required
+                                />
+                              </label>
+
+                              <label className="terms-card__field">
+                                <span>Gender</span>
+                                <select
+                                  value={person.gender}
+                                  onChange={(event) =>
+                                    updatePerson(person.id, 'gender', event.target.value)
+                                  }
+                                  required
+                                >
+                                  <option value="">Select gender</option>
+                                  <option value="Male">Male</option>
+                                  <option value="Female">Female</option>
+                                </select>
+                              </label>
+
+                              <label className="terms-card__field">
+                                <span>Phone Number</span>
+                                <input
+                                  type="tel"
+                                  inputMode="numeric"
+                                  maxLength={10}
+                                  pattern="[6-9][0-9]{9}"
+                                  placeholder="Enter your phone number"
+                                  value={person.phone}
+                                  onChange={(event) =>
+                                    updatePerson(
+                                      person.id,
+                                      'phone',
+                                      event.target.value.replace(/\D/g, '').slice(0, 10)
+                                    )
+                                  }
+                                  required
+                                />
+                              </label>
+                            </div>
+                          </div>
+                        ))}
+
+                        <div className="terms-card__add-person-wrap">
+                          <button
+                            type="button"
+                            className="terms-card__add-row"
+                            onClick={addPerson}
+                            disabled={updatingPeople}
+                          >
+                            <Plus aria-hidden="true" />
+                            <span>Add Another Person</span>
+                          </button>
+                        </div>
                       </div>
                     </section>
 
