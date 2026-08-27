@@ -125,6 +125,20 @@ function isValidMobileNumber(value) {
   return /^[6-9]\d{9}$/.test(`${value || ''}`.trim());
 }
 
+function normalizeWhatsAppPhone(value) {
+  return `${value || ''}`.replace(/\D/g, '');
+}
+
+function buildManualWhatsAppUrl(phone) {
+  const normalizedPhone = normalizeWhatsAppPhone(phone);
+
+  if (!normalizedPhone) {
+    return '';
+  }
+
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent('you registered successfully')}`;
+}
+
 function showSubmissionPopup(message) {
   window.alert(message);
 }
@@ -467,6 +481,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
+        saved.forEach((row) => {
+          const whatsappUrl = buildManualWhatsAppUrl(row.phone || row.mobile || row.telephone);
+
+          if (whatsappUrl) {
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          }
+        });
       }
       resetPeople();
       setPlace('');
