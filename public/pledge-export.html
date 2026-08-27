@@ -623,48 +623,50 @@
 
       .form-wrapper {
         padding: 0.5rem;
-        overflow: hidden;
       }
 
       .pledge-card {
-        width: 896px;
+        width: 100%;
         max-width: none;
-        aspect-ratio: 1 / 1.414;
-        overflow: hidden;
-        transform: scale(0.47);
+        aspect-ratio: auto;
+        overflow: visible;
+        transform: scale(0.86);
         transform-origin: top center;
         margin: 0 auto;
       }
 
-      .card-content { padding: 2.5rem 3rem; }
-      .header-block { gap: 0.75rem; margin-bottom: 1.5rem; }
-      .header-block img { height: 230px; }
-      .title-block h1 { font-size: 22px; line-height: 30px; }
-      .title-block .subtitle { font-size: 13px; line-height: 18px; }
-      .contact-line { gap: 0.35rem 1rem; }
+      .card-content { padding: 1.2rem 1.35rem 1rem; }
+      .header-block { gap: 0.65rem; margin-bottom: 0.8rem; }
+      .header-block img { height: 145px; }
+      .title-block h1 { font-size: 18px; line-height: 22px; }
+      .title-block .subtitle { font-size: 11px; line-height: 14px; }
+      .contact-line { gap: 0.25rem 0.7rem; }
       .contact-item { white-space: normal; }
-      .bank-row { gap: 1rem; padding: 1rem 0; margin-bottom: 2rem; }
-      .bank-name { gap: 0.75rem; }
-      .bank-name .name { font-size: 20px; line-height: 28px; }
-      .bank-name .detail { font-size: 14px; line-height: 20px; white-space: normal; }
-      .bank-right { min-width: 160px; }
-      .desc-text { font-size: 18px; line-height: 26px; margin-bottom: 1rem; }
+      .bank-row { gap: 0.75rem; padding: 0.55rem 0; margin-bottom: 1rem; }
+      .bank-name { gap: 0.5rem; }
+      .bank-name .name { font-size: 17px; line-height: 22px; }
+      .bank-name .detail { font-size: 11px; line-height: 15px; white-space: normal; }
+      .bank-right { min-width: 140px; }
+      .desc-text { font-size: 11px; line-height: 14px; margin-bottom: 0.7rem; }
       .table-wrap {
         overflow: hidden;
+        margin-bottom: 1rem;
       }
       .pledge-table {
         min-width: 0;
         table-layout: fixed;
+        font-size: 10px;
+        line-height: 13px;
       }
-      .pledge-table th, .pledge-table td { padding: 0.5rem; font-size: 14px; line-height: 20px; }
-      .pledge-table th.col-sn { width: 2.5rem; }
-      .pledge-table th.col-title { width: 4rem; }
-      .pledge-table th.col-name { width: 18%; }
-      .pledge-table th.col-age { width: 4rem; }
-      .pledge-table th.col-gender { width: 5rem; }
+      .pledge-table th, .pledge-table td { padding: 0.28rem 0.22rem; font-size: 10px; line-height: 13px; }
+      .pledge-table th.col-sn { width: 5%; }
+      .pledge-table th.col-title { width: 8%; }
+      .pledge-table th.col-name { width: 28%; }
+      .pledge-table th.col-age { width: 8%; }
+      .pledge-table th.col-gender { width: 10%; }
       .pledge-table th.col-phone { width: 12%; }
-      .bank-right .call { font-size: 18px; }
-      .bank-right .hint { font-size: 12px; line-height: 16px; }
+      .bank-right .call { font-size: 15px; }
+      .bank-right .hint { font-size: 10px; line-height: 13px; }
     }
   </style>
 </head>
