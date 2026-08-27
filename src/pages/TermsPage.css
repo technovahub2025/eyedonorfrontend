@@ -947,20 +947,21 @@
   grid-column: 1 / -1;
 }
 
-.terms-card__place-field {
-  width: 100%;
-  align-self: stretch;
-  justify-self: stretch;
-}
-
-.terms-card__place-field .terms-card__field-label {
-  width: 100%;
-}
-
 .terms-card__details-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px;
+}
+
+.terms-card__field--compact {
+  max-width: 220px;
+}
+
+.terms-card__field--compact input,
+.terms-card__field--compact select,
+.terms-card__field--compact textarea {
+  min-height: 42px;
+  padding-inline: 12px;
 }
 
 .terms-card__scroll,

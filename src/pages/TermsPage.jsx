@@ -39,6 +39,7 @@ const initialPerson = () => ({
   age: '',
   gender: '',
   phone: '',
+  place: '',
 });
 
 function createBatchId() {
@@ -150,7 +151,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
-  const [place, setPlace] = useState('');
   const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
@@ -392,7 +392,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       name: person.fullName.trim(),
       age: person.age === '' ? '' : Number(person.age),
       gender: person.gender.trim(),
-      place: place.trim(),
+      place: person.place.trim(),
       phone: person.phone.trim(),
       batchId: person.batchId,
     };
@@ -408,7 +408,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setSavingTerm(true);
     setTermsMessage('');
     setTermsError('');
-    setSubmissionWhatsappLinks([]);
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
@@ -427,22 +426,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
-    if (!place.trim()) {
-      setTermsError('Please enter the place before submitting the pledge.');
-      showSubmissionPopup('Failed to submit: Please enter the place before submitting the pledge.');
-      setSavingTerm(false);
-      return;
-    }
-
     const incomplete = people.find(
       (person) =>
-        (person.fullName || person.age || person.gender || person.phone) &&
-        (!person.fullName || !person.age || !person.gender || !person.phone)
+        (person.fullName || person.age || person.gender || person.phone || person.place) &&
+        (!person.fullName || !person.age || !person.gender || !person.phone || !person.place)
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all four fields for each person you added.');
-      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
+      setTermsError('Please fill in all five fields for each person you added.');
+      showSubmissionPopup('Failed to submit: Please fill in all five fields for each person you added.');
       setSavingTerm(false);
       return;
     }
@@ -469,7 +461,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         });
         const savedPerson = {
           ...person,
-          place: place.trim(),
+          place: person.place.trim(),
           id: response?.data?._id || response?._id || person.id,
           createdAt: response?.data?.createdAt || response?.createdAt || new Date().toISOString(),
           batchId: response?.data?.batchId || response?.batchId || batchId,
@@ -490,7 +482,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         });
       }
       resetPeople();
-      setPlace('');
       setPledgeAccepted(false);
 
       if (!isAdminView) {
@@ -812,19 +803,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                         </div>
                       ) : null}
 
-                      <div className="terms-card__field terms-card__field--full terms-card__place-field">
-                        <label className="terms-card__field-label">
-                          <span>Place</span>
-                          <input
-                            type="text"
-                            placeholder="Enter your place"
-                            value={place}
-                            onChange={(event) => setPlace(event.target.value)}
-                            required
-                          />
-                        </label>
-                      </div>
-
                     </section>
 
                     <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
@@ -934,6 +912,19 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                       'phone',
                                       event.target.value.replace(/\D/g, '').slice(0, 10)
                                     )
+                                  }
+                                  required
+                                />
+                              </label>
+
+                              <label className="terms-card__field terms-card__field--compact">
+                                <span>Place</span>
+                                <input
+                                  type="text"
+                                  placeholder="Place"
+                                  value={person.place}
+                                  onChange={(event) =>
+                                    updatePerson(person.id, 'place', event.target.value)
                                   }
                                   required
                                 />
