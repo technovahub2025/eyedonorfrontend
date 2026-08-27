@@ -22,7 +22,7 @@ const steps = [
 ];
 
 const createTermsEndpoint = '/api/terms/createterms';
-const requiredPeopleCount = 3;
+const requiredPeopleCount = 2;
 const adminRowsPerPage = 20;
 
 const pledgePoints = [
@@ -416,7 +416,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
-    // Check if there are at least 3 people
+    // Check if there are at least 2 people
     if (people.length < requiredPeopleCount) {
       setTermsError(`Please add at least ${requiredPeopleCount} people before submitting the pledge.`);
       showSubmissionPopup(
@@ -469,7 +469,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         saved.push(savedPerson);
       }
 
-      setSubmittedRows((current) => [...saved, ...current]);
+      setSubmittedRows(saved);
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
@@ -963,7 +963,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <button
                         className="terms-card__button terms-card__button--primary"
                         type="submit"
-                        disabled={savingTerm || !pledgeAccepted || people.length < 3}
+                        disabled={savingTerm || !pledgeAccepted || people.length < requiredPeopleCount}
                       >
                         <Heart aria-hidden="true" />
                         <span>{savingTerm ? 'Submitting...' : 'Submit pledge'}</span>
@@ -971,9 +971,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </div>
                   </form>
 <div className="terms-card__top-banner-copy">
-                      <strong>Add 3 people to continue</strong>
+                      <strong>Add 2 people to continue</strong>
                       <span>
-                        You need to enter at least three complete people details before submitting
+                        You need to enter at least two complete people details before submitting
                         the pledge.
                       </span>
                     </div>
