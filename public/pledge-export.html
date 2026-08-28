@@ -1339,8 +1339,9 @@ body.desktop-export-mode .pledge-table {
 html.desktop-export-mode .bottom-row,
 body.desktop-export-mode .bottom-row {
   display: flex !important;
-  flex-direction: row !important;
-  gap: 1rem !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 0.9rem !important;
   margin-top: 0.25rem !important;
 }
 
@@ -1351,7 +1352,7 @@ body.desktop-export-mode .inline-entry--date {
 
 html.desktop-export-mode .inline-entry--place,
 body.desktop-export-mode .inline-entry--place {
-  flex: 1 !important;
+  width: 100% !important;
 }
 
 /* ----- print layout (unchanged) ----- */
