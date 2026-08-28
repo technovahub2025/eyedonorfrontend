@@ -1006,15 +1006,20 @@
 .terms-card__field-error {
   display: block;
   margin-top: 4px;
-  color: #ba1a1a;
+  color: #d11a2a;
   font-size: 0.8rem;
   font-weight: 700;
   line-height: 1.35;
 }
 
+.terms-card__field-error,
+.terms-card__field-error * {
+  color: #d11a2a !important;
+}
+
 .terms-card__field--invalid .terms-card__field-label > span,
 .terms-card__field--invalid > span {
-  color: #ba1a1a;
+  color: #d11a2a;
 }
 
 .terms-card__field {
