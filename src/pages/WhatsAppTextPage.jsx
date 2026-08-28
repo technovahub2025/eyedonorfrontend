@@ -29,10 +29,7 @@ function WhatsAppTextPage({ submittedRows = [], onBackToThankYou, onRoleSelect }
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
 
     try {
-      const popup = window.open(whatsappUrl, '_blank');
-      if (!popup) {
-        window.location.href = whatsappUrl;
-      }
+      window.location.assign(whatsappUrl);
       setStatus('opened');
     } catch (shareError) {
       console.warn('Could not open WhatsApp text:', shareError);

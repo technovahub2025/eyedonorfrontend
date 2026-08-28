@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
 import RoleSelectPage from './pages/RoleSelectPage';
@@ -21,13 +21,60 @@ const pages = {
 };
 
 function App() {
-  const [activePage, setActivePage] = useState('role-select');
+  const [activePage, setActivePage] = useState(() => window.history.state?.page || 'role-select');
   const [activeRole, setActiveRole] = useState(null);
   const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
   const [thankYouRows, setThankYouRows] = useState([]);
   const whatsappRedirectRef = useRef(null);
+  const suppressHistoryRef = useRef(false);
+  const lastHistoryPageRef = useRef(null);
   const PageComponent = pages[activePage] || RoleSelectPage;
+
+  useEffect(() => {
+    if (!window.history.state?.page) {
+      window.history.replaceState({ page: activePage }, '', window.location.href);
+    }
+
+    lastHistoryPageRef.current = window.history.state?.page || activePage;
+  }, [activePage]);
+
+  useEffect(() => {
+    function handlePopState(event) {
+      const nextPage = event.state?.page || 'role-select';
+
+      suppressHistoryRef.current = true;
+      lastHistoryPageRef.current = nextPage;
+      setActivePage(nextPage);
+
+      if (nextPage === 'role-select') {
+        setActiveRole(null);
+      } else if (nextPage === 'admin-login') {
+        setActiveRole('admin');
+      } else {
+        setActiveRole('user');
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (suppressHistoryRef.current) {
+      suppressHistoryRef.current = false;
+      return;
+    }
+
+    if (lastHistoryPageRef.current === activePage) {
+      return;
+    }
+
+    window.history.pushState({ page: activePage }, '', window.location.href);
+    lastHistoryPageRef.current = activePage;
+  }, [activePage]);
 
   function navigate(nextPage) {
     setActivePage(nextPage);
