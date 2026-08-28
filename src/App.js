@@ -116,7 +116,7 @@ function App() {
           onLoginSuccess={handleUserLoginSuccess}
         />
       </main>
-      {activePage !== 'role-select' ? (
+      {activePage !== 'role-select' && activePage !== 'thank-you' ? (
         <SharedFooter
           onHome={handleFooterHome}
           onPledge={handleFooterPledge}

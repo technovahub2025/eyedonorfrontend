@@ -13,6 +13,7 @@ import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
+  const showFooter = !Array.isArray(submittedRows) || submittedRows.length === 0;
 
   async function handleExportPdf() {
     setExportingPdf(true);
@@ -132,18 +133,20 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
           </div>
         </aside>
 
-        <section className="thank-you-page__footer-card">
-          <div>
-            <p className="thank-you-page__footer-kicker">What happens next</p>
-            <p className="thank-you-page__footer-text">
-              If you need to make another entry or return to the beginning, you can use the buttons
-              above.
-            </p>
-          </div>
-          <div className="thank-you-page__footer-pulse" aria-hidden="true">
-            <CheckCircle2 />
-          </div>
-        </section>
+        {showFooter ? (
+          <section className="thank-you-page__footer-card">
+            <div>
+              <p className="thank-you-page__footer-kicker">What happens next</p>
+              <p className="thank-you-page__footer-text">
+                You can return to the home screen, restart the form, or export the PDF from the
+                action buttons above.
+              </p>
+            </div>
+            <div className="thank-you-page__footer-pulse" aria-hidden="true">
+              <CheckCircle2 />
+            </div>
+          </section>
+        ) : null}
       </main>
     </div>
   );

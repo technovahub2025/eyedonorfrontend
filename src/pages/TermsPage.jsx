@@ -501,6 +501,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsMessage('');
     setTermsError('');
     setFieldErrors({ place: '', people: {} });
+    let exportPopup = null;
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
@@ -571,7 +572,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     const invalidPhone = people.find((person) => !isValidMobileNumber(person.phone));
 
-      if (invalidPhone) {
+    if (invalidPhone) {
       setTermsError('Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.');
       setFieldErrors((current) => ({
         ...current,
@@ -585,6 +586,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }));
       setSavingTerm(false);
       return;
+    }
+
+    if (!isAdminView) {
+      exportPopup = window.open('', '_blank');
+      if (!exportPopup) {
+        setTermsError('Please allow popups for this site so the PDF can download automatically.');
+        setSavingTerm(false);
+        return;
+      }
     }
 
     try {
@@ -610,6 +620,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
+        window.__PLEDGE_EXPORT_ROWS__ = saved;
+        window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
+
+        const exportUrl = new URL('/pledge-export.html', window.location.origin).toString();
+        if (exportPopup && !exportPopup.closed) {
+          exportPopup.location.href = exportUrl;
+          exportPopup.focus();
+        } else {
+          window.open(exportUrl, '_blank');
+        }
       }
       resetPeople();
       setPlace('');
@@ -620,6 +640,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }
     } catch (err) {
       setTermsError(err.message);
+      if (exportPopup && !exportPopup.closed) {
+        exportPopup.close();
+      }
     } finally {
       setSavingTerm(false);
     }
