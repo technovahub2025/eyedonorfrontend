@@ -447,8 +447,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsError('');
     setFieldErrors({ place: '', people: {} });
 
+    const whatsappPopup = !isAdminView
+      ? window.open('', '_blank', 'noopener,noreferrer')
+      : null;
+
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
       setSavingTerm(false);
       return;
     }
@@ -467,6 +474,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (completePeopleCount < requiredPeopleCount) {
       setTermsError(`Please add at least ${requiredPeopleCount} complete people before submitting the pledge.`);
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
       setSavingTerm(false);
       return;
     }
@@ -503,6 +513,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     if (hasInlineError) {
       setFieldErrors(nextFieldErrors);
       setTermsError('Please fix the highlighted fields below.');
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
       setSavingTerm(false);
       return;
     }
@@ -510,6 +523,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     if (!place.trim()) {
       setTermsError('Please enter the place before submitting the pledge.');
       setFieldErrors({ place: 'Please enter the place.', people: {} });
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
       setSavingTerm(false);
       return;
     }
@@ -528,6 +544,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
           },
         },
       }));
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
       setSavingTerm(false);
       return;
     }
@@ -562,7 +581,14 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         );
 
         if (whatsappUrl) {
-          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+          if (whatsappPopup && !whatsappPopup.closed) {
+            whatsappPopup.location.href = whatsappUrl;
+            whatsappPopup.focus();
+          } else {
+            window.location.href = whatsappUrl;
+          }
+        } else if (whatsappPopup && !whatsappPopup.closed) {
+          whatsappPopup.close();
         }
       }
       resetPeople();
@@ -574,6 +600,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }
     } catch (err) {
       setTermsError(err.message);
+      if (whatsappPopup && !whatsappPopup.closed) {
+        whatsappPopup.close();
+      }
     } finally {
       setSavingTerm(false);
     }
