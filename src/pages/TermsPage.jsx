@@ -125,6 +125,39 @@ function isValidMobileNumber(value) {
   return /^[6-9]\d{9}$/.test(`${value || ''}`.trim());
 }
 
+function validatePersonField(field, value) {
+  const text = `${value ?? ''}`.trim();
+
+  if (field === 'fullName') {
+    return text ? '' : 'Please enter a full name.';
+  }
+
+  if (field === 'age') {
+    if (text === '') {
+      return 'Please enter a valid age.';
+    }
+
+    const ageValue = Number(text);
+    if (!Number.isFinite(ageValue) || ageValue < 1) {
+      return 'Please enter a valid age.';
+    }
+
+    return '';
+  }
+
+  if (field === 'gender') {
+    return text ? '' : 'Please select a gender.';
+  }
+
+  if (field === 'phone') {
+    return isValidMobileNumber(text)
+      ? ''
+      : 'Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.';
+  }
+
+  return '';
+}
+
 function showSubmissionPopup(message) {
   window.alert(message);
 }
@@ -270,19 +303,20 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       current.map((person) => (person.id === id ? { ...person, [field]: value } : person))
     );
     setFieldErrors((current) => {
-      const personErrors = current.people?.[id];
-      if (!personErrors?.[field]) {
-        return current;
+      const fieldError = validatePersonField(field, value);
+      const personErrors = { ...(current.people?.[id] || {}) };
+
+      if (fieldError) {
+        personErrors[field] = fieldError;
+      } else {
+        delete personErrors[field];
       }
 
-      const nextPersonErrors = { ...(personErrors || {}) };
-      delete nextPersonErrors[field];
-
       const nextPeopleErrors = { ...(current.people || {}) };
-      if (Object.keys(nextPersonErrors).length === 0) {
+      if (Object.keys(personErrors).length === 0) {
         delete nextPeopleErrors[id];
       } else {
-        nextPeopleErrors[id] = nextPersonErrors;
+        nextPeopleErrors[id] = personErrors;
       }
 
       return {
@@ -406,6 +440,31 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
       const nextPeopleErrors = { ...(current.people || {}) };
       delete nextPeopleErrors[id];
+
+      return {
+        ...current,
+        people: nextPeopleErrors,
+      };
+    });
+  }
+
+  function touchPersonField(id, field, value) {
+    setFieldErrors((current) => {
+      const fieldError = validatePersonField(field, value);
+      const personErrors = { ...(current.people?.[id] || {}) };
+
+      if (fieldError) {
+        personErrors[field] = fieldError;
+      } else {
+        delete personErrors[field];
+      }
+
+      const nextPeopleErrors = { ...(current.people || {}) };
+      if (Object.keys(personErrors).length === 0) {
+        delete nextPeopleErrors[id];
+      } else {
+        nextPeopleErrors[id] = personErrors;
+      }
 
       return {
         ...current,
@@ -947,6 +1006,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   onChange={(event) =>
                                     updatePerson(person.id, 'fullName', event.target.value)
                                   }
+                                  onBlur={(event) => touchPersonField(person.id, 'fullName', event.target.value)}
                                   required
                                 />
                               </label>
@@ -975,6 +1035,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   onChange={(event) =>
                                     updatePerson(person.id, 'age', event.target.value)
                                   }
+                                  onBlur={(event) => touchPersonField(person.id, 'age', event.target.value)}
                                   required
                                 />
                                 {fieldErrors.people?.[person.id]?.age ? (
@@ -998,6 +1059,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   onChange={(event) =>
                                     updatePerson(person.id, 'gender', event.target.value)
                                   }
+                                  onBlur={(event) => touchPersonField(person.id, 'gender', event.target.value)}
                                   required
                                 >
                                   <option value="">Select gender</option>
@@ -1034,6 +1096,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                       event.target.value.replace(/\D/g, '').slice(0, 10)
                                     )
                                   }
+                                  onBlur={(event) => touchPersonField(person.id, 'phone', event.target.value)}
                                   required
                                 />
                                 {fieldErrors.people?.[person.id]?.phone ? (
@@ -1078,25 +1141,34 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </div>
 
                       <div className="terms-card__place-row">
-                        <label
-                          className={`terms-card__field terms-card__field--compact terms-card__field--place${
-                            fieldErrors.place ? ' terms-card__field--invalid' : ''
-                          }`}
-                        >
+                          <label
+                            className={`terms-card__field terms-card__field--compact terms-card__field--place${
+                              fieldErrors.place ? ' terms-card__field--invalid' : ''
+                            }`}
+                          >
                           <span>Place</span>
-                          <input
-                            type="text"
-                            placeholder="Enter place"
-                            value={place}
-                            aria-invalid={Boolean(fieldErrors.place)}
-                            onChange={(event) => {
-                              setPlace(event.target.value);
-                              if (fieldErrors.place) {
-                                setFieldErrors((current) => ({ ...current, place: '' }));
-                              }
-                            }}
-                            required
-                          />
+                            <input
+                              type="text"
+                              placeholder="Enter place"
+                              value={place}
+                              aria-invalid={Boolean(fieldErrors.place)}
+                              onChange={(event) => {
+                                const nextPlace = event.target.value;
+                                setPlace(nextPlace);
+                                setFieldErrors((current) => ({
+                                  ...current,
+                                  place: nextPlace.trim() ? '' : 'Please enter the place.',
+                                }));
+                              }}
+                              onBlur={(event) => {
+                                const nextPlace = event.target.value;
+                                setFieldErrors((current) => ({
+                                  ...current,
+                                  place: nextPlace.trim() ? '' : 'Please enter the place.',
+                                }));
+                              }}
+                              required
+                            />
                           {fieldErrors.place ? (
                             <span className="terms-card__field-error">{fieldErrors.place}</span>
                           ) : null}
