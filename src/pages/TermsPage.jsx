@@ -923,7 +923,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <div className="terms-card__people-stack">
                         {people.map((person, index) => (
                           <div key={person.id} className="terms-card__person">
-                            <div className="terms-card__field terms-card__field--full">
+                            <div
+                              className={`terms-card__field terms-card__field--full${
+                                fieldErrors.people?.[person.id]?.fullName
+                                  ? ' terms-card__field--invalid'
+                                  : ''
+                              }`}
+                            >
                               <label className="terms-card__field-label">
                                 <span>Full Name {index + 1}</span>
                                 <input
@@ -945,7 +951,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             </div>
 
                             <div className="terms-card__details-grid">
-                              <label className="terms-card__field">
+                              <label
+                                className={`terms-card__field${
+                                  fieldErrors.people?.[person.id]?.age
+                                    ? ' terms-card__field--invalid'
+                                    : ''
+                                }`}
+                              >
                                 <span>Age</span>
                                 <input
                                   type="number"
@@ -965,7 +977,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 ) : null}
                               </label>
 
-                              <label className="terms-card__field">
+                              <label
+                                className={`terms-card__field${
+                                  fieldErrors.people?.[person.id]?.gender
+                                    ? ' terms-card__field--invalid'
+                                    : ''
+                                }`}
+                              >
                                 <span>Gender</span>
                                 <select
                                   value={person.gender}
@@ -986,7 +1004,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 ) : null}
                               </label>
 
-                              <label className="terms-card__field">
+                              <label
+                                className={`terms-card__field${
+                                  fieldErrors.people?.[person.id]?.phone
+                                    ? ' terms-card__field--invalid'
+                                    : ''
+                                }`}
+                              >
                                 <span>Phone Number</span>
                                 <input
                                   type="tel"
@@ -1047,7 +1071,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       </div>
 
                       <div className="terms-card__place-row">
-                        <label className="terms-card__field terms-card__field--compact terms-card__field--place">
+                        <label
+                          className={`terms-card__field terms-card__field--compact terms-card__field--place${
+                            fieldErrors.place ? ' terms-card__field--invalid' : ''
+                          }`}
+                        >
                           <span>Place</span>
                           <input
                             type="text"

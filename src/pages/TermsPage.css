@@ -922,6 +922,11 @@
   pointer-events: none;
 }
 
+.terms-card__field--invalid .terms-card__field-label > span,
+.terms-card__field--invalid > span {
+  color: #ba1a1a;
+}
+
 .terms-card__field {
   display: grid;
   gap: 8px;
@@ -971,11 +976,6 @@
 .terms-card__field textarea[aria-invalid='true'] {
   border-color: #ba1a1a;
   box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.08);
-}
-
-.terms-card__field:has(.terms-card__field-error),
-.terms-card__field--full:has(.terms-card__field-error) {
-  padding-bottom: 18px;
 }
 
 .terms-card__field textarea {
