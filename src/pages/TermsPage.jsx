@@ -192,6 +192,14 @@ function showSubmissionPopup(message) {
   window.alert(message);
 }
 
+function openWhatsAppText(message) {
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+  const popup = window.open(whatsappUrl, '_blank');
+  if (!popup) {
+    window.location.href = whatsappUrl;
+  }
+}
+
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
@@ -646,15 +654,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setPledgeAccepted(false);
 
       if (!isAdminView) {
-        const exportUrl = new URL('/pledge-export.html', window.location.origin);
-        exportUrl.searchParams.set('mode', 'download-share');
         window.__PLEDGE_EXPORT_ROWS__ = saved;
         window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
 
-        const exportPopup = window.open(exportUrl.toString(), '_blank');
-        if (!exportPopup) {
-          setTermsError('Please allow popups for this site so the PDF can download automatically.');
-        }
+        const whatsappMessage =
+          `My eye donation pledge has been submitted successfully.\n` +
+          `People added: ${saved.length}\n` +
+          `Place: ${place.trim()}`;
+
+        openWhatsAppText(whatsappMessage);
 
         onAccept?.(saved);
       }
