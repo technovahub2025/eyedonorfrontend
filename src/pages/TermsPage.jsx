@@ -128,14 +128,29 @@ function normalizeWhatsAppPhone(value) {
   return `${value || ''}`.replace(/\D/g, '');
 }
 
-function buildManualWhatsAppUrl(phone) {
+function buildCombinedWhatsAppUrl(phone, rows = []) {
   const normalizedPhone = normalizeWhatsAppPhone(phone);
 
   if (!normalizedPhone) {
     return '';
   }
 
-  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent('you registered successfully')}`;
+  const messageLines = [
+    'you registered successfully',
+    '',
+    'Submitted people:',
+    ...rows.map((row, index) => {
+      const label = row.fullName || row.name || `Person ${index + 1}`;
+      const age = row.age ?? 'N/A';
+      const gender = row.gender || 'N/A';
+      const placeText = row.place || 'N/A';
+      const phoneText = row.phone || 'N/A';
+
+      return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
+    }),
+  ];
+
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
 }
 
 function showSubmissionPopup(message) {
@@ -540,13 +555,15 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
-        saved.forEach((row) => {
-          const whatsappUrl = buildManualWhatsAppUrl(row.phone || row.mobile || row.telephone);
+        const firstPhone = saved.find((row) => row.phone || row.mobile || row.telephone);
+        const whatsappUrl = buildCombinedWhatsAppUrl(
+          firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone,
+          saved
+        );
 
-          if (whatsappUrl) {
-            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
-          }
-        });
+        if (whatsappUrl) {
+          window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
       }
       resetPeople();
       setPlace('');
