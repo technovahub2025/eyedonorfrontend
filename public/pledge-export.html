@@ -1709,6 +1709,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     const nativePreviewMode = pageMode === 'preview-native';
     const downloadMode = pageMode === 'download';
     const shareMode = pageMode === 'share';
+    const blobShareMode = pageMode === 'blob-share';
 
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
@@ -1819,7 +1820,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         previewFrame.src = previewUrl;
       }
 
-      if (!previewMode && !nativePreviewMode && !shareMode) {
+      if (!previewMode && !nativePreviewMode && !shareMode && !blobShareMode) {
         const autoDownloadLink = document.createElement('a');
         autoDownloadLink.href = previewUrl;
         autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
@@ -1827,6 +1828,16 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         document.body.appendChild(autoDownloadLink);
         autoDownloadLink.click();
         autoDownloadLink.remove();
+      }
+
+      if (blobShareMode && window.parent) {
+        window.parent.postMessage(
+          {
+            type: 'PLEDGE_PDF_BLOB_URL',
+            blobUrl: previewUrl,
+          },
+          window.location.origin
+        );
       }
 
       const sharePdfToWhatsApp = () => {
