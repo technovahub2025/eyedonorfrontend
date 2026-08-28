@@ -906,6 +906,13 @@
   width: min(320px, 100%);
 }
 
+.terms-card__field-error {
+  color: #ba1a1a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .terms-card__field {
   display: grid;
   gap: 8px;
@@ -948,6 +955,13 @@
 .terms-card__field textarea:focus {
   border-color: #00668a;
   box-shadow: 0 0 0 4px rgba(31, 76, 201, 0.12);
+}
+
+.terms-card__field input[aria-invalid='true'],
+.terms-card__field select[aria-invalid='true'],
+.terms-card__field textarea[aria-invalid='true'] {
+  border-color: #ba1a1a;
+  box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.08);
 }
 
 .terms-card__field textarea {

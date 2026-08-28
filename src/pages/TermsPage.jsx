@@ -150,6 +150,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
   const [place, setPlace] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({ place: '', people: {} });
   const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
@@ -281,6 +282,27 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setPeople((current) =>
       current.map((person) => (person.id === id ? { ...person, [field]: value } : person))
     );
+    setFieldErrors((current) => {
+      const personErrors = current.people?.[id];
+      if (!personErrors?.[field]) {
+        return current;
+      }
+
+      const nextPersonErrors = { ...(personErrors || {}) };
+      delete nextPersonErrors[field];
+
+      const nextPeopleErrors = { ...(current.people || {}) };
+      if (Object.keys(nextPersonErrors).length === 0) {
+        delete nextPeopleErrors[id];
+      } else {
+        nextPeopleErrors[id] = nextPersonErrors;
+      }
+
+      return {
+        ...current,
+        people: nextPeopleErrors,
+      };
+    });
   }
 
   function updateAdminFilter(field, value) {
@@ -383,6 +405,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
   function resetPeople() {
     setPeople([initialPerson()]);
+    setFieldErrors({ place: '', people: {} });
   }
 
   async function submitPerson(person) {
@@ -407,40 +430,71 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setSavingTerm(true);
     setTermsMessage('');
     setTermsError('');
+    setFieldErrors({ place: '', people: {} });
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
-      showSubmissionPopup('Failed to submit: Please confirm the pledge before you continue.');
       setSavingTerm(false);
       return;
     }
 
     // Check if there are at least 2 people
-    if (people.length < requiredPeopleCount) {
-      setTermsError(`Please add at least ${requiredPeopleCount} people before submitting the pledge.`);
-      showSubmissionPopup(
-        `Failed to submit: Please add at least ${requiredPeopleCount} people before submitting the pledge.`
+    const completePeopleCount = people.filter((person) => {
+      const ageValue = Number(person.age);
+      return (
+        person.fullName.trim() &&
+        Number.isFinite(ageValue) &&
+        ageValue >= 1 &&
+        person.gender &&
+        person.phone
       );
+    }).length;
+
+    if (completePeopleCount < requiredPeopleCount) {
+      setTermsError(`Please add at least ${requiredPeopleCount} complete people before submitting the pledge.`);
       setSavingTerm(false);
       return;
     }
 
-    const incomplete = people.find(
-      (person) =>
-        (person.fullName || person.age || person.gender || person.phone) &&
-        (!person.fullName || !person.age || !person.gender || !person.phone)
-    );
+    const nextFieldErrors = { place: '', people: {} };
+    let hasInlineError = false;
 
-    if (incomplete) {
-      setTermsError('Please fill in all four fields for each person you added.');
-      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
+    people.forEach((person) => {
+      const personErrors = {};
+
+      if (person.fullName && !person.fullName.trim()) {
+        personErrors.fullName = 'Please enter a full name.';
+      }
+
+      const ageValue = Number(person.age);
+      if (person.age === '' || person.age === null || person.age === undefined || !Number.isFinite(ageValue) || ageValue < 1) {
+        personErrors.age = 'Please enter a valid age.';
+      }
+
+      if (!person.gender) {
+        personErrors.gender = 'Please select a gender.';
+      }
+
+      if (!person.phone) {
+        personErrors.phone = 'Please enter a phone number.';
+      }
+
+      if (Object.keys(personErrors).length > 0) {
+        nextFieldErrors.people[person.id] = personErrors;
+        hasInlineError = true;
+      }
+    });
+
+    if (hasInlineError) {
+      setFieldErrors(nextFieldErrors);
+      setTermsError('Please fix the highlighted fields below.');
       setSavingTerm(false);
       return;
     }
 
     if (!place.trim()) {
       setTermsError('Please enter the place before submitting the pledge.');
-      showSubmissionPopup('Failed to submit: Please enter the place before submitting the pledge.');
+      setFieldErrors({ place: 'Please enter the place.', people: {} });
       setSavingTerm(false);
       return;
     }
@@ -449,9 +503,16 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (invalidPhone) {
       setTermsError('Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.');
-      showSubmissionPopup(
-        'Failed to submit: Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.'
-      );
+      setFieldErrors((current) => ({
+        ...current,
+        people: {
+          ...current.people,
+          [invalidPhone.id]: {
+            ...(current.people?.[invalidPhone.id] || {}),
+            phone: 'Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.',
+          },
+        },
+      }));
       setSavingTerm(false);
       return;
     }
@@ -496,7 +557,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }
     } catch (err) {
       setTermsError(err.message);
-      showSubmissionPopup(`Failed to submit: ${err.message}`);
     } finally {
       setSavingTerm(false);
     }
@@ -853,12 +913,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   type="text"
                                   placeholder="Enter your full name"
                                   value={person.fullName}
+                                  aria-invalid={Boolean(fieldErrors.people?.[person.id]?.fullName)}
                                   onChange={(event) =>
                                     updatePerson(person.id, 'fullName', event.target.value)
                                   }
                                   required
                                 />
                               </label>
+                              {fieldErrors.people?.[person.id]?.fullName ? (
+                                <span className="terms-card__field-error">
+                                  {fieldErrors.people[person.id].fullName}
+                                </span>
+                              ) : null}
                             </div>
 
                             <div className="terms-card__details-grid">
@@ -866,20 +932,27 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 <span>Age</span>
                                 <input
                                   type="number"
-                                  min="0"
+                                  min="1"
                                   placeholder="Enter your age"
                                   value={person.age}
+                                  aria-invalid={Boolean(fieldErrors.people?.[person.id]?.age)}
                                   onChange={(event) =>
                                     updatePerson(person.id, 'age', event.target.value)
                                   }
                                   required
                                 />
+                                {fieldErrors.people?.[person.id]?.age ? (
+                                  <span className="terms-card__field-error">
+                                    {fieldErrors.people[person.id].age}
+                                  </span>
+                                ) : null}
                               </label>
 
                               <label className="terms-card__field">
                                 <span>Gender</span>
                                 <select
                                   value={person.gender}
+                                  aria-invalid={Boolean(fieldErrors.people?.[person.id]?.gender)}
                                   onChange={(event) =>
                                     updatePerson(person.id, 'gender', event.target.value)
                                   }
@@ -889,6 +962,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   <option value="Male">Male</option>
                                   <option value="Female">Female</option>
                                 </select>
+                                {fieldErrors.people?.[person.id]?.gender ? (
+                                  <span className="terms-card__field-error">
+                                    {fieldErrors.people[person.id].gender}
+                                  </span>
+                                ) : null}
                               </label>
 
                               <label className="terms-card__field">
@@ -900,6 +978,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   pattern="[6-9][0-9]{9}"
                                   placeholder="Enter your phone number"
                                   value={person.phone}
+                                  aria-invalid={Boolean(fieldErrors.people?.[person.id]?.phone)}
                                   onChange={(event) =>
                                     updatePerson(
                                       person.id,
@@ -909,6 +988,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                   }
                                   required
                                 />
+                                {fieldErrors.people?.[person.id]?.phone ? (
+                                  <span className="terms-card__field-error">
+                                    {fieldErrors.people[person.id].phone}
+                                  </span>
+                                ) : null}
                               </label>
 
                             </div>
@@ -930,9 +1014,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                     </section>
 
                     <section className="terms-card__bottom-note" aria-label="Minimum people notice">
-                      <span className="terms-card__bottom-note-icon" aria-hidden="true">
-                        2
-                      </span>
+                     
                       <div className="terms-card__bottom-note-copy">
                         <strong>Add at least 2 people to continue</strong>
                         <span>You need at least two complete people details before submitting.</span>
@@ -954,9 +1036,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                             type="text"
                             placeholder="Enter place"
                             value={place}
-                            onChange={(event) => setPlace(event.target.value)}
+                            aria-invalid={Boolean(fieldErrors.place)}
+                            onChange={(event) => {
+                              setPlace(event.target.value);
+                              if (fieldErrors.place) {
+                                setFieldErrors((current) => ({ ...current, place: '' }));
+                              }
+                            }}
                             required
                           />
+                          {fieldErrors.place ? (
+                            <span className="terms-card__field-error">{fieldErrors.place}</span>
+                          ) : null}
                         </label>
                       </div>
                     </section>
