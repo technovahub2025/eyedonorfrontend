@@ -188,44 +188,6 @@ function validatePersonField(field, value) {
   return '';
 }
 
-function showSubmissionPopup(message) {
-  window.alert(message);
-}
-
-function openWhatsAppText(message) {
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
-  const popup = window.open(whatsappUrl, '_blank');
-  if (!popup) {
-    window.location.href = whatsappUrl;
-  }
-}
-
-function triggerHiddenPdfDownload(rows) {
-  const exportUrl = new URL('/pledge-export.html', window.location.origin);
-  exportUrl.searchParams.set('mode', 'download');
-
-  const iframe = document.createElement('iframe');
-  iframe.setAttribute('aria-hidden', 'true');
-  iframe.title = 'PDF download helper';
-  iframe.style.position = 'fixed';
-  iframe.style.width = '1px';
-  iframe.style.height = '1px';
-  iframe.style.opacity = '0';
-  iframe.style.pointerEvents = 'none';
-  iframe.style.left = '-9999px';
-  iframe.style.top = '0';
-
-  window.__PLEDGE_EXPORT_ROWS__ = rows;
-  window.localStorage?.setItem('pledge_export_rows', JSON.stringify(rows));
-
-  iframe.src = exportUrl.toString();
-  document.body.appendChild(iframe);
-
-  window.setTimeout(() => {
-    iframe.remove();
-  }, 15000);
-}
-
 function TermsPage({ adminToken, onAccept, onDecline }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
@@ -672,28 +634,11 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
       setSubmittedRows(saved);
       setTermsMessage('Your details and pledge were submitted successfully.');
-      if (!isAdminView) {
-        showSubmissionPopup('Successfully submitted.');
-      }
       resetPeople();
       setPlace('');
       setPledgeAccepted(false);
 
       if (!isAdminView) {
-        window.__PLEDGE_EXPORT_ROWS__ = saved;
-        window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
-
-        triggerHiddenPdfDownload(saved);
-
-        const whatsappMessage =
-          `My eye donation pledge has been submitted successfully.\n` +
-          `People added: ${saved.length}\n` +
-          `Place: ${place.trim()}`;
-
-        window.setTimeout(() => {
-          openWhatsAppText(whatsappMessage);
-        }, 350);
-
         onAccept?.(saved);
       }
     } catch (err) {
