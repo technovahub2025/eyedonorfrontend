@@ -501,7 +501,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsMessage('');
     setTermsError('');
     setFieldErrors({ place: '', people: {} });
-    let exportPopup = null;
 
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
@@ -588,15 +587,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
-    if (!isAdminView) {
-      exportPopup = window.open('', '_blank');
-      if (!exportPopup) {
-        setTermsError('Please allow popups for this site so the PDF can download automatically.');
-        setSavingTerm(false);
-        return;
-      }
-    }
-
     try {
       const saved = [];
       const batchId = createBatchId();
@@ -620,29 +610,25 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
-        window.__PLEDGE_EXPORT_ROWS__ = saved;
-        window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
-
-        const exportUrl = new URL('/pledge-export.html', window.location.origin).toString();
-        if (exportPopup && !exportPopup.closed) {
-          exportPopup.location.href = exportUrl;
-          exportPopup.focus();
-        } else {
-          window.open(exportUrl, '_blank');
-        }
       }
       resetPeople();
       setPlace('');
       setPledgeAccepted(false);
 
       if (!isAdminView) {
+        const exportUrl = new URL('/pledge-export.html', window.location.origin).toString();
+        window.__PLEDGE_EXPORT_ROWS__ = saved;
+        window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
+
+        const exportPopup = window.open(exportUrl, '_blank');
+        if (!exportPopup) {
+          setTermsError('Please allow popups for this site so the PDF can download automatically.');
+        }
+
         onAccept?.(saved);
       }
     } catch (err) {
       setTermsError(err.message);
-      if (exportPopup && !exportPopup.closed) {
-        exportPopup.close();
-      }
     } finally {
       setSavingTerm(false);
     }
