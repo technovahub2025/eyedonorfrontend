@@ -138,7 +138,7 @@ function validatePersonField(field, value) {
     }
 
     const ageValue = Number(text);
-    if (!Number.isFinite(ageValue) || ageValue < 1) {
+    if (!Number.isFinite(ageValue) || ageValue < 1 || ageValue > 99) {
       return 'Please enter a valid age.';
     }
 
@@ -1027,13 +1027,18 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                               >
                                 <span>Age</span>
                                 <input
-                                  type="number"
-                                  min="1"
+                                  type="text"
+                                  inputMode="numeric"
+                                  maxLength={2}
                                   placeholder="Enter your age"
                                   value={person.age}
                                   aria-invalid={Boolean(fieldErrors.people?.[person.id]?.age)}
                                   onChange={(event) =>
-                                    updatePerson(person.id, 'age', event.target.value)
+                                    updatePerson(
+                                      person.id,
+                                      'age',
+                                      event.target.value.replace(/\D/g, '').slice(0, 2)
+                                    )
                                   }
                                   onBlur={(event) => touchPersonField(person.id, 'age', event.target.value)}
                                   required
