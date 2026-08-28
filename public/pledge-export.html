@@ -931,15 +931,15 @@ main {
   .pledge-card {
     width: 100% !important;
     max-width: 100% !important;
-    aspect-ratio: 1 / 1.414 !important;
-    overflow: hidden !important;
-    transform: scale(0.94) !important;
+    aspect-ratio: auto !important;
+    overflow: visible !important;
+    transform: none !important;
     transform-origin: top center !important;
     margin: 0 auto !important;
   }
 
   .card-content {
-    padding: 1rem 1rem 0.9rem !important;
+    padding: 1rem 0.85rem 1.1rem !important;
   }
 
   .header-block {
@@ -1388,6 +1388,59 @@ body.desktop-export-mode * {
   filter: none !important;
 }
 
+body.pdf-preview-mode main,
+body.pdf-preview-mode .form-wrapper {
+  display: none !important;
+}
+
+body.pdf-preview-mode .pdf-preview-shell {
+  display: flex !important;
+}
+
+.pdf-preview-shell {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  background: #f7f9fb;
+}
+
+.pdf-preview-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  background: #ffffff;
+  border-bottom: 1px solid #c6c6cd;
+}
+
+.pdf-preview-bar strong {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  color: #191c1e;
+}
+
+.pdf-preview-bar span {
+  color: #45464d;
+  font-size: 0.88rem;
+}
+
+.pdf-preview-bar a {
+  color: #006398;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.pdf-preview-frame {
+  width: 100%;
+  flex: 1 1 auto;
+  border: 0;
+  background: #ffffff;
+}
+
 /* ----- print layout (unchanged) ----- */
 @media print {
   @page {
@@ -1635,6 +1688,17 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     </div>
   </main>
 
+  <section class="pdf-preview-shell" aria-label="Generated PDF preview">
+    <div class="pdf-preview-bar">
+      <div>
+        <strong>PDF Preview</strong>
+        <span>Review the generated pledge PDF below.</span>
+      </div>
+      <a id="pdfDownloadLink" href="#" download="jothi-eye-care-centre-pledge.pdf">Download PDF</a>
+    </div>
+    <iframe class="pdf-preview-frame" id="pdfPreviewFrame" title="PDF preview"></iframe>
+  </section>
+
   <script>
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
@@ -1706,6 +1770,31 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     function setDesktopViewMode(active) {
       document.documentElement.classList.toggle('desktop-export-mode', active);
       document.body.classList.toggle('desktop-export-mode', active);
+    }
+
+    function showPdfPreview(blob) {
+      const previewFrame = document.getElementById('pdfPreviewFrame');
+      const downloadLink = document.getElementById('pdfDownloadLink');
+      if (!previewFrame || !downloadLink) {
+        return;
+      }
+
+      const previewUrl = URL.createObjectURL(blob);
+      previewFrame.src = previewUrl;
+      downloadLink.href = previewUrl;
+      document.body.classList.add('pdf-preview-mode');
+
+      const autoDownloadLink = document.createElement('a');
+      autoDownloadLink.href = previewUrl;
+      autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
+      autoDownloadLink.style.display = 'none';
+      document.body.appendChild(autoDownloadLink);
+      autoDownloadLink.click();
+      autoDownloadLink.remove();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(previewUrl);
+      }, 60000);
     }
 
     // ----- UPDATE TABLE WITH ALL FIELDS -----
@@ -1816,7 +1905,8 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         const offsetY = (pageHeight - finalHeight) / 2;
 
         pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
-        pdf.save('jothi-eye-care-centre-pledge.pdf');
+        const pdfBlob = pdf.output('blob');
+        showPdfPreview(pdfBlob);
       } finally {
         const existingCaptureRoot = document.querySelector('[aria-hidden="true"][style*="-100000px"]');
         if (existingCaptureRoot) {
