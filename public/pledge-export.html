@@ -1509,6 +1509,10 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       return row?.fullName || row?.name || '';
     }
 
+    function getRowPlace(row) {
+      return row?.place || row?.location || '';
+    }
+
     function readFrontendRows() {
       try {
         const openerRows = window.opener && window.opener.__PLEDGE_EXPORT_ROWS__;
@@ -1574,6 +1578,23 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       tbody.innerHTML = html;
     }
 
+    function updateFooterDetails(rows) {
+      const dateEl = document.getElementById('currentDate');
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        });
+      }
+
+      const placeEl = document.querySelector('.inline-entry--place .inline-value');
+      if (placeEl) {
+        const firstPlace = Array.isArray(rows) && rows.length > 0 ? getRowPlace(rows[0]) : '';
+        placeEl.textContent = firstPlace;
+      }
+    }
+
     async function downloadPdf() {
       const card = document.querySelector('.pledge-card');
       if (!card || !window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
@@ -1623,17 +1644,9 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
       try {
-        const dateEl = document.getElementById('currentDate');
-        if (dateEl) {
-          dateEl.textContent = new Date().toLocaleDateString('en-GB', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          });
-        }
-
         const rows = readFrontendRows();
         updateTable(rows);
+        updateFooterDetails(rows);
         await new Promise((resolve) => setTimeout(resolve, 300));
         await downloadPdf();
       } catch (error) {
