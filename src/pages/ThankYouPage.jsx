@@ -1,38 +1,81 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
   CheckCircle2,
   Download,
-  Eye,
   HeartHandshake,
   ShieldCheck,
   Sparkles,
+  Share2,
 } from 'lucide-react';
-import eyeHero from '../asset/eyehero.png';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [previewReady, setPreviewReady] = useState(false);
   const showFooter = !Array.isArray(submittedRows) || submittedRows.length === 0;
+  const previewUrl = '/pledge-export.html?mode=preview';
 
-  async function handleExportPdf() {
-    setExportingPdf(true);
-
+  useEffect(() => {
+    const rows = Array.isArray(submittedRows) ? submittedRows : [];
+    setPreviewReady(false);
     try {
-      const rows = Array.isArray(submittedRows) ? submittedRows : [];
       window.__PLEDGE_EXPORT_ROWS__ = rows;
       window.localStorage?.setItem('pledge_export_rows', JSON.stringify(rows));
+    } catch (error) {
+      console.warn('Could not persist preview rows:', error);
+    }
+    setPreviewReady(true);
+  }, [submittedRows]);
 
-      const exportUrl = new URL('/pledge-export.html', window.location.origin);
+  function buildCombinedWhatsAppUrl(rows = []) {
+    const savedRows = Array.isArray(rows) ? rows : [];
+    const firstPhone = savedRows.find((row) => row.phone || row.mobile || row.telephone);
+    const normalizedPhone = `${firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone || ''}`.replace(/\D/g, '');
 
-      const popup = window.open(exportUrl.toString(), '_blank');
-      if (!popup) {
-        throw new Error('Please allow popups for this site to export the PDF.');
-      }
-    } catch (err) {
-      console.error('Export error:', err);
-    } finally {
+    if (!normalizedPhone) {
+      return '';
+    }
+
+    const messageLines = [
+      'you registered successfully',
+      '',
+      'Submitted people:',
+      ...savedRows.map((row, index) => {
+        const label = row.fullName || row.name || `Person ${index + 1}`;
+        const age = row.age ?? 'N/A';
+        const gender = row.gender || 'N/A';
+        const placeText = row.place || 'N/A';
+        const phoneText = row.phone || 'N/A';
+
+        return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
+      }),
+    ];
+
+    return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
+  }
+
+  function handleDownloadPdf() {
+    setExportingPdf(true);
+    const downloadUrl = new URL('/pledge-export.html?mode=download', window.location.origin);
+    const popup = window.open(downloadUrl.toString(), '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      window.location.href = downloadUrl.toString();
+    }
+    window.setTimeout(() => {
       setExportingPdf(false);
+    }, 600);
+  }
+
+  function handleShare() {
+    const whatsappUrl = buildCombinedWhatsAppUrl(submittedRows);
+    if (!whatsappUrl) {
+      return;
+    }
+
+    const popup = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      window.location.href = whatsappUrl;
     }
   }
 
@@ -74,12 +117,22 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
             <button
               className="thank-you-page__button thank-you-page__button--ghost"
               type="button"
-              onClick={handleExportPdf}
+              onClick={handleDownloadPdf}
               disabled={exportingPdf}
               title="Download PDF"
             >
               <Download aria-hidden="true" />
-              <span>{exportingPdf ? 'Generating...' : 'Export PDF'}</span>
+              <span>{exportingPdf ? 'Generating...' : 'Download PDF'}</span>
+            </button>
+
+            <button
+              className="thank-you-page__button thank-you-page__button--secondary"
+              type="button"
+              onClick={handleShare}
+              title="Share on WhatsApp"
+            >
+              <Share2 aria-hidden="true" />
+              <span>Share</span>
             </button>
 
           </div>
@@ -102,36 +155,40 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
           </div>
         </section>
 
-        <aside className="thank-you-page__visual" aria-label="Celebration illustration">
-          <div className="thank-you-page__halo" aria-hidden="true">
-            <img className="thank-you-page__hero-image" src={eyeHero} alt="" aria-hidden="true" />
-            <div className="thank-you-page__eye-rings" />
-            <div className="thank-you-page__floating thank-you-page__floating--heart">
-              <HeartHandshake aria-hidden="true" />
+        <section className="thank-you-page__preview-panel" aria-label="PDF preview">
+          <div className="thank-you-page__preview-head">
+            <div>
+              <p className="thank-you-page__preview-kicker">PDF Preview</p>
+              <h2>Review the generated pledge PDF</h2>
             </div>
-            <div className="thank-you-page__floating thank-you-page__floating--shield">
-              <ShieldCheck aria-hidden="true" />
-            </div>
-            <div className="thank-you-page__floating thank-you-page__floating--eye">
-              <Eye aria-hidden="true" />
+            <div className="thank-you-page__preview-actions">
+              <button
+                className="thank-you-page__button thank-you-page__button--secondary"
+                type="button"
+                onClick={handleDownloadPdf}
+              >
+                <Download aria-hidden="true" />
+                <span>Download</span>
+              </button>
+              <button
+                className="thank-you-page__button thank-you-page__button--secondary"
+                type="button"
+                onClick={handleShare}
+              >
+                <Share2 aria-hidden="true" />
+                <span>Share</span>
+              </button>
             </div>
           </div>
-
-          <div className="thank-you-page__stats">
-            <article className="thank-you-page__stat">
-              <strong>Submitted</strong>
-              <span>Your pledge is now recorded</span>
-            </article>
-            <article className="thank-you-page__stat">
-              <strong>One step</strong>
-              <span>Closer to helping someone see again</span>
-            </article>
-            <article className="thank-you-page__stat">
-              <strong>Thank you</strong>
-              <span>For choosing a compassionate path</span>
-            </article>
+          <div className="thank-you-page__preview-frame-wrap">
+            <iframe
+              key={previewReady ? previewUrl : 'preview-loading'}
+              className="thank-you-page__preview-frame"
+              src={previewReady ? previewUrl : 'about:blank'}
+              title="Pledge PDF preview"
+            />
           </div>
-        </aside>
+        </section>
 
         {showFooter ? (
           <section className="thank-you-page__footer-card">

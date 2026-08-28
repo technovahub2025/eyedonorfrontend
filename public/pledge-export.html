@@ -1397,6 +1397,10 @@ body.pdf-preview-mode .pdf-preview-shell {
   display: flex !important;
 }
 
+body.preview-mode .pdf-preview-bar {
+  display: none !important;
+}
+
 .pdf-preview-shell {
   display: none;
   position: fixed;
@@ -1700,6 +1704,10 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
   </section>
 
   <script>
+    const pageMode = new URLSearchParams(window.location.search).get('mode') || 'auto';
+    const previewMode = pageMode === 'preview';
+    const downloadMode = pageMode === 'download';
+
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
       return String(value ?? '')
@@ -1769,6 +1777,13 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
 
     function readFrontendRows() {
       try {
+        const parentRows = window.parent && window.parent !== window && window.parent.__PLEDGE_EXPORT_ROWS__;
+        if (Array.isArray(parentRows)) return parentRows;
+      } catch (error) {
+        console.warn('Could not read rows from parent:', error);
+      }
+
+      try {
         const openerRows = window.opener && window.opener.__PLEDGE_EXPORT_ROWS__;
         if (Array.isArray(openerRows)) return openerRows;
       } catch (error) {
@@ -1825,16 +1840,21 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       previewFrame.src = previewUrl;
       downloadLink.href = previewUrl;
       document.body.classList.add('pdf-preview-mode');
+      if (previewMode) {
+        document.body.classList.add('preview-mode');
+      }
 
-      const autoDownloadLink = document.createElement('a');
-      autoDownloadLink.href = previewUrl;
-      autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
-      autoDownloadLink.style.display = 'none';
-      document.body.appendChild(autoDownloadLink);
-      autoDownloadLink.click();
-      autoDownloadLink.remove();
+      if (!previewMode) {
+        const autoDownloadLink = document.createElement('a');
+        autoDownloadLink.href = previewUrl;
+        autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
+        autoDownloadLink.style.display = 'none';
+        document.body.appendChild(autoDownloadLink);
+        autoDownloadLink.click();
+        autoDownloadLink.remove();
+      }
 
-      if (Array.isArray(rows) && rows.length > 0) {
+      if (!previewMode && !downloadMode && Array.isArray(rows) && rows.length > 0) {
         setTimeout(() => {
           openCombinedWhatsApp(rows);
         }, 200);
@@ -1967,6 +1987,9 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     async function loadData() {
       try {
         setDesktopViewMode(true);
+        if (previewMode) {
+          document.body.classList.add('preview-mode');
+        }
         const rows = readFrontendRows();
         try {
           window.localStorage?.removeItem('pledge_export_rows');
