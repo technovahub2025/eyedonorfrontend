@@ -1706,7 +1706,9 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
   <script>
     const pageMode = new URLSearchParams(window.location.search).get('mode') || 'auto';
     const previewMode = pageMode === 'preview';
+    const nativePreviewMode = pageMode === 'preview-native';
     const downloadMode = pageMode === 'download';
+    const shareMode = pageMode === 'share';
 
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
@@ -1735,44 +1737,6 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
 
     function normalizeWhatsAppPhone(value) {
       return `${value || ''}`.replace(/\D/g, '');
-    }
-
-    function buildCombinedWhatsAppUrl(rows = []) {
-      const savedRows = Array.isArray(rows) ? rows : [];
-      const firstPhone = savedRows.find((row) => row.phone || row.mobile || row.telephone);
-      const normalizedPhone = normalizeWhatsAppPhone(
-        firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone
-      );
-
-      if (!normalizedPhone) {
-        return '';
-      }
-
-      const messageLines = [
-        'you registered successfully',
-        '',
-        'Submitted people:',
-        ...savedRows.map((row, index) => {
-          const label = row.fullName || row.name || `Person ${index + 1}`;
-          const age = row.age ?? 'N/A';
-          const gender = row.gender || 'N/A';
-          const placeText = row.place || 'N/A';
-          const phoneText = row.phone || 'N/A';
-
-          return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
-        }),
-      ];
-
-      return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
-    }
-
-    function openCombinedWhatsApp(rows = []) {
-      const whatsappUrl = buildCombinedWhatsAppUrl(rows);
-      if (!whatsappUrl) {
-        return;
-      }
-
-      window.location.href = whatsappUrl;
     }
 
     function readFrontendRows() {
@@ -1837,14 +1801,25 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       }
 
       const previewUrl = URL.createObjectURL(blob);
-      previewFrame.src = previewUrl;
       downloadLink.href = previewUrl;
-      document.body.classList.add('pdf-preview-mode');
+
+      const shouldShowPreviewShell = previewMode || nativePreviewMode;
+      if (shouldShowPreviewShell) {
+        document.body.classList.add('pdf-preview-mode');
+      }
       if (previewMode) {
         document.body.classList.add('preview-mode');
       }
 
-      if (!previewMode) {
+      if (nativePreviewMode) {
+        setTimeout(() => {
+          window.location.href = previewUrl;
+        }, 50);
+      } else {
+        previewFrame.src = previewUrl;
+      }
+
+      if (!previewMode && !nativePreviewMode && !shareMode) {
         const autoDownloadLink = document.createElement('a');
         autoDownloadLink.href = previewUrl;
         autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
@@ -1854,10 +1829,36 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         autoDownloadLink.remove();
       }
 
-      if (!previewMode && !downloadMode && Array.isArray(rows) && rows.length > 0) {
-        setTimeout(() => {
-          openCombinedWhatsApp(rows);
-        }, 200);
+      if (shareMode) {
+        const pdfFile = new File([blob], 'jothi-eye-care-centre-pledge.pdf', {
+          type: 'application/pdf',
+        });
+
+        const canShareFiles = Boolean(
+          navigator.share &&
+            (!navigator.canShare || navigator.canShare({ files: [pdfFile] }))
+        );
+
+        if (canShareFiles) {
+          setTimeout(async () => {
+            try {
+              await navigator.share({
+                files: [pdfFile],
+                title: 'Jothi Eye Care Centre pledge',
+              });
+            } catch (error) {
+              console.warn('PDF share was cancelled or unavailable:', error);
+            }
+          }, 200);
+        } else {
+          const autoDownloadLink = document.createElement('a');
+          autoDownloadLink.href = previewUrl;
+          autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
+          autoDownloadLink.style.display = 'none';
+          document.body.appendChild(autoDownloadLink);
+          autoDownloadLink.click();
+          autoDownloadLink.remove();
+        }
       }
 
       setTimeout(() => {
@@ -1917,7 +1918,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       }
     }
 
-    async function downloadPdf() {
+    async function downloadPdf(rows = []) {
       const card = document.querySelector('.pledge-card');
       if (!card || !window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
         throw new Error('PDF tools are still loading.');
@@ -1974,7 +1975,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
 
         pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
         const pdfBlob = pdf.output('blob');
-        showPdfPreview(pdfBlob, readFrontendRows());
+        showPdfPreview(pdfBlob, rows);
       } finally {
         const existingCaptureRoot = document.querySelector('[aria-hidden="true"][style*="-100000px"]');
         if (existingCaptureRoot) {
@@ -1987,19 +1988,14 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     async function loadData() {
       try {
         setDesktopViewMode(true);
-        if (previewMode) {
+        if (previewMode || nativePreviewMode) {
           document.body.classList.add('preview-mode');
         }
         const rows = readFrontendRows();
-        try {
-          window.localStorage?.removeItem('pledge_export_rows');
-        } catch (error) {
-          console.warn('Could not clear stored export rows:', error);
-        }
         updateTable(rows);
         updateFooterDetails(rows);
         await new Promise((resolve) => setTimeout(resolve, 300));
-        await downloadPdf();
+        await downloadPdf(rows);
       } catch (error) {
         console.error('Error:', error);
         updateTable([]);

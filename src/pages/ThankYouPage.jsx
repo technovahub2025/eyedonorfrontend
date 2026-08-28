@@ -4,61 +4,39 @@ import {
   CheckCircle2,
   Download,
   HeartHandshake,
+  Eye,
   ShieldCheck,
   Sparkles,
   Share2,
 } from 'lucide-react';
+import pdfSeal from '../asset/pdf.png';
 import './ThankYouPage.css';
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
-  const [previewReady, setPreviewReady] = useState(false);
+  const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
   const showFooter = !Array.isArray(submittedRows) || submittedRows.length === 0;
-  const previewUrl = '/pledge-export.html?mode=preview';
+  const exportBaseUrl = new URL('/pledge-export.html', window.location.origin);
+  const previewRows = Array.isArray(submittedRows) ? submittedRows : [];
+  const previewPlace = previewRows[0]?.place || 'Place not set';
+  const previewDate = new Date().toLocaleDateString('en-GB');
+  const isMobilePreview = typeof window !== 'undefined' && window.innerWidth <= 640;
 
   useEffect(() => {
     const rows = Array.isArray(submittedRows) ? submittedRows : [];
-    setPreviewReady(false);
     try {
       window.__PLEDGE_EXPORT_ROWS__ = rows;
       window.localStorage?.setItem('pledge_export_rows', JSON.stringify(rows));
     } catch (error) {
       console.warn('Could not persist preview rows:', error);
     }
-    setPreviewReady(true);
   }, [submittedRows]);
-
-  function buildCombinedWhatsAppUrl(rows = []) {
-    const savedRows = Array.isArray(rows) ? rows : [];
-    const firstPhone = savedRows.find((row) => row.phone || row.mobile || row.telephone);
-    const normalizedPhone = `${firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone || ''}`.replace(/\D/g, '');
-
-    if (!normalizedPhone) {
-      return '';
-    }
-
-    const messageLines = [
-      'you registered successfully',
-      '',
-      'Submitted people:',
-      ...savedRows.map((row, index) => {
-        const label = row.fullName || row.name || `Person ${index + 1}`;
-        const age = row.age ?? 'N/A';
-        const gender = row.gender || 'N/A';
-        const placeText = row.place || 'N/A';
-        const phoneText = row.phone || 'N/A';
-
-        return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
-      }),
-    ];
-
-    return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
-  }
 
   function handleDownloadPdf() {
     setExportingPdf(true);
-    const downloadUrl = new URL('/pledge-export.html?mode=download', window.location.origin);
-    const popup = window.open(downloadUrl.toString(), '_blank', 'noopener,noreferrer');
+    const downloadUrl = new URL(exportBaseUrl);
+    downloadUrl.searchParams.set('mode', 'download');
+    const popup = window.open(downloadUrl.toString(), '_blank');
     if (!popup) {
       window.location.href = downloadUrl.toString();
     }
@@ -67,20 +45,160 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     }, 600);
   }
 
-  function handleShare() {
-    const whatsappUrl = buildCombinedWhatsAppUrl(submittedRows);
-    if (!whatsappUrl) {
-      return;
-    }
-
-    const popup = window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  function handleSharePdf() {
+    const shareUrl = new URL(exportBaseUrl);
+    shareUrl.searchParams.set('mode', 'share');
+    const popup = window.open(shareUrl.toString(), '_blank');
     if (!popup) {
-      window.location.href = whatsappUrl;
+      window.location.href = shareUrl.toString();
     }
+  }
+
+  function handleShare() {
+    handleSharePdf();
+  }
+
+  function renderPreviewSheet() {
+    return (
+      <div className="thank-you-page__preview-sheet-inner">
+        <div className="thank-you-page__preview-export-header">
+          <img src={pdfSeal} alt="" className="thank-you-page__preview-seal" />
+          <div className="thank-you-page__preview-title-block">
+            <h3>Family Eye Donation Pledge Form</h3>
+            <span className="thank-you-page__preview-subtitle">
+              "Eye Donation, let us make it our Family Tradition !! Let us light up lives !!!"
+            </span>
+            <div className="thank-you-page__preview-contact-line">
+              <span>
+                <strong>Address:</strong> JOTHI EYE CARE CENTRE, 152 &amp; 154, Calve Subraya Chetty Street, Puducherry-605 001.
+              </span>
+              <span>
+                <strong>Phone:</strong> +91-413-2224534, +91-413-2337659
+              </span>
+              <span>
+                <strong>Email:</strong> jothieyecare@gmail.com
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="thank-you-page__preview-bank-row">
+          <div className="thank-you-page__preview-bank-left">
+            <span className="thank-you-page__preview-bank-name">JOTHI EYE BANK</span>
+            <span className="thank-you-page__preview-bank-detail">
+              Run by JOTHI EYE CARE FOUNDATION (Society) @ JOTHI EYE CARE CENTRE
+            </span>
+          </div>
+          <div className="thank-you-page__preview-bank-right">
+            <span className="thank-you-page__preview-bank-label">FOR EYE DONATION</span>
+            <strong>Toll No. 1919</strong>
+            <span>[Free (BSNL) Service]</span>
+          </div>
+        </div>
+
+        <p className="thank-you-page__preview-page-lead">
+          I AM A PROUD EYE DONOR AND AMBASSADOR
+        </p>
+
+        <div className="thank-you-page__preview-table-wrap">
+          <table className="thank-you-page__preview-table">
+            <thead>
+              <tr>
+                <th>S.NO</th>
+                <th>Title</th>
+                <th>NAME</th>
+                <th>AGE</th>
+                <th>GENDER</th>
+                <th>PHONE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {previewRows.length > 0 ? (
+                previewRows.map((row, index) => {
+                  const title = row.title || (row.gender === 'Female' ? 'Ms.' : 'Mr.');
+
+                  return (
+                    <tr key={row.id || `${row.fullName}-${index}`}>
+                      <td>{index + 1}</td>
+                      <td>{title}</td>
+                      <td>{row.fullName || row.name || 'N/A'}</td>
+                      <td>{row.age || 'N/A'}</td>
+                      <td>{row.gender || 'N/A'}</td>
+                      <td>{row.phone || 'N/A'}</td>
+                    </tr>
+                  );
+                })
+              ) : (
+                <tr>
+                  <td colSpan="6">No submitted data available yet.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="thank-you-page__preview-bottom-block">
+          <div>
+            <span className="thank-you-page__preview-bottom-label">DATE:</span>
+            <strong>{previewDate}</strong>
+          </div>
+          <div>
+            <span className="thank-you-page__preview-bottom-label">PLACE:</span>
+            <strong>{previewPlace}</strong>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderPreviewPanel() {
+    return (
+      <section className="thank-you-page__preview-panel" aria-label="Pledge preview">
+        <div className="thank-you-page__preview-head">
+          <div>
+            <p className="thank-you-page__preview-kicker">Preview</p>
+            <h2>Exact pledge page layout</h2>
+          </div>
+          <div className="thank-you-page__preview-meta">
+            <span>{previewRows.length} people</span>
+            <span>{previewPlace}</span>
+          </div>
+        </div>
+
+        <div className="thank-you-page__preview-sheet">
+          {renderPreviewSheet()}
+        </div>
+      </section>
+    );
   }
 
   return (
     <div className="thank-you-page">
+      {mobilePreviewOpen ? (
+        <div className="thank-you-page__mobile-preview-screen" role="dialog" aria-label="Pledge preview screen">
+          <div className="thank-you-page__mobile-preview-topbar">
+            <button
+              className="thank-you-page__mobile-preview-close"
+              type="button"
+              onClick={() => setMobilePreviewOpen(false)}
+            >
+              <ArrowLeft aria-hidden="true" />
+              <span>Back</span>
+            </button>
+            <div className="thank-you-page__mobile-preview-title">
+              <p>Preview</p>
+              <strong>Pledge page</strong>
+            </div>
+          </div>
+
+          <div className="thank-you-page__mobile-preview-body">
+            <div className="thank-you-page__mobile-preview-page">
+              {renderPreviewSheet()}
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <main className="thank-you-page__shell">
         <section className="thank-you-page__card">
           <div className="thank-you-page__badge">
@@ -129,13 +247,27 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               className="thank-you-page__button thank-you-page__button--secondary"
               type="button"
               onClick={handleShare}
-              title="Share on WhatsApp"
+              title="Share PDF to WhatsApp"
             >
               <Share2 aria-hidden="true" />
-              <span>Share</span>
+              <span>Share PDF</span>
             </button>
 
+            {isMobilePreview ? (
+              <button
+                className="thank-you-page__button thank-you-page__button--ghost thank-you-page__button--preview"
+                type="button"
+                onClick={() => setMobilePreviewOpen(true)}
+                title="Open preview"
+              >
+                <Eye aria-hidden="true" />
+                <span>Preview PDF</span>
+              </button>
+            ) : null}
+
           </div>
+
+          {!isMobilePreview ? renderPreviewPanel() : null}
 
           <div className="thank-you-page__mini-notes">
             <article className="thank-you-page__note">
@@ -152,41 +284,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
                 <span>You helped create a hopeful path</span>
               </div>
             </article>
-          </div>
-        </section>
-
-        <section className="thank-you-page__preview-panel" aria-label="PDF preview">
-          <div className="thank-you-page__preview-head">
-            <div>
-              <p className="thank-you-page__preview-kicker">PDF Preview</p>
-              <h2>Review the generated pledge PDF</h2>
-            </div>
-            <div className="thank-you-page__preview-actions">
-              <button
-                className="thank-you-page__button thank-you-page__button--secondary"
-                type="button"
-                onClick={handleDownloadPdf}
-              >
-                <Download aria-hidden="true" />
-                <span>Download</span>
-              </button>
-              <button
-                className="thank-you-page__button thank-you-page__button--secondary"
-                type="button"
-                onClick={handleShare}
-              >
-                <Share2 aria-hidden="true" />
-                <span>Share</span>
-              </button>
-            </div>
-          </div>
-          <div className="thank-you-page__preview-frame-wrap">
-            <iframe
-              key={previewReady ? previewUrl : 'preview-loading'}
-              className="thank-you-page__preview-frame"
-              src={previewReady ? previewUrl : 'about:blank'}
-              title="Pledge PDF preview"
-            />
           </div>
         </section>
 
