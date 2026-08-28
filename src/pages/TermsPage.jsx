@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
-  ClipboardList,
   Download,
-  Handshake,
   Heart,
   Plus,
   ShieldCheck,
@@ -26,10 +24,42 @@ const createTermsEndpoint = '/api/terms/createterms';
 const requiredPeopleCount = 2;
 const adminRowsPerPage = 20;
 
-const pledgePoints = [
-  'I understand this is a voluntary pledge.',
-  'I agree to share accurate details with the admin team.',
-  'I am ready to continue to the final thank you step.',
+const mythsAndFacts = [
+  {
+    myth: 'Only young, healthy people can donate.',
+    fact:
+      'Age, spectacles, diabetes, or hypertension are no bar. Almost anyone can pledge, except in cases of active systemic infections like HIV or Hepatitis, or other blood-borne diseases.',
+  },
+  {
+    myth: 'Donation disfigures the face.',
+    fact:
+      'Harvesting takes about 20 minutes, is performed by trained professionals, and does not alter the donor\'s facial appearance.',
+  },
+  {
+    myth: 'The entire eyeball is removed for transplant.',
+    fact:
+      'Only the thin, clear front layer of the eye, the cornea, is retrieved for transplantation.',
+  },
+  {
+    myth: 'Pledging eyes automatically guarantees donation after death.',
+    fact:
+      'A pledge is an expression of intent. At the time of passing, written consent from immediate family is legally mandatory for harvesting to proceed.',
+  },
+  {
+    myth: 'My family has to be eye donors too.',
+    fact:
+      'You can pledge individually, and no one else in your family needs to. You can also donate your loved one\'s eyes even if they have not pledged.',
+  },
+  {
+    myth: 'Previous eye surgeries or poor vision prevent donation.',
+    fact:
+      'Cataract surgery, LASIK, or refractive errors do not affect the clarity of the cornea or exclude someone from donating.',
+  },
+  {
+    myth: 'Eye donation delays funeral rites or costs money.',
+    fact:
+      'Harvesting is completed quickly without delaying funeral arrangements, and the service is entirely free of cost.',
+  },
 ];
 
 let personId = 0;
@@ -931,36 +961,30 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                     </section>
 
-                    <section className="terms-card__section terms-card__section--pledge" aria-label="Pledge points">
+                    <section className="terms-card__section terms-card__section--pledge" aria-label="Myths and facts">
                       <div className="terms-card__section-header">
                         <div className="terms-card__section-title">
                           <ShieldCheck aria-hidden="true" />
-                          <span>YOUR PLEDGE</span>
+                          <span>MYTHS &amp; FACTS</span>
                         </div>
                       </div>
 
-                      <div className="terms-card__scroll">
-                        {pledgePoints.map((point, index) => {
-                          const rowIcons = [Handshake, ClipboardList, Heart];
-                          const RowIcon = rowIcons[index] || Heart;
-
-                          return (
-                            <article key={point} className="terms-card__row">
-                              <div className="terms-card__row-index">
-                                {String(index + 1).padStart(2, '0')}
+                      <div className="terms-card__myths-grid">
+                        {mythsAndFacts.map((item, index) => (
+                          <article key={item.myth} className="terms-card__myth-item">
+                            <div className="terms-card__myth-badge">0{index + 1}</div>
+                            <div className="terms-card__myth-pair">
+                              <div className="terms-card__myth-box terms-card__myth-box--wrong">
+                                <span className="terms-card__myth-label">Myth</span>
+                                <p>{item.myth}</p>
                               </div>
-                              <div className="terms-card__row-icon">
-                                <RowIcon aria-hidden="true" />
+                              <div className="terms-card__myth-box terms-card__myth-box--right">
+                                <span className="terms-card__myth-label">Fact</span>
+                                <p>{item.fact}</p>
                               </div>
-                              <div className="terms-card__row-content">
-                                <div className="terms-card__row-heading">
-                                  <h3>Pledge  {index + 1}</h3>
-                                </div>
-                                <p>{point}</p>
-                              </div>
-                            </article>
-                          );
-                        })}
+                            </div>
+                          </article>
+                        ))}
                       </div>
                     </section>
 

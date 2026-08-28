@@ -1100,6 +1100,106 @@
   grid-column: 1 / -1;
 }
 
+.terms-card__myths-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.terms-card__myth-item {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(31, 76, 201, 0.12);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.terms-card__myth-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(31, 76, 201, 0.12), rgba(255, 255, 255, 0.98));
+  color: #17316f;
+  font-size: 0.86rem;
+  font-weight: 900;
+  box-shadow: 0 10px 20px rgba(31, 76, 201, 0.08);
+}
+
+.terms-card__myth-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  padding-top: 26px;
+}
+
+.terms-card__myth-box {
+  min-width: 0;
+  border-radius: 16px;
+  padding: 14px 14px 13px;
+  border: 1px solid transparent;
+  display: grid;
+  gap: 8px;
+}
+
+.terms-card__myth-box p {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.terms-card__myth-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.terms-card__myth-box--wrong {
+  background: linear-gradient(135deg, rgba(186, 26, 26, 0.1), rgba(255, 255, 255, 0.96));
+  border-color: rgba(186, 26, 26, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.terms-card__myth-box--wrong .terms-card__myth-label {
+  background: rgba(186, 26, 26, 0.12);
+  color: #ba1a1a;
+}
+
+.terms-card__myth-box--wrong p {
+  color: #8f1f1f;
+}
+
+.terms-card__myth-box--right {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(255, 255, 255, 0.96));
+  border-color: rgba(16, 185, 129, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.terms-card__myth-box--right .terms-card__myth-label {
+  background: rgba(16, 185, 129, 0.14);
+  color: #0f7a57;
+}
+
+.terms-card__myth-box--right p {
+  color: #0f5132;
+}
+
 .terms-card__form-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -1639,6 +1739,37 @@
   .terms-card__row {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .terms-card__myth-item {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .terms-card__myth-badge {
+    position: static;
+    width: fit-content;
+    min-width: 36px;
+    height: 36px;
+  }
+
+  .terms-card__myth-pair {
+    grid-template-columns: 1fr;
+    padding-top: 0;
+  }
+
+  .terms-card__myth-box {
+    padding: 12px 12px 11px;
+    border-radius: 14px;
+  }
+
+  .terms-card__myth-box p {
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+
+  .terms-card__myth-label {
+    font-size: 0.7rem;
   }
 
   .terms-card__field {
