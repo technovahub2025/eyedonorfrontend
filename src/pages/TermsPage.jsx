@@ -124,35 +124,6 @@ function isValidMobileNumber(value) {
   return /^[6-9]\d{9}$/.test(`${value || ''}`.trim());
 }
 
-function normalizeWhatsAppPhone(value) {
-  return `${value || ''}`.replace(/\D/g, '');
-}
-
-function buildCombinedWhatsAppUrl(phone, rows = []) {
-  const normalizedPhone = normalizeWhatsAppPhone(phone);
-
-  if (!normalizedPhone) {
-    return '';
-  }
-
-  const messageLines = [
-    'you registered successfully',
-    '',
-    'Submitted people:',
-    ...rows.map((row, index) => {
-      const label = row.fullName || row.name || `Person ${index + 1}`;
-      const age = row.age ?? 'N/A';
-      const gender = row.gender || 'N/A';
-      const placeText = row.place || 'N/A';
-      const phoneText = row.phone || 'N/A';
-
-      return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
-    }),
-  ];
-
-  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
-}
-
 function showSubmissionPopup(message) {
   window.alert(message);
 }
@@ -447,15 +418,8 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setTermsError('');
     setFieldErrors({ place: '', people: {} });
 
-    const whatsappPopup = !isAdminView
-      ? window.open('', '_blank', 'noopener,noreferrer')
-      : null;
-
     if (!pledgeAccepted) {
       setTermsError('Please confirm the pledge before you continue.');
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
       setSavingTerm(false);
       return;
     }
@@ -474,9 +438,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     if (completePeopleCount < requiredPeopleCount) {
       setTermsError(`Please add at least ${requiredPeopleCount} complete people before submitting the pledge.`);
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
       setSavingTerm(false);
       return;
     }
@@ -513,9 +474,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     if (hasInlineError) {
       setFieldErrors(nextFieldErrors);
       setTermsError('Please fix the highlighted fields below.');
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
       setSavingTerm(false);
       return;
     }
@@ -523,16 +481,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     if (!place.trim()) {
       setTermsError('Please enter the place before submitting the pledge.');
       setFieldErrors({ place: 'Please enter the place.', people: {} });
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
       setSavingTerm(false);
       return;
     }
 
     const invalidPhone = people.find((person) => !isValidMobileNumber(person.phone));
 
-    if (invalidPhone) {
+      if (invalidPhone) {
       setTermsError('Phone number must be exactly 10 digits and start with 6, 7, 8, or 9.');
       setFieldErrors((current) => ({
         ...current,
@@ -544,9 +499,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
           },
         },
       }));
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
       setSavingTerm(false);
       return;
     }
@@ -574,22 +526,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         showSubmissionPopup('Successfully submitted.');
-        const firstPhone = saved.find((row) => row.phone || row.mobile || row.telephone);
-        const whatsappUrl = buildCombinedWhatsAppUrl(
-          firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone,
-          saved
-        );
-
-        if (whatsappUrl) {
-          if (whatsappPopup && !whatsappPopup.closed) {
-            whatsappPopup.location.href = whatsappUrl;
-            whatsappPopup.focus();
-          } else {
-            window.location.href = whatsappUrl;
-          }
-        } else if (whatsappPopup && !whatsappPopup.closed) {
-          whatsappPopup.close();
-        }
       }
       resetPeople();
       setPlace('');
@@ -600,9 +536,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       }
     } catch (err) {
       setTermsError(err.message);
-      if (whatsappPopup && !whatsappPopup.closed) {
-        whatsappPopup.close();
-      }
     } finally {
       setSavingTerm(false);
     }

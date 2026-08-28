@@ -11,8 +11,42 @@ import {
 import eyeHero from '../asset/eyehero.png';
 import './ThankYouPage.css';
 
+function normalizeWhatsAppPhone(value) {
+  return `${value || ''}`.replace(/\D/g, '');
+}
+
+function buildCombinedWhatsAppUrl(rows = []) {
+  const savedRows = Array.isArray(rows) ? rows : [];
+  const firstPhone = savedRows.find((row) => row.phone || row.mobile || row.telephone);
+  const normalizedPhone = normalizeWhatsAppPhone(
+    firstPhone?.phone || firstPhone?.mobile || firstPhone?.telephone
+  );
+
+  if (!normalizedPhone) {
+    return '';
+  }
+
+  const messageLines = [
+    'you registered successfully',
+    '',
+    'Submitted people:',
+    ...savedRows.map((row, index) => {
+      const label = row.fullName || row.name || `Person ${index + 1}`;
+      const age = row.age ?? 'N/A';
+      const gender = row.gender || 'N/A';
+      const placeText = row.place || 'N/A';
+      const phoneText = row.phone || 'N/A';
+
+      return `${index + 1}. ${label} | Age: ${age} | Gender: ${gender} | Place: ${placeText} | Phone: ${phoneText}`;
+    }),
+  ];
+
+  return `https://wa.me/${normalizedPhone}?text=${encodeURIComponent(messageLines.join('\n'))}`;
+}
+
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [pdfExported, setPdfExported] = useState(false);
 
   async function handleExportPdf() {
     setExportingPdf(true);
@@ -28,11 +62,21 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
       if (!popup) {
         throw new Error('Please allow popups for this site to export the PDF.');
       }
+      setPdfExported(true);
     } catch (err) {
       console.error('Export error:', err);
     } finally {
       setExportingPdf(false);
     }
+  }
+
+  function handleOpenWhatsApp() {
+    const whatsappUrl = buildCombinedWhatsAppUrl(submittedRows);
+    if (!whatsappUrl) {
+      return;
+    }
+
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -80,6 +124,19 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               <Download aria-hidden="true" />
               <span>{exportingPdf ? 'Generating...' : 'Export PDF'}</span>
             </button>
+
+            {pdfExported ? (
+              <button
+                className="thank-you-page__button thank-you-page__button--secondary"
+                type="button"
+                onClick={handleOpenWhatsApp}
+              >
+                <span className="material-symbols-outlined" aria-hidden="true">
+                  whatsapp
+                </span>
+                <span>Open WhatsApp</span>
+              </button>
+            ) : null}
           </div>
 
           <div className="thank-you-page__mini-notes">

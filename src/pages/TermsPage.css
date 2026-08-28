@@ -1393,6 +1393,31 @@
     grid-template-columns: 1fr;
   }
 
+  .terms-card__field--compact {
+    max-width: none;
+    width: 100%;
+  }
+
+  .terms-card__place-row {
+    width: 100%;
+  }
+
+  .terms-card__field {
+    gap: 6px;
+  }
+
+  .terms-card__field-error {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    padding: 0;
+    margin-top: 2px;
+    background: transparent;
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
   .terms-card__person {
     padding: 12px;
   }
@@ -1530,6 +1555,26 @@
   .terms-card__row {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .terms-card__field {
+    gap: 5px;
+  }
+
+  .terms-card__field span {
+    font-size: 0.8rem;
+  }
+
+  .terms-card__field input,
+  .terms-card__field select,
+  .terms-card__field textarea {
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  .terms-card__field-error {
+    font-size: 0.7rem;
+    margin-top: 1px;
   }
 
   .terms-card__row-index,
