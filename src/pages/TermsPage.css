@@ -1662,7 +1662,7 @@
 }
 
 .terms-card__person-delete:disabled {
-  opacity: 1;
+  opacity: 1 !important;
   cursor: not-allowed;
   box-shadow:
     0 10px 22px rgba(185, 28, 28, 0.12),
@@ -1670,9 +1670,10 @@
   transform: none;
   background:
     linear-gradient(135deg, #ffb0ab 0%, #ef746d 50%, #d5534e 100%);
-  border-color: rgba(185, 28, 28, 0.16);
-  color: rgba(255, 255, 255, 0.84);
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.84);
+  border-color: rgba(185, 28, 28, 0.18) !important;
+  color: rgba(255, 255, 255, 0.96) !important;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0.96) !important;
+  filter: none !important;
 }
 
 .terms-card__person-delete svg {
