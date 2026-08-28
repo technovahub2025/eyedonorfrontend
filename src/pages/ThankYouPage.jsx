@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -12,10 +12,9 @@ import {
 import pdfSeal from '../asset/pdf.png';
 import './ThankYouPage.css';
 
-function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
+function ThankYouPage({ onRestart, onRoleSelect, onSharePdf, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
-  const shareIframeRef = useRef(null);
   const showFooter = !Array.isArray(submittedRows) || submittedRows.length === 0;
   const exportBaseUrl = new URL('/pledge-export.html', window.location.origin);
   const previewRows = Array.isArray(submittedRows) ? submittedRows : [];
@@ -33,57 +32,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     }
   }, [submittedRows]);
 
-  useEffect(() => {
-    async function handleShareMessage(event) {
-      if (event.origin !== window.location.origin) {
-        return;
-      }
-
-      if (event.data?.type !== 'PLEDGE_PDF_BLOB_URL') {
-        return;
-      }
-
-      const blobUrl = event.data.blobUrl;
-      if (!blobUrl) {
-        return;
-      }
-
-      try {
-        const response = await fetch(blobUrl);
-        const blob = await response.blob();
-        const file = new File([blob], 'certificate.pdf', { type: 'application/pdf' });
-
-        const canShareFiles = Boolean(
-          navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }))
-        );
-
-        if (!canShareFiles) {
-          window.alert('Your device does not support sharing PDF files. Please use Download PDF instead.');
-          return;
-        }
-
-        await navigator.share({
-          title: 'Generated PDF',
-          text: 'Here is your generated PDF',
-          files: [file],
-        });
-      } catch (error) {
-        console.warn('Could not share the PDF file:', error);
-        window.alert('Unable to share the PDF right now. Please try again.');
-      } finally {
-        if (shareIframeRef.current) {
-          shareIframeRef.current.remove();
-          shareIframeRef.current = null;
-        }
-      }
-    }
-
-    window.addEventListener('message', handleShareMessage);
-    return () => {
-      window.removeEventListener('message', handleShareMessage);
-    };
-  }, []);
-
   function handleDownloadPdf() {
     setExportingPdf(true);
     const downloadUrl = new URL(exportBaseUrl);
@@ -95,43 +43,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     window.setTimeout(() => {
       setExportingPdf(false);
     }, 600);
-  }
-
-  function handleSharePdf() {
-    try {
-      window.__PLEDGE_EXPORT_ROWS__ = previewRows;
-      window.localStorage?.setItem('pledge_export_rows', JSON.stringify(previewRows));
-
-      if (shareIframeRef.current) {
-        shareIframeRef.current.remove();
-        shareIframeRef.current = null;
-      }
-
-      const iframe = document.createElement('iframe');
-      iframe.title = 'PDF share helper';
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.style.position = 'fixed';
-      iframe.style.left = '-9999px';
-      iframe.style.top = '0';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.style.opacity = '0';
-      iframe.style.pointerEvents = 'none';
-
-      const shareUrl = new URL(exportBaseUrl);
-      shareUrl.searchParams.set('mode', 'blob-share');
-      iframe.src = shareUrl.toString();
-
-      shareIframeRef.current = iframe;
-      document.body.appendChild(iframe);
-    } catch (error) {
-      console.warn('Could not start PDF sharing:', error);
-      window.alert('Unable to share the PDF right now. Please try again.');
-    }
-  }
-
-  function handleShare() {
-    handleSharePdf();
   }
 
   function renderPreviewSheet() {
@@ -322,8 +233,8 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
             <button
               className="thank-you-page__button thank-you-page__button--secondary"
               type="button"
-              onClick={handleShare}
-              title="Share PDF to WhatsApp"
+              onClick={() => onSharePdf?.()}
+              title="Open share page"
             >
               <Share2 aria-hidden="true" />
               <span>Share PDF</span>

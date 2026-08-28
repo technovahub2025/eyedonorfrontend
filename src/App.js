@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
 import RoleSelectPage from './pages/RoleSelectPage';
+import SharePdfPage from './pages/SharePdfPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
 
@@ -12,6 +13,7 @@ const pages = {
   'role-select': RoleSelectPage,
   terms: TermsPage,
   'thank-you': ThankYouPage,
+  'share-pdf': SharePdfPage,
   'admin-login': AdminLoginPage,
  
 };
@@ -45,6 +47,16 @@ function App() {
 
   function handleTermsAccept(savedRows = []) {
     setThankYouRows(Array.isArray(savedRows) ? savedRows : []);
+    setActiveRole('user');
+    setActivePage('thank-you');
+  }
+
+  function handleSharePdf() {
+    setActiveRole('user');
+    setActivePage('share-pdf');
+  }
+
+  function handleBackToThankYou() {
     setActiveRole('user');
     setActivePage('thank-you');
   }
@@ -95,7 +107,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      {activePage !== 'role-select' ? (
+      {activePage !== 'role-select' && activePage !== 'share-pdf' ? (
         <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
       ) : null}
       <main className="app-shell__content">
@@ -107,6 +119,8 @@ function App() {
           onDecline={handleTermsDecline}
           onCancel={handleUserLogout}
           onRestart={handleUserLogout}
+          onSharePdf={handleSharePdf}
+          onBackToThankYou={handleBackToThankYou}
           onAdminLoginSuccess={handleAdminLoginSuccess}
           onAdminLogout={handleAdminLogout}
           onUserLogout={handleUserLogout}
@@ -116,7 +130,7 @@ function App() {
           onLoginSuccess={handleUserLoginSuccess}
         />
       </main>
-      {activePage !== 'role-select' && activePage !== 'thank-you' ? (
+      {activePage !== 'role-select' && activePage !== 'thank-you' && activePage !== 'share-pdf' ? (
         <SharedFooter
           onHome={handleFooterHome}
           onPledge={handleFooterPledge}
