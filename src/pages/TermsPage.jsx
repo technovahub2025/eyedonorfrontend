@@ -8,6 +8,7 @@ import {
   Heart,
   Plus,
   ShieldCheck,
+  Trash2,
   UserRound,
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
@@ -387,6 +388,30 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     setUpdatingPeople(true);
     setPeople((current) => [...current, initialPerson()]);
     setTimeout(() => setUpdatingPeople(false), 1500);
+  }
+
+  function removePerson(id) {
+    setPeople((current) => {
+      if (current.length <= 1) {
+        return current;
+      }
+
+      return current.filter((person) => person.id !== id);
+    });
+
+    setFieldErrors((current) => {
+      if (!current.people?.[id]) {
+        return current;
+      }
+
+      const nextPeopleErrors = { ...(current.people || {}) };
+      delete nextPeopleErrors[id];
+
+      return {
+        ...current,
+        people: nextPeopleErrors,
+      };
+    });
   }
 
   function resetPeople() {
@@ -885,6 +910,26 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                       <div className="terms-card__people-stack">
                         {people.map((person, index) => (
                           <div key={person.id} className="terms-card__person">
+                            <div className="terms-card__person-head">
+                              <div className="terms-card__person-title">
+                                <span>Person {index + 1}</span>
+                                <small>Enter details for this person</small>
+                              </div>
+                              <button
+                                type="button"
+                                className="terms-card__person-delete"
+                                onClick={() => removePerson(person.id)}
+                                disabled={people.length === 1}
+                                title={
+                                  people.length === 1
+                                    ? 'At least one person row is required.'
+                                    : 'Delete this person'
+                                }
+                              >
+                                <Trash2 aria-hidden="true" />
+                                <span>Delete</span>
+                              </button>
+                            </div>
                             <div
                               className={`terms-card__field terms-card__field--full${
                                 fieldErrors.people?.[person.id]?.fullName
