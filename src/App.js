@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AppNavigator from './components/AppNavigator';
 import AdminLoginPage from './pages/AdminLoginPage';
 import RoleSelectPage from './pages/RoleSelectPage';
 import SharePdfPage from './pages/SharePdfPage';
 import TermsPage from './pages/TermsPage';
 import ThankYouPage from './pages/ThankYouPage';
+import WhatsAppTextPage from './pages/WhatsAppTextPage';
 
 import SharedFooter from './components/SharedFooter';
 import './App.css';
@@ -14,6 +15,7 @@ const pages = {
   terms: TermsPage,
   'thank-you': ThankYouPage,
   'share-pdf': SharePdfPage,
+  'whatsapp-text': WhatsAppTextPage,
   'admin-login': AdminLoginPage,
  
 };
@@ -24,6 +26,7 @@ function App() {
   const [adminToken, setAdminToken] = useState('');
   const [userToken, setUserToken] = useState('');
   const [thankYouRows, setThankYouRows] = useState([]);
+  const whatsappRedirectRef = useRef(null);
   const PageComponent = pages[activePage] || RoleSelectPage;
 
   function navigate(nextPage) {
@@ -49,6 +52,14 @@ function App() {
     setThankYouRows(Array.isArray(savedRows) ? savedRows : []);
     setActiveRole('user');
     setActivePage('thank-you');
+
+    if (whatsappRedirectRef.current) {
+      window.clearTimeout(whatsappRedirectRef.current);
+    }
+
+    whatsappRedirectRef.current = window.setTimeout(() => {
+      setActivePage((currentPage) => (currentPage === 'thank-you' ? 'whatsapp-text' : currentPage));
+    }, 1400);
   }
 
   function handleSharePdf() {
@@ -107,7 +118,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      {activePage !== 'role-select' && activePage !== 'share-pdf' ? (
+      {activePage !== 'role-select' && activePage !== 'share-pdf' && activePage !== 'whatsapp-text' ? (
         <AppNavigator activePage={activePage} activeRole={activeRole} onNavigate={navigate} />
       ) : null}
       <main className="app-shell__content">
@@ -130,7 +141,10 @@ function App() {
           onLoginSuccess={handleUserLoginSuccess}
         />
       </main>
-      {activePage !== 'role-select' && activePage !== 'thank-you' && activePage !== 'share-pdf' ? (
+      {activePage !== 'role-select' &&
+      activePage !== 'thank-you' &&
+      activePage !== 'share-pdf' &&
+      activePage !== 'whatsapp-text' ? (
         <SharedFooter
           onHome={handleFooterHome}
           onPledge={handleFooterPledge}

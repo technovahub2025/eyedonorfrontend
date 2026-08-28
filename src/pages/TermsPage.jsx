@@ -634,6 +634,9 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
       setSubmittedRows(saved);
       setTermsMessage('Your details and pledge were submitted successfully.');
+      if (!isAdminView) {
+        window.alert('Successfully submitted.');
+      }
       resetPeople();
       setPlace('');
       setPledgeAccepted(false);
