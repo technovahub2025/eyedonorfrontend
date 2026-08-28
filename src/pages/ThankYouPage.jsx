@@ -46,7 +46,6 @@ function buildCombinedWhatsAppUrl(rows = []) {
 
 function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
-  const [pdfExported, setPdfExported] = useState(false);
 
   async function handleExportPdf() {
     setExportingPdf(true);
@@ -62,21 +61,16 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
       if (!popup) {
         throw new Error('Please allow popups for this site to export the PDF.');
       }
-      setPdfExported(true);
+
+      const whatsappUrl = buildCombinedWhatsAppUrl(rows);
+      if (whatsappUrl) {
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      }
     } catch (err) {
       console.error('Export error:', err);
     } finally {
       setExportingPdf(false);
     }
-  }
-
-  function handleOpenWhatsApp() {
-    const whatsappUrl = buildCombinedWhatsAppUrl(submittedRows);
-    if (!whatsappUrl) {
-      return;
-    }
-
-    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   }
 
   return (
@@ -125,18 +119,6 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
               <span>{exportingPdf ? 'Generating...' : 'Export PDF'}</span>
             </button>
 
-            {pdfExported ? (
-              <button
-                className="thank-you-page__button thank-you-page__button--secondary"
-                type="button"
-                onClick={handleOpenWhatsApp}
-              >
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  whatsapp
-                </span>
-                <span>Open WhatsApp</span>
-              </button>
-            ) : null}
           </div>
 
           <div className="thank-you-page__mini-notes">
