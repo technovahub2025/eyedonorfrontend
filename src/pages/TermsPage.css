@@ -893,6 +893,19 @@
   font-size: 0.92rem;
 }
 
+.terms-card__section--place {
+  margin-top: 16px;
+}
+
+.terms-card__place-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.terms-card__field--place {
+  width: min(320px, 100%);
+}
+
 .terms-card__field {
   display: grid;
   gap: 8px;

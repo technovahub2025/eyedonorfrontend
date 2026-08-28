@@ -18,7 +18,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     setExportingPdf(true);
 
     try {
-      const rows = Array.isArray(submittedRows) ? submittedRows.slice(0, 3) : [];
+      const rows = Array.isArray(submittedRows) ? submittedRows : [];
       window.__PLEDGE_EXPORT_ROWS__ = rows;
 
       const exportUrl = new URL('/pledge-export.html', window.location.origin);

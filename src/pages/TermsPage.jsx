@@ -22,7 +22,7 @@ const steps = [
 ];
 
 const createTermsEndpoint = '/api/terms/createterms';
-const requiredPeopleCount = 3;
+const requiredPeopleCount = 2;
 const adminRowsPerPage = 20;
 
 const pledgePoints = [
@@ -39,7 +39,6 @@ const initialPerson = () => ({
   age: '',
   gender: '',
   phone: '',
-  place: '',
 });
 
 function createBatchId() {
@@ -112,7 +111,6 @@ function collectPdfRows(row, rows) {
     }))
     .filter((item) => item.distance <= 120000)
     .sort((a, b) => a.distance - b.distance || a.time - b.time)
-    .slice(0, 3)
     .map((item) => item.entry);
 
   if (nearest.length > 0) {
@@ -151,6 +149,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
   const [termsMessage, setTermsMessage] = useState('');
   const [termsError, setTermsError] = useState('');
   const [pledgeAccepted, setPledgeAccepted] = useState(false);
+  const [place, setPlace] = useState('');
   const [people, setPeople] = useState([initialPerson()]);
   const [submittedRows, setSubmittedRows] = useState([]);
   const [adminRows, setAdminRows] = useState([]);
@@ -392,7 +391,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       name: person.fullName.trim(),
       age: person.age === '' ? '' : Number(person.age),
       gender: person.gender.trim(),
-      place: person.place.trim(),
+      place: place.trim(),
       phone: person.phone.trim(),
       batchId: person.batchId,
     };
@@ -428,13 +427,20 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     const incomplete = people.find(
       (person) =>
-        (person.fullName || person.age || person.gender || person.phone || person.place) &&
-        (!person.fullName || !person.age || !person.gender || !person.phone || !person.place)
+        (person.fullName || person.age || person.gender || person.phone) &&
+        (!person.fullName || !person.age || !person.gender || !person.phone)
     );
 
     if (incomplete) {
-      setTermsError('Please fill in all five fields for each person you added.');
-      showSubmissionPopup('Failed to submit: Please fill in all five fields for each person you added.');
+      setTermsError('Please fill in all four fields for each person you added.');
+      showSubmissionPopup('Failed to submit: Please fill in all four fields for each person you added.');
+      setSavingTerm(false);
+      return;
+    }
+
+    if (!place.trim()) {
+      setTermsError('Please enter the place before submitting the pledge.');
+      showSubmissionPopup('Failed to submit: Please enter the place before submitting the pledge.');
       setSavingTerm(false);
       return;
     }
@@ -461,7 +467,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         });
         const savedPerson = {
           ...person,
-          place: person.place.trim(),
+          place: place.trim(),
           id: response?.data?._id || response?._id || person.id,
           createdAt: response?.data?.createdAt || response?.createdAt || new Date().toISOString(),
           batchId: response?.data?.batchId || response?.batchId || batchId,
@@ -482,6 +488,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
         });
       }
       resetPeople();
+      setPlace('');
       setPledgeAccepted(false);
 
       if (!isAdminView) {
@@ -904,18 +911,6 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 />
                               </label>
 
-                              <label className="terms-card__field terms-card__field--compact">
-                                <span>Place</span>
-                                <input
-                                  type="text"
-                                  placeholder="Place"
-                                  value={person.place}
-                                  onChange={(event) =>
-                                    updatePerson(person.id, 'place', event.target.value)
-                                  }
-                                  required
-                                />
-                              </label>
                             </div>
                           </div>
                         ))}
@@ -936,11 +931,33 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
                     <section className="terms-card__bottom-note" aria-label="Minimum people notice">
                       <span className="terms-card__bottom-note-icon" aria-hidden="true">
-                        3
+                        2
                       </span>
                       <div className="terms-card__bottom-note-copy">
                         <strong>Add at least 2 people to continue</strong>
-                        <span>You need at least three complete people details before submitting.</span>
+                        <span>You need at least two complete people details before submitting.</span>
+                      </div>
+                    </section>
+
+                    <section className="terms-card__section terms-card__section--place" aria-label="Place details">
+                      <div className="terms-card__section-header">
+                        <div className="terms-card__section-title">
+                          <Heart aria-hidden="true" />
+                          <span>PLACE</span>
+                        </div>
+                      </div>
+
+                      <div className="terms-card__place-row">
+                        <label className="terms-card__field terms-card__field--compact terms-card__field--place">
+                          <span>Place</span>
+                          <input
+                            type="text"
+                            placeholder="Enter place"
+                            value={place}
+                            onChange={(event) => setPlace(event.target.value)}
+                            required
+                          />
+                        </label>
                       </div>
                     </section>
 
