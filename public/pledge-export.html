@@ -154,8 +154,7 @@ main {
   aspect-ratio: 1 / 1.414;
   background: #ffffff;
   border: 1px solid #c6c6cd;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
-    0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  box-shadow: none;
   position: relative;
   overflow: hidden;
   display: flex;
@@ -167,12 +166,7 @@ main {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle at top right,
-      rgba(0, 99, 152, 0.03) 0%,
-      transparent 40%),
-    radial-gradient(circle at bottom left,
-      rgba(0, 99, 152, 0.03) 0%,
-      transparent 40%);
+  background: transparent;
   z-index: 0;
 }
 
@@ -1265,8 +1259,7 @@ body.desktop-export-mode .pledge-card {
   max-width: none !important;
   aspect-ratio: 1 / 1.414 !important;
   border: 1px solid #c6c6cd !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
-    0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
+  box-shadow: none !important;
   overflow: hidden !important;
   transform: none !important;
   transform-origin: top center !important;
