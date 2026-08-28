@@ -1709,6 +1709,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     const nativePreviewMode = pageMode === 'preview-native';
     const downloadMode = pageMode === 'download';
     const shareMode = pageMode === 'share';
+    const downloadShareMode = pageMode === 'download-share';
 
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
@@ -1819,7 +1820,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         previewFrame.src = previewUrl;
       }
 
-      if (!previewMode && !nativePreviewMode && !shareMode) {
+      if (!previewMode && !nativePreviewMode && !shareMode && !downloadShareMode) {
         const autoDownloadLink = document.createElement('a');
         autoDownloadLink.href = previewUrl;
         autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
@@ -1829,13 +1830,13 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         autoDownloadLink.remove();
       }
 
-      if (shareMode) {
+      const sharePdfToWhatsApp = () => {
         const pdfFile = new File([blob], 'jothi-eye-care-centre-pledge.pdf', {
           type: 'application/pdf',
         });
 
         const canShareFiles = Boolean(
-          navigator.share &&
+            navigator.share &&
             (!navigator.canShare || navigator.canShare({ files: [pdfFile] }))
         );
 
@@ -1851,14 +1852,33 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
             }
           }, 200);
         } else {
-          const autoDownloadLink = document.createElement('a');
-          autoDownloadLink.href = previewUrl;
-          autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
-          autoDownloadLink.style.display = 'none';
-          document.body.appendChild(autoDownloadLink);
-          autoDownloadLink.click();
-          autoDownloadLink.remove();
+          const message = encodeURIComponent(
+            'I have downloaded my Jothi Eye Care Centre pledge PDF. Please check the attached file if your device supports file sharing.'
+          );
+          const whatsappUrl = `https://wa.me/?text=${message}`;
+          const popup = window.open(whatsappUrl, '_blank');
+          if (!popup) {
+            window.location.href = whatsappUrl;
+          }
         }
+      };
+
+      if (shareMode) {
+        sharePdfToWhatsApp();
+      }
+
+      if (downloadShareMode) {
+        const autoDownloadLink = document.createElement('a');
+        autoDownloadLink.href = previewUrl;
+        autoDownloadLink.download = 'jothi-eye-care-centre-pledge.pdf';
+        autoDownloadLink.style.display = 'none';
+        document.body.appendChild(autoDownloadLink);
+        autoDownloadLink.click();
+        autoDownloadLink.remove();
+
+        setTimeout(() => {
+          sharePdfToWhatsApp();
+        }, 350);
       }
 
       setTimeout(() => {

@@ -646,11 +646,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setPledgeAccepted(false);
 
       if (!isAdminView) {
-        const exportUrl = new URL('/pledge-export.html', window.location.origin).toString();
+        const exportUrl = new URL('/pledge-export.html', window.location.origin);
+        exportUrl.searchParams.set('mode', 'download-share');
         window.__PLEDGE_EXPORT_ROWS__ = saved;
         window.localStorage?.setItem('pledge_export_rows', JSON.stringify(saved));
 
-        const exportPopup = window.open(exportUrl, '_blank');
+        const exportPopup = window.open(exportUrl.toString(), '_blank');
         if (!exportPopup) {
           setTermsError('Please allow popups for this site so the PDF can download automatically.');
         }
