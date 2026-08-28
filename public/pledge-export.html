@@ -1397,6 +1397,19 @@ body.pdf-preview-mode .pdf-preview-shell {
   display: flex !important;
 }
 
+body.download-mode main,
+body.download-mode .form-wrapper {
+  display: none !important;
+}
+
+body.download-mode .pdf-preview-shell {
+  display: flex !important;
+}
+
+body.download-mode .pdf-preview-bar {
+  display: none !important;
+}
+
 body.preview-mode .pdf-preview-bar {
   display: none !important;
 }
@@ -1804,7 +1817,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       const previewUrl = URL.createObjectURL(blob);
       downloadLink.href = previewUrl;
 
-      const shouldShowPreviewShell = previewMode || nativePreviewMode;
+      const shouldShowPreviewShell = previewMode || nativePreviewMode || downloadMode;
       if (shouldShowPreviewShell) {
         document.body.classList.add('pdf-preview-mode');
       }
