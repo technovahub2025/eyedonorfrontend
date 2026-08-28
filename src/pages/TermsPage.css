@@ -907,10 +907,19 @@
 }
 
 .terms-card__field-error {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 9px;
+  z-index: 2;
+  display: block;
+  padding: 0 4px;
+  background: #ffffff;
   color: #ba1a1a;
   font-size: 0.78rem;
   font-weight: 700;
   line-height: 1.35;
+  pointer-events: none;
 }
 
 .terms-card__field {
@@ -962,6 +971,11 @@
 .terms-card__field textarea[aria-invalid='true'] {
   border-color: #ba1a1a;
   box-shadow: 0 0 0 4px rgba(186, 26, 26, 0.08);
+}
+
+.terms-card__field:has(.terms-card__field-error),
+.terms-card__field--full:has(.terms-card__field-error) {
+  padding-bottom: 18px;
 }
 
 .terms-card__field textarea {
