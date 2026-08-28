@@ -986,7 +986,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
                                 }
                               >
                                 <Trash2 aria-hidden="true" />
-                                <span>Delete</span>
+                                <span>Delete row</span>
                               </button>
                             </div>
                             <div
