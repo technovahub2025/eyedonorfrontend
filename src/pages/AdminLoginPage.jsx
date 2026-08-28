@@ -145,12 +145,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <h2 id="admin-login-title">Admin sign in</h2>
             <p>Enter your details to open the list and tools.</p>
             <div className="admin-login-card__status" role="status" aria-live="polite">
-              <span className="admin-login-card__status-badge">
-                <span className="material-symbols-outlined" aria-hidden="true">
-                  check_circle
-                </span>
-                VisionGift API Running
-              </span>
               <span className="admin-login-card__status-copy">{rootStatus}</span>
             </div>
           </header>
