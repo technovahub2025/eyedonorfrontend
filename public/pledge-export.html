@@ -1238,6 +1238,11 @@ html.desktop-export-mode,
 body.desktop-export-mode {
   background: #f7f9fb !important;
   min-width: 1200px !important;
+  width: 100% !important;
+  zoom: 1 !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
 }
 
 html.desktop-export-mode header,
@@ -1251,6 +1256,8 @@ body.desktop-export-mode main {
 html.desktop-export-mode .form-wrapper,
 body.desktop-export-mode .form-wrapper {
   padding: 2rem !important;
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 html.desktop-export-mode .pledge-card,
@@ -1264,11 +1271,15 @@ body.desktop-export-mode .pledge-card {
   transform: none !important;
   transform-origin: top center !important;
   margin: 0 auto !important;
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 html.desktop-export-mode .card-content,
 body.desktop-export-mode .card-content {
   padding: 2.5rem 3rem !important;
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 html.desktop-export-mode .header-block,
@@ -1346,6 +1357,12 @@ body.desktop-export-mode .inline-entry--date {
 html.desktop-export-mode .inline-entry--place,
 body.desktop-export-mode .inline-entry--place {
   width: 100% !important;
+}
+
+html.desktop-export-mode *,
+body.desktop-export-mode * {
+  opacity: 1 !important;
+  filter: none !important;
 }
 
 /* ----- print layout (unchanged) ----- */
@@ -1633,6 +1650,18 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         return window.__PLEDGE_EXPORT_ROWS__;
       }
 
+      try {
+        const storedRows = window.localStorage?.getItem('pledge_export_rows');
+        if (storedRows) {
+          const parsedRows = JSON.parse(storedRows);
+          if (Array.isArray(parsedRows)) {
+            return parsedRows;
+          }
+        }
+      } catch (error) {
+        console.warn('Could not read rows from storage:', error);
+      }
+
       return [];
     }
 
@@ -1714,8 +1743,6 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         throw new Error('PDF tools are still loading.');
       }
 
-      setPdfCaptureMode(true);
-
       try {
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
@@ -1723,7 +1750,23 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
 
         await Promise.all(Array.from(card.querySelectorAll('img')).map(waitForImageLoad));
 
-        const canvas = await window.html2canvas(card, {
+        const captureRoot = document.createElement('div');
+        captureRoot.setAttribute('aria-hidden', 'true');
+        captureRoot.style.position = 'fixed';
+        captureRoot.style.left = '-100000px';
+        captureRoot.style.top = '0';
+        captureRoot.style.width = '1280px';
+        captureRoot.style.padding = '0';
+        captureRoot.style.margin = '0';
+        captureRoot.style.background = '#ffffff';
+        captureRoot.style.pointerEvents = 'none';
+        captureRoot.style.overflow = 'hidden';
+
+        const captureCard = card.cloneNode(true);
+        captureRoot.appendChild(captureCard);
+        document.body.appendChild(captureRoot);
+
+        const canvas = await window.html2canvas(captureCard, {
           scale: 2,
           useCORS: true,
           backgroundColor: '#ffffff',
@@ -1732,6 +1775,8 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
           scrollX: 0,
           scrollY: 0,
         });
+
+        captureRoot.remove();
 
         const imgData = canvas.toDataURL('image/jpeg', 1.0);
         const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
@@ -1750,7 +1795,10 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         pdf.addImage(imgData, 'JPEG', offsetX, offsetY, finalWidth, finalHeight);
         pdf.save('jothi-eye-care-centre-pledge.pdf');
       } finally {
-        setPdfCaptureMode(false);
+        const existingCaptureRoot = document.querySelector('[aria-hidden="true"][style*="-100000px"]');
+        if (existingCaptureRoot) {
+          existingCaptureRoot.remove();
+        }
       }
     }
 
@@ -1759,6 +1807,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       try {
         setDesktopViewMode(true);
         const rows = readFrontendRows();
+        try {
+          window.localStorage?.removeItem('pledge_export_rows');
+        } catch (error) {
+          console.warn('Could not clear stored export rows:', error);
+        }
         updateTable(rows);
         updateFooterDetails(rows);
         await new Promise((resolve) => setTimeout(resolve, 300));

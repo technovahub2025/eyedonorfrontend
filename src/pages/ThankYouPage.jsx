@@ -20,6 +20,7 @@ function ThankYouPage({ onRestart, onRoleSelect, submittedRows = [] }) {
     try {
       const rows = Array.isArray(submittedRows) ? submittedRows : [];
       window.__PLEDGE_EXPORT_ROWS__ = rows;
+      window.localStorage?.setItem('pledge_export_rows', JSON.stringify(rows));
 
       const exportUrl = new URL('/pledge-export.html', window.location.origin);
 
