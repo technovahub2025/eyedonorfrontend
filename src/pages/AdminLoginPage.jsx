@@ -16,28 +16,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [rootStatus, setRootStatus] = useState('Checking your connection...');
-
-  useEffect(() => {
-    let active = true;
-
-    async function checkRoot() {
-      try {
-        const data = await apiRequest('/');
-        if (!active) return;
-        setRootStatus(typeof data === 'string' ? data : data?.message || 'Everything is ready.');
-      } catch (err) {
-        if (!active) return;
-        setRootStatus(`Connection check failed: ${err.message}`);
-      }
-    }
-
-    checkRoot();
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   useEffect(() => {
     if (!adminToken) {
@@ -144,9 +122,6 @@ function AdminLoginPage({ adminToken, onAdminTokenChange, onAdminLoginSuccess, o
             <p className="admin-login-card__kicker">VisionGift</p>
             <h2 id="admin-login-title">Admin sign in</h2>
             <p>Enter your details to open the list and tools.</p>
-            <div className="admin-login-card__status" role="status" aria-live="polite">
-              <span className="admin-login-card__status-copy">{rootStatus}</span>
-            </div>
           </header>
 
           <form className="admin-login-form" onSubmit={handleSubmit}>
