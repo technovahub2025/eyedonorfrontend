@@ -1240,6 +1240,120 @@ body.pdf-capture-mode .inline-value {
   min-height: 1.9rem !important;
 }
 
+html.desktop-export-mode,
+body.desktop-export-mode {
+  background: #f7f9fb !important;
+  min-width: 1200px !important;
+}
+
+html.desktop-export-mode header,
+body.desktop-export-mode header,
+html.desktop-export-mode main,
+body.desktop-export-mode main {
+  padding-top: 80px !important;
+  min-height: 100vh !important;
+}
+
+html.desktop-export-mode .form-wrapper,
+body.desktop-export-mode .form-wrapper {
+  padding: 2rem !important;
+}
+
+html.desktop-export-mode .pledge-card,
+body.desktop-export-mode .pledge-card {
+  width: 896px !important;
+  max-width: none !important;
+  aspect-ratio: 1 / 1.414 !important;
+  border: 1px solid #c6c6cd !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
+    0 8px 10px -6px rgba(0, 0, 0, 0.02) !important;
+  overflow: hidden !important;
+  transform: none !important;
+  transform-origin: top center !important;
+  margin: 0 auto !important;
+}
+
+html.desktop-export-mode .card-content,
+body.desktop-export-mode .card-content {
+  padding: 2.5rem 3rem !important;
+}
+
+html.desktop-export-mode .header-block,
+body.desktop-export-mode .header-block {
+  gap: 0.75rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+html.desktop-export-mode .header-block img,
+body.desktop-export-mode .header-block img {
+  height: 230px !important;
+}
+
+html.desktop-export-mode .title-block h1,
+body.desktop-export-mode .title-block h1 {
+  font-size: 22px !important;
+  line-height: 30px !important;
+}
+
+html.desktop-export-mode .title-block .subtitle,
+body.desktop-export-mode .title-block .subtitle {
+  font-size: 13px !important;
+  line-height: 18px !important;
+}
+
+html.desktop-export-mode .bank-row,
+body.desktop-export-mode .bank-row {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin-bottom: 2rem !important;
+  padding: 1rem 0 !important;
+}
+
+html.desktop-export-mode .bank-name .name,
+body.desktop-export-mode .bank-name .name {
+  font-size: 20px !important;
+  line-height: 28px !important;
+}
+
+html.desktop-export-mode .bank-name .detail,
+body.desktop-export-mode .bank-name .detail {
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+html.desktop-export-mode .desc-text,
+body.desktop-export-mode .desc-text {
+  font-size: 18px !important;
+  line-height: 26px !important;
+  margin-bottom: 1rem !important;
+}
+
+html.desktop-export-mode .pledge-table,
+body.desktop-export-mode .pledge-table {
+  table-layout: fixed !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+}
+
+html.desktop-export-mode .bottom-row,
+body.desktop-export-mode .bottom-row {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1rem !important;
+  margin-top: 0.25rem !important;
+}
+
+html.desktop-export-mode .inline-entry--date,
+body.desktop-export-mode .inline-entry--date {
+  width: 14rem !important;
+}
+
+html.desktop-export-mode .inline-entry--place,
+body.desktop-export-mode .inline-entry--place {
+  flex: 1 !important;
+}
+
 /* ----- print layout (unchanged) ----- */
 @media print {
   @page {
@@ -1472,11 +1586,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
             <div class="bottom-row">
               <div class="inline-entry inline-entry--date">
                 <span class="inline-label">Date:</span>
-                <span class="inline-value" id="currentDate" contenteditable="true" aria-label="Date"></span>
+                <span class="inline-value" id="currentDate" aria-label="Date"></span>
               </div>
               <div class="inline-entry inline-entry--place">
                 <span class="inline-label">Place:</span>
-                <span class="inline-value" contenteditable="true" aria-label="Place"></span>
+                <span class="inline-value" aria-label="Place"></span>
               </div>
             </div>
           </div>
@@ -1541,6 +1655,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     function setPdfCaptureMode(active) {
       document.documentElement.classList.toggle('pdf-capture-mode', active);
       document.body.classList.toggle('pdf-capture-mode', active);
+    }
+
+    function setDesktopViewMode(active) {
+      document.documentElement.classList.toggle('desktop-export-mode', active);
+      document.body.classList.toggle('desktop-export-mode', active);
     }
 
     // ----- UPDATE TABLE WITH ALL FIELDS -----
@@ -1614,8 +1733,8 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
           scale: 2,
           useCORS: true,
           backgroundColor: '#ffffff',
-          windowWidth: 896,
-          windowHeight: 1268,
+          windowWidth: 1280,
+          windowHeight: 1800,
           scrollX: 0,
           scrollY: 0,
         });
@@ -1644,6 +1763,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
       try {
+        setDesktopViewMode(true);
         const rows = readFrontendRows();
         updateTable(rows);
         updateFooterDetails(rows);
