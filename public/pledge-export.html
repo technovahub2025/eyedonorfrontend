@@ -1418,6 +1418,53 @@ body.admin-export-mode .bottom-row {
   display: none !important;
 }
 
+body.admin-export-mode .pdf-preview-shell {
+  display: none !important;
+}
+
+body.admin-export-mode main,
+body.admin-export-mode .form-wrapper {
+  background: #ffffff !important;
+}
+
+html.admin-export-mode .pledge-card,
+body.admin-export-mode .pledge-card {
+  width: 896px !important;
+  max-width: none !important;
+  aspect-ratio: auto !important;
+  height: auto !important;
+  border: 1px solid #c6c6cd !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+  transform: none !important;
+  transform-origin: top center !important;
+  margin: 0 auto !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+html.admin-export-mode .card-content,
+body.admin-export-mode .card-content {
+  height: auto !important;
+  min-height: 0 !important;
+  overflow: visible !important;
+}
+
+html.admin-export-mode .table-wrap,
+body.admin-export-mode .table-wrap {
+  flex: 0 0 auto !important;
+}
+
+html.admin-export-mode .header-block img,
+body.admin-export-mode .header-block img {
+  height: 230px !important;
+}
+
+html.admin-export-mode .bottom-row,
+body.admin-export-mode .bottom-row {
+  display: none !important;
+}
+
 .pdf-preview-shell {
   display: none;
   position: fixed;
@@ -1904,6 +1951,47 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       }, 60000);
     }
 
+    function downloadBlob(blob, filename) {
+      const blobUrl = URL.createObjectURL(blob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobUrl;
+      downloadLink.download = filename;
+      downloadLink.style.display = 'none';
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+
+      setTimeout(() => {
+        URL.revokeObjectURL(blobUrl);
+      }, 60000);
+    }
+
+    function canvasToPdfBlob(canvas) {
+      const pdf = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 6;
+      const usableWidth = pageWidth - margin * 2;
+      const usableHeight = pageHeight - margin * 2;
+      const imgHeight = (canvas.height * usableWidth) / canvas.width;
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+      let heightLeft = imgHeight;
+      let position = margin;
+
+      pdf.addImage(imgData, 'JPEG', margin, position, usableWidth, imgHeight);
+      heightLeft -= usableHeight;
+
+      while (heightLeft > 0) {
+        position = margin + (heightLeft - imgHeight);
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', margin, position, usableWidth, imgHeight);
+        heightLeft -= usableHeight;
+      }
+
+      return pdf.output('blob');
+    }
+
     // ----- UPDATE TABLE WITH ALL FIELDS -----
     function updateTable(rows) {
       const tbody = document.getElementById('pledgeTableBody');
@@ -2026,6 +2114,67 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
       }
     }
 
+    async function downloadAdminPdf(rows = []) {
+      const card = document.querySelector('.pledge-card');
+      if (!card || !window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+        throw new Error('PDF tools are still loading.');
+      }
+
+      try {
+        if (document.fonts && document.fonts.ready) {
+          await document.fonts.ready;
+        }
+
+        await Promise.all(Array.from(card.querySelectorAll('img')).map(waitForImageLoad));
+
+        const captureRoot = document.createElement('div');
+        captureRoot.setAttribute('aria-hidden', 'true');
+        captureRoot.style.position = 'fixed';
+        captureRoot.style.left = '-100000px';
+        captureRoot.style.top = '0';
+        captureRoot.style.width = '1280px';
+        captureRoot.style.padding = '0';
+        captureRoot.style.margin = '0';
+        captureRoot.style.background = '#ffffff';
+        captureRoot.style.pointerEvents = 'none';
+        captureRoot.style.overflow = 'visible';
+
+        const captureCard = card.cloneNode(true);
+        captureCard.style.height = 'auto';
+        captureCard.style.maxHeight = 'none';
+        captureCard.style.overflow = 'visible';
+        captureCard.style.aspectRatio = 'auto';
+
+        const captureContent = captureCard.querySelector('.card-content');
+        if (captureContent) {
+          captureContent.style.height = 'auto';
+          captureContent.style.minHeight = '0';
+          captureContent.style.overflow = 'visible';
+        }
+
+        captureRoot.appendChild(captureCard);
+        document.body.appendChild(captureRoot);
+
+        const canvas = await window.html2canvas(captureCard, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          windowWidth: 1280,
+          windowHeight: captureCard.scrollHeight + 200,
+          scrollX: 0,
+          scrollY: 0,
+        });
+
+        const pdfBlob = canvasToPdfBlob(canvas);
+        downloadBlob(pdfBlob, 'terms-entries-export.pdf');
+      } finally {
+        const existingCaptureRoot = document.querySelector('[aria-hidden="true"][style*="-100000px"]');
+        if (existingCaptureRoot) {
+          existingCaptureRoot.remove();
+        }
+      }
+    }
+
     // ----- MAIN: LOAD DATA FROM FRONT-END STATE -----
     async function loadData() {
       try {
@@ -2038,7 +2187,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
         updateTable(rows);
         updateFooterDetails(rows);
         await new Promise((resolve) => setTimeout(resolve, 300));
-        await downloadPdf(rows);
+        if (adminExportMode) {
+          await downloadAdminPdf(rows);
+        } else {
+          await downloadPdf(rows);
+        }
       } catch (error) {
         console.error('Error:', error);
         updateTable([]);
