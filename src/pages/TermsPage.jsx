@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import ProgressStepper from '../components/ProgressStepper';
 import eyeImage from '../asset/eye.png';
-import { apiRequest } from '../lib/apiClient';
+import { apiDownload, apiRequest } from '../lib/apiClient';
 import './TermsPage.css';
 
 const steps = [
@@ -400,15 +400,28 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
 
     try {
       const rowsToExport = filteredAdminRows.map((row) => ({ ...row }));
-      window.__PLEDGE_EXPORT_ROWS__ = rowsToExport;
+      const pdfBlob = await apiDownload('/api/terms/exportpdf', {
+        method: 'POST',
+        body: { rows: rowsToExport },
+        token: adminToken,
+      });
 
-      const exportUrl = new URL('/pledge-export.html', window.location.origin);
-      exportUrl.searchParams.set('mode', 'admin-export');
-      const popup = window.open(exportUrl.toString(), '_blank');
+      const pdfUrl = window.URL.createObjectURL(pdfBlob);
+      const popup = window.open(pdfUrl, '_blank');
 
       if (!popup) {
-        throw new Error('Please allow popups for this site to export the PDF.');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pdfUrl;
+        downloadLink.download = 'terms-entries-export.pdf';
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
       }
+
+      window.setTimeout(() => {
+        window.URL.revokeObjectURL(pdfUrl);
+      }, 60000);
     } catch (err) {
       setTermsError(err.message);
     } finally {
