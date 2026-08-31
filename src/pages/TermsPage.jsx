@@ -403,6 +403,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       window.__PLEDGE_EXPORT_ROWS__ = rowsToExport;
 
       const exportUrl = new URL('/pledge-export.html', window.location.origin);
+      exportUrl.searchParams.set('mode', 'admin-export');
       const popup = window.open(exportUrl.toString(), '_blank');
 
       if (!popup) {

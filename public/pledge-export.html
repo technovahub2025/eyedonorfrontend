@@ -1414,6 +1414,10 @@ body.preview-mode .pdf-preview-bar {
   display: none !important;
 }
 
+body.admin-export-mode .bottom-row {
+  display: none !important;
+}
+
 .pdf-preview-shell {
   display: none;
   position: fixed;
@@ -1723,6 +1727,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     const downloadMode = pageMode === 'download';
     const shareMode = pageMode === 'share';
     const blobShareMode = pageMode === 'blob-share';
+    const adminExportMode = pageMode === 'admin-export';
 
     // ----- HELPER FUNCTIONS -----
     function escapeHtml(value) {
@@ -1805,6 +1810,11 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     function setDesktopViewMode(active) {
       document.documentElement.classList.toggle('desktop-export-mode', active);
       document.body.classList.toggle('desktop-export-mode', active);
+    }
+
+    function setAdminExportMode(active) {
+      document.documentElement.classList.toggle('admin-export-mode', active);
+      document.body.classList.toggle('admin-export-mode', active);
     }
 
     function showPdfPreview(blob, rows = []) {
@@ -1930,6 +1940,10 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     }
 
     function updateFooterDetails(rows) {
+      if (adminExportMode) {
+        return;
+      }
+
       const dateEl = document.getElementById('currentDate');
       if (dateEl) {
         dateEl.textContent = new Date().toLocaleDateString('en-GB', {
@@ -2016,6 +2030,7 @@ I AM A PROUD EYE DONOR AND AMBASSADOR
     async function loadData() {
       try {
         setDesktopViewMode(true);
+        setAdminExportMode(adminExportMode);
         if (previewMode || nativePreviewMode) {
           document.body.classList.add('preview-mode');
         }
