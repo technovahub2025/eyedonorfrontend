@@ -44,30 +44,34 @@ function ThankYouPage({ onRestart, onRoleSelect, onSharePdf, submittedRows = [] 
 
     autoDownloadStartedRef.current = true;
 
-    const downloadUrl = new URL(exportBaseUrl);
-    downloadUrl.searchParams.set('mode', 'download');
+    let iframe;
+    const startDownloadTimer = window.setTimeout(() => {
+      const downloadUrl = new URL(exportBaseUrl);
+      downloadUrl.searchParams.set('mode', 'download');
 
-    const iframe = document.createElement('iframe');
-    iframe.setAttribute('aria-hidden', 'true');
-    iframe.title = 'PDF download helper';
-    iframe.style.position = 'fixed';
-    iframe.style.width = '1px';
-    iframe.style.height = '1px';
-    iframe.style.opacity = '0';
-    iframe.style.pointerEvents = 'none';
-    iframe.style.left = '-9999px';
-    iframe.style.top = '0';
-    iframe.src = downloadUrl.toString();
+      iframe = document.createElement('iframe');
+      iframe.setAttribute('aria-hidden', 'true');
+      iframe.title = 'PDF download helper';
+      iframe.style.position = 'fixed';
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.style.opacity = '0';
+      iframe.style.pointerEvents = 'none';
+      iframe.style.left = '-9999px';
+      iframe.style.top = '0';
+      iframe.src = downloadUrl.toString();
 
-    document.body.appendChild(iframe);
+      document.body.appendChild(iframe);
+    }, 250);
 
     const cleanupTimer = window.setTimeout(() => {
-      iframe.remove();
-    }, 15000);
+      iframe?.remove();
+    }, 15250);
 
     return () => {
+      window.clearTimeout(startDownloadTimer);
       window.clearTimeout(cleanupTimer);
-      iframe.remove();
+      iframe?.remove();
     };
   }, [exportBaseUrl, previewRows.length]);
 
