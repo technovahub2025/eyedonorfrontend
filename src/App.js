@@ -96,7 +96,8 @@ function App() {
   }
 
   function handleTermsAccept(savedRows = []) {
-    setThankYouRows(Array.isArray(savedRows) ? savedRows : []);
+    const rows = Array.isArray(savedRows) ? savedRows : [];
+    setThankYouRows(rows);
     setActiveRole('user');
     setActivePage('thank-you');
 
@@ -105,7 +106,19 @@ function App() {
     }
 
     whatsappRedirectRef.current = window.setTimeout(() => {
-      setActivePage((currentPage) => (currentPage === 'thank-you' ? 'whatsapp-text' : currentPage));
+      const header = 'My eye donation pledge has been submitted successfully.';
+      const lines = rows.map(
+        (row, index) =>
+          `${index + 1}. ${row.fullName || row.name || 'N/A'} | Age: ${row.age || 'N/A'} | Gender: ${
+            row.gender || 'N/A'
+          } | Phone: ${row.phone || 'N/A'} | Place: ${row.place || 'N/A'}`
+      );
+      const message = rows.length
+        ? `${header}\n\n${lines.join('\n')}`
+        : `${header}\n\nNo submitted data was available.`;
+
+      // Leave the success page as the previous history entry when returning from WhatsApp.
+      window.location.assign(`https://wa.me/?text=${encodeURIComponent(message)}`);
     }, 1400);
   }
 
