@@ -117,8 +117,8 @@ function App() {
         ? `${header}\n\n${lines.join('\n')}`
         : `${header}\n\nNo submitted data was available.`;
 
-      // Leave the success page as the previous history entry when returning from WhatsApp.
-      window.location.assign(`https://wa.me/?text=${encodeURIComponent(message)}`);
+      // Open WhatsApp separately so this app remains on the Thank You page.
+      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
     }, 1400);
   }
 
