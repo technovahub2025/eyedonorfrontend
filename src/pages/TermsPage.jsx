@@ -188,7 +188,7 @@ function validatePersonField(field, value) {
   return '';
 }
 
-function TermsPage({ adminToken, onAccept, onDecline }) {
+function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
   const isAdminView = Boolean(adminToken);
   const [savingTerm, setSavingTerm] = useState(false);
   const [updatingPeople, setUpdatingPeople] = useState(false);
@@ -641,7 +641,13 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       return;
     }
 
+    let whatsappWindow = null;
+
     try {
+      if (!isAdminView) {
+        whatsappWindow = onPrepareWhatsApp?.();
+      }
+
       const saved = [];
       const batchId = createBatchId();
 
@@ -671,9 +677,12 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setPledgeAccepted(false);
 
       if (!isAdminView) {
-        onAccept?.(saved);
+        onAccept?.(saved, whatsappWindow);
       }
     } catch (err) {
+      if (whatsappWindow && !whatsappWindow.closed) {
+        whatsappWindow.close();
+      }
       setTermsError(err.message);
     } finally {
       setSavingTerm(false);

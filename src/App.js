@@ -95,7 +95,7 @@ function App() {
     }
   }
 
-  function handleTermsAccept(savedRows = []) {
+  function handleTermsAccept(savedRows = [], whatsappWindow = null) {
     const rows = Array.isArray(savedRows) ? savedRows : [];
     setThankYouRows(rows);
     setActiveRole('user');
@@ -117,8 +117,14 @@ function App() {
         ? `${header}\n\n${lines.join('\n')}`
         : `${header}\n\nNo submitted data was available.`;
 
-      // Open WhatsApp separately so this app remains on the Thank You page.
-      window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+      // The tab was opened during the submit click, so mobile browsers allow this navigation.
+      if (whatsappWindow && !whatsappWindow.closed) {
+        whatsappWindow.location.href = whatsappUrl;
+      } else {
+        window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+      }
     }, 1400);
   }
 
@@ -187,6 +193,7 @@ function App() {
           userToken={userToken}
           onRoleSelect={handleRoleSelect}
           onAccept={handleTermsAccept}
+          onPrepareWhatsApp={() => (activePage === 'terms' ? window.open('about:blank', '_blank') : null)}
           onDecline={handleTermsDecline}
           onCancel={handleUserLogout}
           onRestart={handleUserLogout}
