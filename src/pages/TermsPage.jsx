@@ -229,6 +229,33 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
     'December',
   ];
 
+  function startAutomaticPdfDownload(rows) {
+    try {
+      window.__PLEDGE_EXPORT_ROWS__ = rows;
+      window.localStorage?.setItem('pledge_export_rows', JSON.stringify(rows));
+
+      const downloadUrl = new URL('/pledge-export.html', window.location.origin);
+      downloadUrl.searchParams.set('mode', 'download');
+
+      const iframe = document.createElement('iframe');
+      iframe.setAttribute('aria-hidden', 'true');
+      iframe.title = 'Automatic PDF download helper';
+      iframe.style.position = 'fixed';
+      iframe.style.width = '1px';
+      iframe.style.height = '1px';
+      iframe.style.opacity = '0';
+      iframe.style.pointerEvents = 'none';
+      iframe.style.left = '-9999px';
+      iframe.style.top = '0';
+      iframe.src = downloadUrl.toString();
+      document.body.appendChild(iframe);
+
+      window.setTimeout(() => iframe.remove(), 15000);
+    } catch (error) {
+      console.warn('Could not start automatic PDF download:', error);
+    }
+  }
+
   const getRowDate = (row) => {
     if (!row?.createdAt) return null;
     const date = new Date(row.createdAt);
@@ -637,6 +664,7 @@ function TermsPage({ adminToken, onAccept, onDecline }) {
       setTermsMessage('Your details and pledge were submitted successfully.');
       if (!isAdminView) {
         window.alert('Successfully submitted.');
+        startAutomaticPdfDownload(saved);
       }
       resetPeople();
       setPlace('');

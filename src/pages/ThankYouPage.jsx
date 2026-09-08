@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -15,7 +15,6 @@ import './ThankYouPage.css';
 function ThankYouPage({ onRestart, onRoleSelect, onSharePdf, submittedRows = [] }) {
   const [exportingPdf, setExportingPdf] = useState(false);
   const [mobilePreviewOpen, setMobilePreviewOpen] = useState(false);
-  const autoDownloadStartedRef = useRef(false);
   const showFooter = !Array.isArray(submittedRows) || submittedRows.length === 0;
   const exportBaseUrl = useMemo(() => new URL('/pledge-export.html', window.location.origin), []);
   const previewRows = Array.isArray(submittedRows) ? submittedRows : [];
@@ -32,48 +31,6 @@ function ThankYouPage({ onRestart, onRoleSelect, onSharePdf, submittedRows = [] 
       console.warn('Could not persist preview rows:', error);
     }
   }, [submittedRows]);
-
-  useEffect(() => {
-    if (autoDownloadStartedRef.current) {
-      return;
-    }
-
-    if (!previewRows.length) {
-      return;
-    }
-
-    autoDownloadStartedRef.current = true;
-
-    let iframe;
-    const startDownloadTimer = window.setTimeout(() => {
-      const downloadUrl = new URL(exportBaseUrl);
-      downloadUrl.searchParams.set('mode', 'download');
-
-      iframe = document.createElement('iframe');
-      iframe.setAttribute('aria-hidden', 'true');
-      iframe.title = 'PDF download helper';
-      iframe.style.position = 'fixed';
-      iframe.style.width = '1px';
-      iframe.style.height = '1px';
-      iframe.style.opacity = '0';
-      iframe.style.pointerEvents = 'none';
-      iframe.style.left = '-9999px';
-      iframe.style.top = '0';
-      iframe.src = downloadUrl.toString();
-
-      document.body.appendChild(iframe);
-    }, 250);
-
-    const cleanupTimer = window.setTimeout(() => {
-      iframe?.remove();
-    }, 15250);
-
-    return () => {
-      window.clearTimeout(startDownloadTimer);
-      window.clearTimeout(cleanupTimer);
-      iframe?.remove();
-    };
-  }, [exportBaseUrl, previewRows.length]);
 
   function handleDownloadPdf() {
     setExportingPdf(true);
