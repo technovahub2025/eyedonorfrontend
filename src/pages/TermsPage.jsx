@@ -41,13 +41,14 @@ const mythsAndFacts = [
       'Only the thin, clear front layer of the eye, the cornea, is retrieved for transplantation.',
   },
   {
-    myth: 'You can pledge individually... .',
+    myth: 'Pledging eyes automatically guarantees donation after death.',
     fact:
-      'You can pledge individually but any family member, lacking awareness can stop your eye donation. Hence, Family pledge is preferable.'},
+      'A pledge is an expression of intent. At the time of passing, written consent from immediate family is legally mandatory for harvesting to proceed.',
+  },
   {
-    myth: 'My family has to be eye donors too.',
+    myth: 'You can  Pledge individually...',
     fact:
-      'You can pledge individually, and no one else in your family needs to. You can also donate your loved one\'s eyes even if they have not pledged.',
+      'You can pledge individually, but any family member,lacking awarness can  stop your eye donation .Hence ,Family  pledge is preferable'
   },
   {
     myth: 'Previous eye surgeries or poor vision prevent donation.',
