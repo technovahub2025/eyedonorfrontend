@@ -450,7 +450,8 @@ function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
     const rows = filteredAdminRows.map((row) => [
       getRowTitle(row),
       getRowDisplayName(row),
@@ -460,11 +461,16 @@ function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
       row.phone || row.mobile || row.telephone || 'N/A',
       row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A',
     ]);
-    const tableRows = [columns, ...rows]
-      .map((cells) => `<tr>${cells.map((cell) => `<td>${escapeCell(cell)}</td>`).join('')}</tr>`)
+    const worksheetRows = [columns, ...rows]
+      .map((cells) => {
+        const worksheetCells = cells
+          .map((cell) => `<Cell><Data ss:Type="String">${escapeCell(cell)}</Data></Cell>`)
+          .join('');
+        return `<Row>${worksheetCells}</Row>`;
+      })
       .join('');
-    const workbook = `<html><head><meta charset="utf-8"></head><body><table>${tableRows}</table></body></html>`;
-    const blob = new Blob([`\ufeff${workbook}`], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const workbook = `<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Terms Data"><Table>${worksheetRows}</Table></Worksheet></Workbook>`;
+    const blob = new Blob([workbook], { type: 'application/vnd.ms-excel;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
