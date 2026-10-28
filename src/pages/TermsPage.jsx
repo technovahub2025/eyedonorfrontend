@@ -443,6 +443,38 @@ function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
     }
   }
 
+  function handleExportAdminExcel() {
+    const columns = ['Title', 'Name', 'Place', 'Age', 'Gender', 'Phone', 'Created At'];
+    const escapeCell = (value) =>
+      String(value ?? 'N/A')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    const rows = filteredAdminRows.map((row) => [
+      getRowTitle(row),
+      getRowDisplayName(row),
+      getRowPlace(row),
+      row.age ?? 'N/A',
+      row.gender || 'N/A',
+      row.phone || row.mobile || row.telephone || 'N/A',
+      row.createdAt ? new Date(row.createdAt).toLocaleString() : 'N/A',
+    ]);
+    const tableRows = [columns, ...rows]
+      .map((cells) => `<tr>${cells.map((cell) => `<td>${escapeCell(cell)}</td>`).join('')}</tr>`)
+      .join('');
+    const workbook = `<html><head><meta charset="utf-8"></head><body><table>${tableRows}</table></body></html>`;
+    const blob = new Blob([`\ufeff${workbook}`], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `terms-data-${new Date().toISOString().slice(0, 10)}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
   async function handleDownloadRowPdf(row) {
     const rowsToExport = collectPdfRows(row, adminRows);
     const firstRow = rowsToExport[0];
@@ -720,6 +752,16 @@ function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
                 </div>
                 <div className="terms-card__admin-actions">
                   {isAdminView && (
+                    <>
+                    <button
+                      type="button"
+                      className="terms-card__download"
+                      onClick={handleExportAdminExcel}
+                      disabled={adminLoading || filteredAdminRows.length === 0}
+                    >
+                      <Download aria-hidden="true" />
+                      <span>Download Excel</span>
+                    </button>
                     <button
                       type="button"
                       className="terms-card__download"
@@ -729,6 +771,7 @@ function TermsPage({ adminToken, onAccept, onDecline, onPrepareWhatsApp }) {
                       <Download aria-hidden="true" />
                       <span>{exportingPdf ? 'Downloading...' : 'Download PDF'}</span>
                     </button>
+                    </>
                   )}
                 </div>
               </div>
